@@ -14,9 +14,9 @@ import java.util.List;
 
 @WebServlet(name = "updateEvent", value = "/updateEvent")
 @MultipartConfig(
-        fileSizeThreshold = 1024 * 1024,   // 1MB
-        maxFileSize = 10 * 1024 * 1024,    // 10MB
-        maxRequestSize = 20 * 1024 * 1024 // 20MB
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 10 * 1024 * 1024,
+        maxRequestSize = 20 * 1024 * 1024
 )
 public class updateEvent extends HttpServlet {
     @Override
