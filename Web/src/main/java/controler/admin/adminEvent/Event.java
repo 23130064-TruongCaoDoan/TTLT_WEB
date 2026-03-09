@@ -1,0 +1,53 @@
+package controler.admin.adminEvent;
+
+import Service.EventService;
+import Service.UserService;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import model.User;
+
+import java.io.IOException;
+import java.util.List;
+
+@WebServlet(name = "Event", value = "/Event")
+public class Event extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
+        UserService userService = new UserService();
+
+        if (!userService.checkRole(user)) {
+            response.sendRedirect("login");
+            return;
+        }
+
+        EventService eventService = new EventService();
+
+        String q = request.getParameter("q");
+        String sortDate = request.getParameter("sortDate");
+
+        List<model.Event> listEvent = eventService.searchAndFilter(q, sortDate);
+
+        request.setAttribute("listEvent", listEvent);
+        request.getRequestDispatcher("admin/events.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    }
+}
