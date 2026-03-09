@@ -1,0 +1,144 @@
+.content .menuInfor {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-left: 3px solid #0d3164;
+    padding-left: 10px;
+    margin-left: 25px;
+    gap: 5px;
+    color: #575757;
+}
+
+.content .menuInfor .title {
+    color: #575757;
+}
+
+.content .menuUser .ttcn {
+    font-weight: bold;
+    color: #0d3164;
+}
+
+.content .menuInfor .address {
+    color: #0d3164;
+    font-weight: bold;
+}
+
+.content .menuInfor .title:hover {
+    color: #0d3164;
+    transform: translateY(-3px);
+    background: #cde7da;
+}
+
+.address-container {
+    flex: 3;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    align-self: flex-start;
+}
+
+.address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.address-header h2 {
+    font-size: 22px;
+    color: #0d3164;
+    font-weight: bold;
+    margin: 0;
+}
+
+.add-address {
+    color: #3b7ddd;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.add-address i {
+    margin-right: 5px;
+}
+
+.address-card {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.address-title {
+    font-size: 15px;
+    color: #333;
+}
+
+.address-title .divider {
+    color: #999;
+    margin: 0 6px;
+}
+
+.address-title .phone {
+    font-weight: 500;
+}
+
+.default-tag {
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.default-tag.blue {
+    background-color: #e8f0fe;
+    color: #3b7ddd;
+}
+
+.default-tag.gray {
+    background-color: #f1f3f4;
+    color: #555;
+}
+
+.address-info p {
+    font-size: 14px;
+    color: #555;
+    margin: 6px 0 0 0;
+    line-height: 1.5;
+}
+
+.address-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.address-actions i {
+    color: #3b7ddd;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.address-actions .divider {
+    color: #ccc;
+    font-weight: bold;
+}
+.address-actions .delete{
+    border: none;
+    background: white;
+}
+.address-actions .delete i{
+    color: #8e8e8e;
+}
+button.delete-btn {
+    background: none;
+    border: none;
+}
+.address-container .emtyCard{
+    display: none;
+    font-size: 17px;
+    font-weight: bold;
+    color: #8e8e8e;
+    text-align: center;
+}

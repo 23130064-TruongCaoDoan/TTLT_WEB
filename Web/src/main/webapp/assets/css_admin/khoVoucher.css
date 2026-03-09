@@ -1,0 +1,329 @@
+.Menu .menfunction .storeVoucher {
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+
+.voucher-container {
+    flex: 3;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.voucher-container h2 {
+    color: #0d3164;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.form-group, .form-group-inline div {
+    margin-bottom: 14px;
+}
+
+.form-group-inline {
+    display: flex;
+    gap: 16px;
+}
+
+.form-group-inline > div {
+    flex: 1;
+}
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+
+input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#btn-save {
+    display: block;
+    margin: 20px auto 0;
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+#btn-save:hover {
+    background-color: #0a254b;
+}
+
+.voucher-container .function {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.voucher-container .function #add,
+.voucher-container .function .timkiem button {
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.voucher-container .function .timkiem {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.voucher-container .function .timkiem input {
+    width: 250px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.voucher-list .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.voucher-container .voucher-list .title h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #0d3164;
+}
+
+.voucher-container .voucher-list .title select {
+    width: 120px;
+    height: 38px;
+    margin: 0;
+    padding: 6px 10px;
+}
+
+.voucher-list .table-wrapper {
+    max-height: 350px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.voucher-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.voucher-list th, .voucher-list td {
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 12px 8px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.voucher-list thead th {
+    position: sticky;
+    top: 0;
+    background: #f4f7fa;
+    color: #0d3164;
+    font-weight: 700;
+    z-index: 2;
+    border-bottom: 2px solid #0d3164;
+}
+
+#voucherTable .sua {
+    color: #3b7ddd;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+#voucherTable .xoa {
+    color: #8e8e8e;
+    cursor: pointer;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+    display: none;
+}
+
+#voucherForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px 28px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    z-index: 101;
+    display: none;
+    width: 460px;
+    max-width: 92vw;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+.condition-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+/* Căn đều form tìm kiếm */
+.voucher-container .function .timkiem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Input tìm kiếm */
+.voucher-container .function .timkiem input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Select lọc */
+.voucher-container .function .timkiem select {
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Nút tìm kiếm */
+.voucher-container .function .timkiem button {
+    height: 40px;
+    padding: 0 18px;
+    background-color: #0d3164;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+
+.voucher-container .function .timkiem button:hover {
+    background-color: #0a254b;
+}
+.delete-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    z-index: 102;
+    width: 320px;
+    display: none;
+}
+
+.delete-popup p {
+    margin: 0 0 16px;
+    font-size: 15px;
+    color: #333;
+}
+
+.delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-delete {
+    background: #d9534f;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background: #c9302c;
+}
+
+.btn-cancel {
+    background: #ccc;
+    color: #333;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: #b3b3b3;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.status.active {
+    background-color: #e6f9ee;
+    color: #1e8e3e;
+    border: 1px solid #1e8e3e;
+}
+
+.status.inactive {
+    background-color: #f2f2f2;
+    color: #666;
+    border: 1px solid #ccc;
+}
+

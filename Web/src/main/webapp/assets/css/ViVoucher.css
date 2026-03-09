@@ -1,0 +1,28 @@
+.content .menuUser .Voucher {
+    font-weight: bold;
+    color: #0d3164;
+}
+
+.voucher-box {
+    flex: 3;
+    background-color: #fff;
+    width: 600px;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    align-self: flex-start;
+}
+
+.voucher-box h2 {
+    font-size: 22px;
+    color: #0d3164;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+
+.voucher-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}

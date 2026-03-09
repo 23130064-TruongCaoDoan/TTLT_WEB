@@ -1,0 +1,112 @@
+/* ==== Reset và font ==== */
+.return-policy {
+    font-family: 'Sarabun', sans-serif;
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color:   #d5ebdb;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+    color: #333;
+    line-height: 1.8;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==== Tiêu đề chính ==== */
+.return-policy h1 {
+    text-align: center;
+    color: #0d3164;
+    font-family: 'Lobster', cursive;
+    font-size: 2.2em;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* ==== Tiêu đề phụ ==== */
+.return-policy h2 {
+    color: #0d3164;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    padding-left: 10px;
+    font-weight: 600;
+}
+
+/* ==== Phần giới thiệu ==== */
+.policy-intro p {
+    margin-bottom: 10px;
+    font-size: 1.05em;
+    text-align: justify;
+}
+
+/* ==== Mỗi section ==== */
+.policy-section {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px 25px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(255, 182, 193, 0.2);
+    transition: transform 0.2s ease;
+    border-left: 5px solid #7fc7a4;
+}
+.policy-section:hover {
+    transform: translateY(-2px);
+}
+
+/* ==== Danh sách ==== */
+.policy-section ul,
+.policy-section ol {
+    margin-left: 25px;
+    padding-left: 10px;
+}
+.policy-section li {
+    margin: 8px 0;
+    font-size: 1.02em;
+}
+.policy-section strong {
+    color: #0d3164;
+}
+
+/* ==== Liên hệ ==== */
+.policy-contact {
+    margin-top: 40px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+}
+.policy-contact a {
+    color: #0d3164;
+    text-decoration: none;
+    font-weight: 600;
+}
+.policy-contact a:hover {
+    text-decoration: underline;
+}
+.policy-contact p {
+    margin: 8px 0;
+}
+
+/*phản hồi*/
+@media (max-width: 768px) {
+    .return-policy {
+        padding: 20px;
+    }
+    .return-policy h1 {
+        font-size: 1.8em;
+    }
+    .return-policy h2 {
+        font-size: 1.2em;
+    }
+}

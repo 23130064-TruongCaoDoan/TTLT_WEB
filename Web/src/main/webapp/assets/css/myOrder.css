@@ -1,0 +1,238 @@
+.content .container .menu.donhang{
+    color: #0d3164;
+    font-weight: bold;
+}
+.content .container .manage-order{
+    width: 72%;
+    height: 600px;
+}
+.content .container .manage-order .menu-bar {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid gray;
+    border-radius: 8px 8px 0px 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+
+}
+.content .container .manage-order .menu-bar .menu-item {
+    width: 140px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-weight: normal;
+    color: #575757;
+}
+
+.content .container .manage-order .menu-bar .menu-item:hover {
+    cursor: pointer;
+    color: #0d3164;
+}
+/* Khi được chọn */
+.menu-item.active {
+    border-bottom: 2px solid #0d3164;
+}
+
+.menu-item.active p {
+    color: #0d3164; /* đổi màu chữ */
+    font-weight: bold;
+}
+.content .container .manage-order .order-content {
+    height: 470px;
+    width: 98%;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 500px; /* Giới hạn chiều cao để có thanh cuộn */
+    overflow-y: auto;
+    padding: 10px;
+    transition: transform 0.3s ease;
+
+}
+.content .container .manage-order .order-content .card-order {
+    width: 97%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    margin-bottom: 20px;
+    height: fit-content;
+}
+.content .container .manage-order .order-content .card-order .top{
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.content .container .manage-order .order-content .card-order .order-id{
+    color: #007BFF;
+}
+.content .container .manage-order .order-content .card-order .order-status{
+    display: flex;
+    gap: 10px;
+}
+.content .container .manage-order .order-content .card-order .order-status .time{
+    margin-top: 20px;
+    color: #575757;
+}
+.content .container .manage-order .order-content .card-order .status-delivered{
+    background-color: #28A745;
+    color: white;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 15px;
+}
+.content .container .manage-order .order-content .card-order .status-waiting{
+    background-color: #FFC107;
+    color: white;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 15px;
+    gap: 10px;
+}
+.content .container .manage-order .order-content .card-order img{
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
+.content .container .manage-order .order-content .card-order .center{
+    width: 98%;
+    display: flex;
+    margin-top: -10px;
+    border-top: 1px solid #EEEEEE;
+    border-bottom: 1px solid #EEEEEE;
+    margin-left: 1%;
+}
+.content .container .manage-order .order-content .card-order .book-name{
+    font-size: 25px;
+    margin-top: 9px;
+    font-family: Arial, sans-serif;
+}
+.content .container .manage-order .order-content .card-order .bottom{
+    height: fit-content;
+    padding-bottom: 10px;
+}
+.content .container .manage-order .order-content .card-order .quantity{
+    float: left;
+    height: 100%;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #575757;
+}
+.content .container .manage-order .order-content .card-order .price-cart{
+    float: right;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    right: 0;
+    height: 100%;
+    width: 400px;
+    align-content: center;
+    justify-content: center;
+    margin-top: 0;
+}
+.content .container .manage-order .order-content .card-order .total-price{
+    display: flex;
+    gap: 10px;
+    color: red;
+    margin-right: 20px;
+    line-height: 2;
+}
+.content .container .manage-order .order-content .card-order .button {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.content .container .manage-order .order-content .card-order .button button {
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    width: fit-content;
+    height: 40px;
+    background-color: #0d3164;
+    color: white;
+    border-radius: 5px;
+    padding: 0 10px;
+    border: none;
+}
+.content .container .manage-order .order-content .card-order .button .rebuy {
+    background: #c5c5c5;
+    color: #0d3164;
+}
+.content .container .manage-order .order-content .card-order .button button:hover {
+    cursor: pointer;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+#reviewPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    width: 350px;
+    border-radius: 8px;
+    z-index: 1001;
+}
+
+#reviewPopup  h3 {
+    margin-bottom: 10px;
+}
+
+#reviewPopup  select,
+#reviewPopup textarea {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+#reviewForm input,
+#reviewForm select,
+#reviewForm textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+}
+#reviewStars option,#reviewStars{
+    color: #FFD700;
+}
+
+
+#submitReview , .close-popup{
+    padding: 8px 15px;
+    background-color: #0d3164;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+#submitReview:hover{
+    cursor: pointer;
+}
+

@@ -1,0 +1,260 @@
+.dashboard {
+    flex: 3;
+    width: 100%;
+    padding: 25px 35px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.dashboard h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0d3164;
+    font-weight: bold;
+}
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #f4f4f4;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.filter-item input,
+.filter-item select {
+    margin-top: 5px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.btn-filter {
+    margin-top: 18px;
+    padding: 8px 18px;
+    background: #0d3164;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.chart-container {
+    background: #fafafa;
+    padding: 18px 22px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 30px;
+}
+
+.chart-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.chart {
+    height: 260px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+}
+
+.column-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.columns-chart {
+    width: 55px;
+    background: #4a90e2;
+    border-radius: 6px 6px 0 0;
+    transition: 0.3s;
+}
+.figure{
+    margin-bottom: 10px;
+    color: #3b7ddd;
+}
+
+.label-star {
+    margin-top: 6px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.top-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.top-box {
+    width: 50%;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.top-box ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #333;
+    word-wrap: break-word;
+}
+
+.rank {
+    display: flex;
+    width: 24px;
+    height: 24px;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #ddd;
+    color: #333;
+}
+
+.function.active {
+    font-weight: bold;
+    padding-left: 5px !important;
+    border-left: 3px solid #0d3164;
+}
+
+.rank1 {
+    background-color: gold;
+    color: #fff;
+}
+
+.rank2 {
+    background-color: silver;
+    color: #fff;
+}
+
+.rank3 {
+    background-color: #cd7f32;
+    color: #fff;
+}
+
+.stars {
+    color: gold;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.top-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.top-box h3 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #0d3164;
+    border-bottom: 2px solid #0d3164;
+    padding-bottom: 6px;
+}
+
+.top-box ul {
+    list-style: none;
+    padding-left: 15px;
+    margin: 0;
+}
+
+.top-box li {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #0d3164;
+    word-wrap: break-word;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.top-box li:last-child {
+    margin-bottom: 0;
+}
+
+.table-wrapper {
+    margin-top: 25px;
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: solid rgb(197, 197, 197) 1px;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+thead {
+    background: #e6e6e6;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+    font-size: 15px;
+    text-align: center;
+    word-wrap: break-word;
+}
+.book-title {
+    max-width: 338px;
+    display: inline-block;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    vertical-align: middle;
+}
+.review-table{
+    max-height: 500px;
+    overflow: scroll;
+}
+.review-table thead th {
+    position: sticky;
+    top: 0;
+    background: #e6e6e6;
+    z-index: 10;
+}
+.xoa {
+    color: #8e8e8e;
+    transition: 0.2s ease;
+}
+
+.xoa:hover {
+    cursor: pointer;
+}
+
+.xoa:active {
+    transform: scale(0.95);
+}
+.btn-delete{
+    background: none;
+    border: none;
+}

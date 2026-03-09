@@ -1,0 +1,114 @@
+.content .menuInfor {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-left: 3px solid #0d3164;
+    padding-left: 10px;
+    margin-left: 25px;
+    gap: 5px;
+    color: #575757;
+}
+
+.content .menuInfor .title {
+    color: #575757;
+}
+
+.content .menuUser .ttcn {
+    font-weight: bold;
+    color: #0d3164;
+}
+
+.content .menuInfor .address {
+    color: #0d3164;
+    font-weight: bold;
+}
+.content .menuInfor .title:hover {
+    color: #0d3164;
+    transform: translateY(-3px);
+    background: #cde7da;
+}
+.address-container {
+    flex: 3;
+    background-color: #fff;
+    width: 600px;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    align-self: flex-start;
+}
+.address-container label{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.address-container h2 {
+    font-size: 22px;
+    color: #0d3164;
+    margin-bottom: 20px;
+}
+
+.address-form .form-group {
+    margin-bottom: 15px;
+}
+
+.address-form label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.address-form input,
+.address-form select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.address-form input:focus,
+.address-form select:focus {
+    border-color: #0d3164;
+}
+
+.address-form input.error,
+.address-form select.error {
+    border-color: #d9534f;
+}
+
+.error-msg {
+    color: #d9534f;
+    font-size: 13px;
+    margin-top: 4px;
+    display: none;
+}
+
+.save-btn {
+    display: block;
+    width: 200px;
+    padding: 12px;
+    margin: 25px auto 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #0d3164;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background-color: #154c99;
+}
+.address_default {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.address_default label {
+    cursor: pointer;
+}

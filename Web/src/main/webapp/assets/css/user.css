@@ -1,0 +1,111 @@
+.content .container{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.content a{
+    text-decoration: none;
+}
+
+.content .menuUser {
+    flex: 1;
+    width: 20vw;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    align-self: flex-start;
+}
+
+.content .nameUser {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border-bottom: 1px solid #bbc1c7;
+}
+
+.content .nameUser .anh {
+    width: 70px;
+    height: 70px;
+    margin: 20px auto 0;
+    font-size: 3rem;
+    border-radius: 50%;
+    border: 1px solid #bbc1c7;
+    line-height: 70px;
+    color: gray;
+}
+
+.content .nameUser .name {
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.content .nameUser .bacThanhVien {
+    margin: 10px auto;
+    width: 8vw;
+    padding: 5px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: #a6b3d6;
+    font-size: 14px;
+}
+.content .nameUser .point{
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+.content .menuUser .btDangXuat{
+    height: 40px;
+    text-align: center;
+    align-content: center;
+    margin-top: 10px;
+}
+.content .menuUser .dangXuat{
+    text-align: center;
+    font-size: 14px;
+    margin: 20px auto;
+    width: 8vw;
+    border: none;
+    padding: 5px;
+    border-radius: 20px;
+    background: #0d3164;
+    color: white;
+}
+.content .menuUser .dangXuat:hover{
+    background: #154c99;
+}
+.content .menuMain{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    text-align: left;
+    position: relative;
+    border-bottom: 1px solid #bbc1c7;
+}
+.content .menuMain .menu{
+    line-height: 5vh;
+    cursor:pointer ;
+    color: #575757;
+    transition: 0.3s ;
+}
+.content .menuMain .menu:hover {
+    color: #0746ae;
+    transform: translateY(-3px);
+    background: #cde7da;
+}
+.content .menuMain .menu i{
+    padding-right: 5px;
+}
+.content .menuInfor {
+    display: none;
+}
+
+
+
+
+

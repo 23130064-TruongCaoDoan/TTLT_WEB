@@ -1,0 +1,278 @@
+.content .menuUser .ttcn {
+    font-weight: bold;
+    color: #0d3164;
+}
+
+a {
+    text-decoration: none;
+}
+
+.profile-container {
+    width: 80%;
+    flex: 3;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    align-self: flex-start;
+}
+
+.profile-container h2 {
+    margin-bottom: 25px;
+    font-size: 22px;
+    color: #0d3164;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.required {
+    color: red;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #0d3164;
+    outline: none;
+}
+
+.form-inline {
+    display: flex;
+    align-items: center;
+}
+
+.form-inline a {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #3b7ddd;
+    text-decoration: none;
+}
+
+.form-inline a:hover {
+    text-decoration: underline;
+}
+
+.gender-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 5px;
+}
+
+.birthday-group {
+    display: flex;
+    gap: 10px;
+}
+
+.birthday-group input {
+    text-align: center;
+}
+
+.btn-save {
+    display: block;
+    width: 200px;
+    padding: 12px;
+    margin: 25px auto 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #0d3164;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-save:hover {
+    background-color: #154c99;
+}
+
+.content .menuInfor {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-left: 3px solid #0d3164;
+    margin-left: 30px;
+    padding-left: 10px;
+    gap: 5px;
+    color: #575757;
+}
+
+.content .menuInfor .title {
+    color: #575757;
+}
+.content .menuInfor .prof {
+    color: #0d3164;
+    font-weight: bold;
+}
+
+.content .menuInfor .title:hover {
+    color: #0d3164;
+    transform: translateY(-3px);
+    background: #cde7da;
+}
+
+/* lỗi kiểm tra form */
+.error {
+    color: #d71919;
+    font-size: 13px;
+    margin-top: 6px;
+    display: none; /* ẩn mặc định */
+}
+
+.input-error {
+    border-color: #d71919 !important;
+    box-shadow: 0 0 0 3px rgba(215, 25, 25, 0.08);
+}
+
+.required {
+    color: #d71919;
+    margin-left: 4px;
+    font-weight: 700;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}
+
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 101;
+    display: none;
+    box-sizing: border-box;
+    width: 40vw;
+}
+
+.popup h3 {
+    text-align: center;
+    font-size: 17px;
+    color: #0d3164;
+    margin-bottom: 20px;
+}
+
+.popup .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup label {
+    float: left;
+    font-size: 14px;
+}
+
+.popup .otp-method {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.popup .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+button{
+    cursor: pointer;
+}
+
+.popup .btn-group button {
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    width: 80px;
+    height: 35px;
+}
+
+.popup .btn-group .confirm {
+    background: green;
+}
+
+.popup .btn-group .cancel {
+    background: #c8c4c4;
+    color: #0d3164;
+}
+
+.popup .otp-method button {
+    height: 35px;
+    border-radius: 6px;
+    border: none;
+    color: #0d3164;
+    font-size: 14px;
+    line-height: 100%;
+}
+
+.popup .otp-method button i {
+    margin-right: 2px;
+}
+
+.popup .otp-method .zalo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.popup .otp-method .zalo img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.popup .otp-method .zalo span {
+    font-size: 14px;
+    line-height: 1;
+    position: relative;
+    top: 0;
+}
+
+#thaydoiEmail .email-row {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+}
+
+#thaydoiEmail .email-row input {
+    width: 29vw;
+    border: none;
+}
+
+#thaydoiEmail .email-row button {
+    border: none;
+    color: #3b7ddd;
+    background: white;
+}
+

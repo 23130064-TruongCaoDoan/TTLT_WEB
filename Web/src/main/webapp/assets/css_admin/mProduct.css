@@ -1,0 +1,198 @@
+.content .Menu {
+    width: 30%;
+}
+.Menu .menfunction .qlsanpham{
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+.product-container{
+    width: 70%;
+    flex: 3;
+    align-items: flex-start;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.product-container h2 {
+    color: #0d3164;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.product-container .function {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+ #add,
+.product-container .function .find button {
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.product-container .function .find {
+    display: flex;
+    gap: 10px;
+}
+.product-container .function .find input {
+    width: 20vw;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+/*title table and filter*/
+.product-container .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-container .title .filter-sp {
+    width: 12vw;
+    height: 5vh;
+    border-radius: 6px;
+    padding: 4px;
+}
+/*table*/
+.product-container .table-wrapper{
+    width: 100%;
+    max-height: 500px; /* Giới hạn chiều cao để có thanh cuộn */
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.product-container .table-wrapper {
+    overflow-y: auto;
+    border: 1px solid #ccc;
+
+}
+.product-container .table-wrapper table{
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    border-radius: 5px;
+    padding: 0;
+}
+
+.product-container .table-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: #f5f5f5;
+    color: #0d3164;
+}
+.product-container th, .product-container td {
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    padding: 10px;
+    font-family: "Times New Roman";
+    word-wrap: break-word;
+    word-break: break-word;
+}
+.product-container tbody .sua{
+    color: #3b7ddd;
+    cursor: pointer;
+}
+.product-container tbody .xoa{
+    color: #8e8e8e;
+    cursor: pointer;
+}
+.product-container .table-wrapper td img{
+    width: 80px;
+    height: 100px;
+}
+.product-container .table-wrapper th,
+.product-container .table-wrapper td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    white-space: normal;
+}
+/*form add book*/
+#bookForm{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 101;
+    display: none;
+    box-sizing: border-box;
+    width: 50%;
+
+
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 cột bằng nhau */
+    gap: 1px 10px; /* khoảng cách giữa các cột và hàng */
+}
+#bookForm h3 {
+    margin-top: 0;
+    color: #0d3164;
+}
+
+.form-group, .form-group-inline div {
+    margin-bottom: 14px;
+}
+
+.form-group-inline {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+input, select, textarea {
+    width: 95%;
+    padding: 8px;
+    border: 1px     solid #ccc;
+    border-radius: 6px;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+.btn-save {
+    display: block;
+    margin: 0 auto;
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-save:hover {
+    background-color: #0a254b;
+}
+#overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}

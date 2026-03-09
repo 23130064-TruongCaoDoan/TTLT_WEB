@@ -1,0 +1,99 @@
+body{
+    margin: 0;
+}
+main{
+    display: flex;
+    flex-direction: column;
+}
+.content{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin: 10px;
+}
+a{
+    text-decoration: none;
+}
+header{
+    background: #0d3164;
+}
+header .left{
+    margin-top: 10px;
+    margin-left: 50px;
+    float: left;
+}
+header .logo img{
+    width: 15vw;
+}
+header .right{
+    margin-top: 35px;
+    float: right;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 40px;
+    font-size: 18px;
+
+}
+header .right i{
+    background: white;
+    border-radius: 50%;
+    padding: 8px;
+}
+header .right .ten{
+    color: white;
+}
+header .right .dangxuat{
+    box-sizing: border-box;
+    padding: 5px;
+    color: #0d3164;
+    background: #cde7da;
+    border-radius: 10px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+header .right .dangxuat:hover{
+    transform: translateY(-3px);
+}
+
+
+.Menu{
+    flex: 1;
+    width: 10vw;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #0d3164;
+    box-sizing: border-box;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);;
+}
+.Menu .title{
+    margin: auto;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #8e8e8e;
+}
+.Menu .menfunction{
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+}
+.Menu .menfunction a{
+    color: #0d3164;
+}
+.Menu .menfunction .function{
+    width: 100%;
+    margin-bottom: 10px;
+    padding-left: 2px;
+    transition: 0.3s;
+}
+.Menu .menfunction .function:hover{
+    transform: translateY(-3px);
+    background: #0d3164;
+    color: white;
+}

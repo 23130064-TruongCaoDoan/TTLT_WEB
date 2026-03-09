@@ -1,0 +1,282 @@
+.Menu .menfunction .qldonhang {
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+
+.order-container {
+    flex: 3;
+    width: 20vw;
+    align-items: flex-start;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.order-container h2 {
+    color: #0d3164;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.order-container .function {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.order-container .function #addorder,
+.order-container .function button {
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.order-container .function  {
+    display: flex;
+    gap: 10px;
+}
+
+.order-container .function input {
+    width: 20vw;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.order-list .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-list .title select {
+    width: 12vw;
+    height: 5vh;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+.table-wrapper {
+    height: auto;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#orderTable .sua {
+    color: #3b7ddd;
+    cursor: pointer;
+}
+#orderTable .xoa {
+    color: #8e8e8e;
+    cursor: pointer;
+}
+
+#overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}
+
+#orderForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 101; /* cao hơn overlay */
+    display: none;
+    box-sizing: border-box;
+    width: 40vw;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#orderForm h3 {
+    margin-top: 0;
+    color: #0d3164;
+}
+
+.form-group, .form-group-inline div {
+    margin-bottom: 14px;
+}
+
+.form-group-inline {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.btn-save {
+    display: block;
+    margin: 0 auto;
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-save:hover {
+    background-color: #0a254b;
+}
+
+.order-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-list th,
+.order-list td,#listSP th ,#listSP td  {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+.order-list thead th,#listSP thead {
+    position: sticky;
+    top: 0;
+    background-color: #f5f5f5;
+    z-index: 2;
+}
+
+
+.order-list .table-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.function.active {
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+.cacsp:hover {
+    color: white;
+    background: #0d3164;
+}
+#listSP {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    z-index: 110;
+    display: none;
+
+    width: 85vw;
+    max-width: 1000px;
+    max-height: 80vh;
+    overflow: hidden; /* popup KHÔNG scroll */
+}
+
+#listSP table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+}
+#listSP th,
+#listSP td {
+    white-space: nowrap;
+    padding: 8px 12px;
+}
+#listSP table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+#listSP .table-wrapper {
+    max-height: 65vh;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+.delete-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    z-index: 102;
+    width: 320px;
+    display: none;
+}
+
+.delete-popup p {
+    margin: 0 0 16px;
+    font-size: 15px;
+    color: #333;
+}
+
+.delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-delete {
+    background: #d9534f;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background: #c9302c;
+}
+
+.btn-cancel {
+    background: #ccc;
+    color: #333;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: #b3b3b3;
+}

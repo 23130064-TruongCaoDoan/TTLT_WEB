@@ -1,0 +1,102 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+.login{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 20px auto;
+    width: 400px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    background: #fff;
+    text-align: center;
+     align-content: center;
+    display: flex;
+    flex-direction: column;
+}
+ .login .title{
+    color: #0d3164;
+    font-weight: bold;
+    margin-bottom: 25px;
+    font-size: 27px;
+    font-family: "Sarabun", sans-serif;
+}
+ .login .inputIfor{
+    display: flex;
+    flex-direction: column;
+}
+ .login .user input {
+    padding-left: 10px;
+    width: 87%;
+    height: 25px;
+    font-size: 14px;
+    border: 1px solid #0d3164;
+    cursor: pointer;
+}
+ .login .MK {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 90%;
+    margin:auto;
+    border: 1px solid #0d3164;
+}
+
+ .login .MK input {
+    flex: 1;
+    height: 25px;
+    padding-left: 10px;
+    font-size: 14px;
+    border: 1px solid #0d3164;
+    border: none;
+}
+
+ .login .MK button {
+    height: 28px;
+    border: none;
+    /*border: 1px solid #0d3164;*/
+    /*background: #0d3164;*/
+    font-size: 13px;
+    background: white;
+    cursor: pointer;
+}
+ .login .forget{
+    margin-bottom: 20px;
+}
+
+ .login .forget a{
+    cursor: pointer;
+}
+ .login .forget span{
+    float: left;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #0d3164;
+}
+ .login .buttonLoginAndSignUp button{
+    width: 120px;
+    height: 40px;
+    font-size: 17px;
+    box-sizing: border-box;
+    color: white;
+    border-radius: 10px;
+    background: #0d3164;
+    margin-bottom: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border: none;
+}
+ .login .error{
+    display: block;
+    text-align: left;
+    padding-left: 20px;
+    margin: 5px 0;
+    font-size: 13px;
+}

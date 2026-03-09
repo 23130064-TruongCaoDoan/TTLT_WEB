@@ -1,0 +1,140 @@
+.content .Menu {
+    width: 30%;
+}
+.content .Menu .qlkhachhang {
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+.user-details{
+    width: 70%;
+    flex: 3;
+    align-items: flex-start;
+    background: #fff;
+    padding: 21px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-bottom: 10px;
+}
+.user-details .customer-info .button-group button{
+   background-color: #0d3164;
+    color: #fff;
+    border-radius: 4px;
+}
+.user-details .customer-info .button-group #btnLock{
+    width: 50px;
+}
+.user-details .customer-info .button-group button:hover{
+    cursor: pointer;
+}
+.user-details .fa-arrow-left{
+    transform: scale(2);
+    color: #0d3164;
+}
+.user-details .fa-arrow-left:hover{
+    cursor: pointer;
+}
+.user-details h2 {
+    color: #0d3164;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* --- Thông tin khách hàng --- */
+.customer-info {
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 10px 25px 25px 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    font-family: Arial, sans-serif;
+}
+.info-item {
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.info-item span {
+    font-weight: bold;
+    color: #333;
+    width: 150px;
+    display: inline-block;
+}
+
+.rank {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.silver {
+    background-color: #b0b0b0;
+}
+
+.gold {
+    background-color: #f1c40f;
+}
+
+.diamond {
+    background-color: #74b9ff;
+}
+/*table*/
+.table-container{
+    width: 97%;
+    flex: 3;
+    align-items: flex-start;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    margin: 10px 16px 15px 0;
+}
+.table-container .table-wrapper{
+    width: 100%;
+    max-height: 300px; /* Giới hạn chiều cao để có thanh cuộn */
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.table-container .table-wrapper {
+    overflow-y: auto;
+    border: 1px solid #ccc;
+
+}
+.table-container .table-wrapper table{
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    border-radius: 5px;
+    padding: 0;
+}
+
+.table-container .table-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: #f5f5f5;
+    color: #0d3164;
+}
+.table-container th, .table-container td {
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    padding: 10px;
+    font-family: "Times New Roman";
+}
+.table-container tbody .xoa{
+    color: #8e8e8e;
+    cursor: pointer;
+}
+.table-container .table-wrapper td img{
+    width: 80px;
+    height: 100px;
+}
+.table-container .table-wrapper th,
+.table-container .table-wrapper td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap;
+}

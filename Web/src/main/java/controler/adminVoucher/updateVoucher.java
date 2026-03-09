@@ -1,0 +1,113 @@
+package controler.adminVoucher;
+
+import Service.VoucherService;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+
+import java.io.IOException;
+
+@WebServlet(name = "updateVoucher", value = "/updateVoucher")
+public class updateVoucher extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        VoucherService voucherService = new VoucherService();
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        int id = Integer.parseInt(request.getParameter("id")==null?"0":request.getParameter("id"));
+        String code = request.getParameter("code");
+        String description = request.getParameter("description");
+        String type = request.getParameter("type");
+        String conditionBook = request.getParameter("loaisach");
+        String conditionPublisher = request.getParameter("nxb");
+        String start_date = request.getParameter("start_date");
+        String end_date = request.getParameter("end_date");
+
+        int conditionPrice = 0;
+        String giaParam = request.getParameter("gia");
+        if (giaParam != null && !giaParam.trim().isEmpty()) {
+            try {
+                conditionPrice = Integer.parseInt(giaParam);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        int usage_limit = 0;
+        String limitParam = request.getParameter("usage_limit");
+        if (limitParam != null && !limitParam.trim().isEmpty()) {
+            try {
+                usage_limit = Integer.parseInt(limitParam);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        double value = 0;
+        String valueParam = request.getParameter("value");
+        if (valueParam != null && !valueParam.trim().isEmpty()) {
+            try {
+                value = Double.parseDouble(valueParam);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        if (code == null || code.trim().isEmpty()
+                || description == null || description.trim().isEmpty()
+                || type == null || type.trim().isEmpty()
+                || start_date == null || start_date.isEmpty()
+                || end_date == null || end_date.isEmpty()
+                || usage_limit <= 0
+                || value <= 0) {
+
+            response.getWriter().write(
+                    "{\"success\":false,\"message\":\"Vui lòng nhập đầy đủ thông tin\"}"
+            );
+            return;
+        }
+
+        if (conditionPrice <= 0
+                && (conditionBook == null || conditionBook.trim().isEmpty())
+                && (conditionPublisher == null || conditionPublisher.trim().isEmpty())) {
+
+            response.getWriter().write(
+                    "{\"success\":false,\"message\":\"Phải nhập ít nhất 1 điều kiện\"}"
+            );
+            return;
+        }
+
+        if (start_date.compareTo(end_date) > 0) {
+            response.getWriter().write(
+                    "{\"success\":false,\"message\":\"Ngày bắt đầu phải nhỏ hơn ngày kết thúc\"}"
+            );
+            return;
+        }
+        boolean success = voucherService.updateVoucher(
+                id,
+                code,
+                description,
+                conditionPrice,
+                conditionBook,
+                conditionPublisher,
+                start_date,
+                end_date,
+                usage_limit,
+                value,
+                type
+        );
+
+        if (success) {
+            response.getWriter().write(
+                    "{\"success\":true,\"message\":\"Cập nhật voucher thành công\"}"
+            );
+        } else {
+            response.getWriter().write(
+                    "{\"success\":false,\"message\":\"Cập nhật voucher thất bại\"}"
+            );
+        }
+    }
+}

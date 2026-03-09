@@ -1,0 +1,304 @@
+.content {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sachh {
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 50px auto 0 auto;
+}
+.moi{
+    background: #d5ebdb;
+}
+.yeuThich{
+    background: #d5ebdb;
+}
+.sale{
+    background: #FF4C4C;
+}
+.sale .t span{
+    color: white;
+    font-size: 35px;
+}
+.sale .t i{
+    margin-left: 5px;
+    color: white;
+    font-size: 40px;
+}
+.dsbooks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    width: 150px;
+    height: 300px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+
+}
+
+.card:hover {
+    cursor: pointer;
+    transform: translateY(-4px);
+}
+.price-cart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+.card .book-name {
+    font-weight: bold;
+    color: #003366;
+    margin: 10px 0 5px 0;
+    height: 49px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card .book-name:hover{
+    text-decoration: underline;
+}
+.card .rating {
+    color: gold;
+    margin: 5px 0;
+}
+
+.card .price {
+    color: #008000;
+    margin-left: 35%;
+    font-weight: bold;
+}
+.card i {
+    color: #003366;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.card i:hover {
+    color: #008000;
+}
+.sachh .title{
+    padding-left: 24px;
+    color:#FF4C4C;
+    font-size: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-family: "Lobster", sans-serif;
+}
+.card .price{
+    margin-left: 22%;
+}
+.card .price s{
+    color: gray;
+}
+.sachh .bt{
+    margin-top: 30px;
+    text-align: right;
+    margin-right: 5%;
+}
+.sachh .bt button{
+    width: 7vw;
+    height: 5vh;
+    box-sizing: border-box;
+    padding: 2px;
+    font-size: 14px;
+    background: gray;
+    color: #0d3164;
+    border: none;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+.sachh .bt button i{
+    margin-left: 5px;
+}
+.sachh .bt button:hover{
+    background: #0d3164;
+    color: white;
+    transform: translateX(10px);
+}
+.event-carousel {
+    position: relative;
+    width: 90%;
+    max-width: 1100px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background: #fff;
+}
+
+.event-carousel .slides {
+    display: flex;
+    transition: transform 0.6s ease-in-out;
+}
+
+.event-carousel .slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.event-carousel .slide img {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.4s ease;
+}
+
+.event-carousel .slide img:hover {
+    transform: scale(1.02);
+}
+.event-carousel .prev,
+.event-carousel .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #0d3164;
+    border: none;
+    padding: 15px 18px;
+    cursor: pointer;
+    font-size: 28px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.event-carousel .prev:hover,
+.event-carousel .next:hover {
+    background-color: #0d3164;
+    color: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.event-carousel .prev {
+    left: 25px;
+}
+.event-carousel .next {
+    right: 25px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .event-carousel {
+        width: 95%;
+        border-radius: 15px;
+    }
+    .event-carousel .slide img {
+        height: 45vh;
+    }
+    .event-carousel .prev,
+    .event-carousel .next {
+        font-size: 22px;
+        padding: 10px 12px;
+    }
+}
+
+.sale .title img{
+    margin-left: 2px;
+    position: absolute;
+    width:4vw;
+}
+
+.moi .title img{
+    position: absolute;
+    width:3vw;
+}
+.sachh .title i{
+    padding-left: 10px;
+}
+
+/*recommend*/
+.recommend{
+    text-align: center;
+    margin-top: 80px;
+}
+.recommend .slogan h3{
+    font-weight: bold;
+    font-size: 35px;
+    color: #0d3164;
+}
+.recommend .valua-container img{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+.recommend .valua-container figcaption{
+    margin-top: 10px;
+}
+.recommend .valua-container{
+    display: flex;
+    justify-content: center;
+}
+.recommend .list-product{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+.recommend .list-product .card{
+    border: 1px solid #0d3164;
+    border-radius: 0;
+}
+.recommend .list-product .card img{
+    height: 150px;
+    width: 100px;
+
+}
+a{
+    text-decoration: none;
+}
+.event-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.event-disabled img {
+    pointer-events: none;
+}
+.event-no-product {
+    position: relative;
+}
+
+.event-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    pointer-events: none; /* đảm bảo không click */
+}
+
+

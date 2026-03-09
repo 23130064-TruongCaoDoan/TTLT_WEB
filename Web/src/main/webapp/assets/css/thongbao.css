@@ -1,0 +1,59 @@
+.container .menuMain .thongbao,.container .menuMain .thongbao i {
+    font-weight: bold;
+    color: #0d3164;
+}
+.container .menuInfor {
+    display: none;
+}
+.container .menuMain .ttcn{
+    color: #575757;
+    font-weight: normal;
+}
+
+.container .nav-inform {
+    display: flex;
+    padding-bottom: 2vh;
+    gap:2vw;
+}
+
+.container hr {
+    background-color: #0746ae;
+    height: 2px;
+    margin:0;
+}
+.container .nav-inform .tab-inform {
+    text-decoration: none;
+    color: black;
+}
+.container .nav-inform .tab-inform:hover {
+    text-decoration: none;
+    color: #0746ae;
+}
+.container .nav-inform .tab-inform.active {
+    color: #0746ae;
+    cursor: pointer;
+    font-weight: bold;
+}
+.container .inform-card{
+    padding:1vw;
+    border-bottom: solid rgb(197, 197, 197) 0.5px;
+}
+.container .inform-card:hover {
+    background-color: #e9f1ff;
+    cursor: pointer;
+}
+.container .inform-card .head-inform-card {
+    display: flex;
+    justify-content: space-between;
+    
+}
+.container .inform-card p{
+    margin: 0;
+    color:rgb(40, 40, 40);
+}
+
+.container .inform-card .title-inform {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color:black;
+}

@@ -1,0 +1,135 @@
+.content .menuInfor {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-left: 3px solid #0d3164;
+    padding-left: 10px;
+    margin-left: 25px;
+    gap: 5px;
+    color: #575757;
+}
+
+.content .menuInfor .title {
+    color: #575757;
+}
+
+.content .menuUser .ttcn {
+    font-weight: bold;
+    color: #0d3164;
+}
+
+.content .menuInfor .member {
+    color: #0d3164;
+    font-weight: bold;
+}
+
+.content .menuInfor .title:hover {
+    color: #0d3164;
+    transform: translateY(-3px);
+    background: #cde7da;
+}
+.box-content {
+    flex: 3;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    align-self: flex-start;
+}
+.box-content h2 {
+    margin-bottom: 25px;
+    font-size: 22px;
+    color: #0d3164;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.info-box {
+    flex: 1;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    padding: 15px 20px;
+}
+
+.info-box h3 {
+    font-size: 17px;
+    color: #0d3164;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.info-content {
+    display: flex;
+    gap: 15px;
+}
+
+.info-item {
+    flex: 1;
+    background: #f2f3f4;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: left;
+}
+
+.info-item p {
+    font-size: 15px;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
+.info-item span {
+    font-size: 17px;
+    font-weight: bold;
+    color: #0746ae;
+}
+
+
+
+
+.member-rank-table {
+    margin-top: 50px;
+    background: #fff;
+    border-radius: 10px;
+}
+
+.member-rank-table h2 {
+    margin-bottom: 25px;
+    font-size: 22px;
+    color: #002e79;
+}
+
+.member-rank-table table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 14px;
+}
+
+.member-rank-table thead {
+    background-color: #f5f7fa;
+    color: #0d3164;
+    font-weight: bold;
+    font-size: 14px;
+
+}
+
+.member-rank-table th,
+.member-rank-table td {
+    padding: 12px 10px;
+    border: 1px solid #e0e0e0;
+}
+.member-rank-table td{
+    font-size: 14px;
+}
+
+.tsilver { color: #8e8e8e; font-weight: bold; }
+.tgold { color: #d4af37; font-weight: bold; }
+.tdiamond { color: #007bff; font-weight: bold; }

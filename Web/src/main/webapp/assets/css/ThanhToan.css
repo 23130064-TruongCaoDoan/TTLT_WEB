@@ -1,0 +1,499 @@
+.content .container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+}
+
+.checkout-section {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.checkout-section .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0d3164;
+    margin-bottom: 15px;
+}
+
+/* dia chi*/
+.address-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.address-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.5;
+}
+
+.address-info input[type="radio"] {
+    accent-color: #3b7ddd;
+    transform: scale(1.1);
+}
+
+
+.address-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #3b7ddd;
+    font-size: 16px;
+}
+
+.address-actions i {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.address-actions .divider {
+    color: #999;
+}
+
+.address-actions .delete-btn i {
+    color: #8e8e8e;
+}
+
+
+.add-address {
+    display: inline-block;
+    color: #3b7ddd;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+/* ship*/
+
+.shipping-item input[type="radio"] {
+    accent-color: #3b7ddd;
+    transform: scale(1.1);
+}
+
+.shipping-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+
+.payment-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.payment-item img {
+    width: 40px;
+    height: auto;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.payment-item input[type="radio"] {
+    accent-color: #3b7ddd;
+    transform: scale(1.1);
+}
+
+/* thanh vien*/
+.member-info {
+    line-height: 1.7;
+}
+
+.member-info .highlight {
+    color: #3b7ddd;
+    font-weight: 600;
+}
+
+.member-info input[type="checkbox"] {
+    accent-color: #3b7ddd;
+    transform: scale(1.1);
+    margin-right: 6px;
+}
+
+.address-actions a,
+.address-actions button {
+    background: none;
+    border: none;
+    color: #3b7ddd;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* khuyến mãi*/
+
+.gift-infor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-row label {
+    color: #333;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group input {
+    flex: 1;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+}
+
+.apply-btn {
+    height: 36px;
+    background-color: #0d3164;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0 16px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.apply-btn:hover {
+    background-color: #0052cc;
+}
+
+#choose-code {
+    color: #3b7ddd;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+/* ghi chú*/
+.other-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.other-label {
+    font-size: 16px;
+    color: #333;
+}
+
+.other-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+}
+
+/* cac san pham dat*/
+.order-review {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    color: #333;
+}
+
+.order-item {
+    display: grid;
+    grid-template-columns: 100px 0.9fr 120px 50px 120px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-img {
+    width: 80px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-name {
+    color: #222;
+}
+
+.order-prices {
+    text-align: right;
+}
+
+.order-price-current {
+    font-weight: 500;
+}
+
+.order-price-old {
+    font-size: 14px;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.order-qty {
+    text-align: center;
+}
+
+.order-total {
+    text-align: right;
+    font-weight: 600;
+    color: #f7941e;
+}
+
+
+/*phan thanh toan*/
+.checkout-summary {
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.checkout-total {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #8e8e8e;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+}
+
+.total-final strong {
+    font-size: 18px;
+}
+
+.total-price {
+    color: #f7941d;
+}
+
+.buttonAndTerm {
+    display: flex;
+    flex-direction: row;
+}
+
+.buttonAndTerm .terms {
+    flex: 1;
+}
+
+.buttonAndTerm .terms a {
+    color: #3b7ddd;
+    text-decoration: none;
+}
+
+.buttonAndTerm .terms a:hover {
+    text-decoration: underline;
+}
+
+.buttonAndTerm .terms input[type="checkbox"] {
+    accent-color: #0d3164;
+    margin-right: 6px;
+}
+
+.confirm-payment-btn {
+    background-color: #d70018;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 32px;
+    cursor: pointer;
+    width: 250px;
+    transition: background-color 0.2s ease;
+}
+
+.buttonAndTerm .confirm-payment-btn:hover {
+    background-color: #b80015;
+}
+
+.buttonAndTerm .confirm-payment-btn:active {
+    background-color: #990012;
+}
+
+/*chon voucher*/
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}
+
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 101;
+    display: none;
+    box-sizing: border-box;
+    width: 40vw;
+    overflow: hidden;
+}
+.popup h3{
+    text-align: center;
+    color: #0d3164;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 17px;
+}
+.popup .search{
+    display: flex;
+    gap: 10px;
+
+}
+.popup .search input{
+    flex: 1;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+}
+.popup .search button {
+    height: 36px;
+    background-color: #0d3164;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0 16px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.popup .listVoucher{
+    margin-top: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.popup .listVoucher .title{
+    margin-bottom: 30px;
+}
+.popup .listVoucher .title .ten{
+    float: left;
+    font-size: 15px;
+    color: #0d3164;
+    font-weight: bold;
+}
+.popup .listVoucher .title .numberAply{
+    float: right;
+    font-size: 15px;
+    color: #a5a4a4;
+    margin-right: 15px;
+}
+.popup .listVoucher .list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+.popup .toggle-btnDis,.toggle-btnShip {
+    display: block;
+    margin: 10px auto 0;
+    width: fit-content;
+    padding: 6px 12px;
+    background: white;
+    color: #0d3164;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #0d3164;
+}
+.toast-error {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(216, 0, 12, 0.95);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+    animation: fadeInScale 0.3s ease;
+}
+
+/* animation vào */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* animation ra */
+.toast-hide {
+    animation: fadeOut 0.4s ease forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -40%) scale(0.9);
+    }
+}
+
+
+
