@@ -10,7 +10,7 @@ import java.net.URL;
 public class FacebookOAuthUltis {
     private static final String APP_ID = "767353226134083";
     private static final String APP_SECRET = "98f7827dde4f40bbbb5c38fe0a4e43f2";
-    private static final String REDIRECT_URI = "http://localhost:8080/YourProject/login-facebook";
+    private static final String REDIRECT_URI = "http://localhost:8080/Web_war_exploded/login-facebook";
 
     public static String getToken(String code) throws Exception {
 

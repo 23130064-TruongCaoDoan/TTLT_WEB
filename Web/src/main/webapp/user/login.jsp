@@ -46,6 +46,9 @@
                     <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png" alt="">
                     <span>Đăng nhập bằng Google</span>
                 </a>
+                <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=767353226134083&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook&scope=email,public_profile">
+                    Login with Facebook
+                </a>
             </div>
         </form>
     </div>
@@ -103,10 +106,12 @@
     const form = document.querySelector(".login");
     const userInput = document.getElementById("iUser");
     const errorDiv = document.querySelector(".error");
+
     function checkPassword(password) {
         const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
         return regex.test(password);
     }
+
     form.addEventListener("submit", function (e) {
         let hasError = false;
         errorDiv.innerText = "";
@@ -114,12 +119,10 @@
         if (userInput.value.trim() === "") {
             errorDiv.innerText = "Vui lòng nhập email";
             hasError = true;
-        }
-        else if (passInput.value.trim() === "") {
+        } else if (passInput.value.trim() === "") {
             errorDiv.innerText = "Vui lòng nhập mật khẩu";
             hasError = true;
-        }
-        else if (passInput.value.length < 8 && !checkPassword(passInput.value.trim())) {
+        } else if (passInput.value.length < 8 && !checkPassword(passInput.value.trim())) {
             errorDiv.innerText = "Mật khẩu phải có ít nhất 8 ký tự, có số và kí tự đặc biệt";
             hasError = true;
         }
@@ -127,8 +130,6 @@
             e.preventDefault();
         }
     });
-
-
 
 
 </script>
