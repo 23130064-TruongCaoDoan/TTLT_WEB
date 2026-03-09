@@ -96,7 +96,6 @@
                     </div>
                 </div>
 
-                <!-- ThanhVien -->
                 <div class="checkout-section">
                     <div class="section-title">THÀNH VIÊN</div>
                     <div class="member-info">
@@ -139,8 +138,6 @@
                     </div>
                 </div>
 
-
-                <!-- cac san pham mua  -->
                 <div class="checkout-section">
                     <div class="section-title">KIỂM TRA LẠI ĐƠN HÀNG</div>
                     <div class="order-review">
@@ -220,7 +217,7 @@
                         <input type="hidden" name="shipType" id="finalShipType">
                         <input type="hidden" name="usePoint" id="finalUsePoint">
                         <input type="hidden" name="orderNote" id="finalNote">
-
+                            <input type="hidden" name="payment" id="finalPayment">
                         <input type="hidden" name="shipFee" value="${shipFee}">
                         <input type="hidden" name="pointUsed" value="${pointUsed}">
                         <input type="hidden" name="finalTotal" value="${finalTotal}">
@@ -234,7 +231,6 @@
                             </label>
                         </div>
                         <button type="submit" class="confirm-payment-btn">Xác nhận thanh toán</button>
-
                     </div>
                 </form>
             </div>
@@ -654,6 +650,9 @@
 
         document.getElementById("finalNote").value =
             document.querySelector('textarea[name="orderNote"]').value;
+
+        document.getElementById("finalPayment").value = document.querySelector("input[name='payment']:checked").value;
+
     });
 
 

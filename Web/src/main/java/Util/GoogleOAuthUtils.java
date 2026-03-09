@@ -9,14 +9,30 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import model.GoogleUser;
 
+import java.io.FileInputStream;
 import java.util.Collections;
+import java.util.Properties;
 
 public class GoogleOAuthUtils {
 
-    private static final String CLIENT_ID = "";
-    private static final String CLIENT_SECRET = "";
-    private static final String REDIRECT_URI = "http://localhost:8080/Web_war_exploded/login-google";
+    private static String CLIENT_ID;
+    private static String CLIENT_SECRET;
+    private static String REDIRECT_URI = "http://localhost:8080/Web_war_exploded/login-google";
 
+    static {
+        try {
+            Properties prop = new Properties();
+            prop.load(GoogleOAuthUtils.class.getClassLoader().getResourceAsStream("config.properties"));
+            CLIENT_ID = prop.getProperty("google.client.id");
+            CLIENT_SECRET = prop.getProperty("google.client.secret");
+
+            CLIENT_ID = prop.getProperty("google.client.id");
+            CLIENT_SECRET = prop.getProperty("google.client.secret");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static String getToken(String code) throws Exception {
         GoogleTokenResponse tokenResponse =
                 new GoogleAuthorizationCodeTokenRequest(

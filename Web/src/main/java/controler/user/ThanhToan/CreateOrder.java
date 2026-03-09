@@ -29,6 +29,7 @@ public class CreateOrder extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
         String mode = request.getParameter("mode");
+        String paymentMethod = request.getParameter("payment");
 
         Cart cart;
         if ("buynow".equals(mode)) {
@@ -76,8 +77,7 @@ public class CreateOrder extends HttpServlet {
 
 
         OrderService orderService = new OrderService();
-
-        boolean check = orderService.addOrder(userId, finalTotal, note, disid, shipid, addressId, shipType, shipFee, deliveryRange, cart);
+        boolean check = orderService.addOrder(userId, finalTotal, note,paymentMethod,disid, shipid, addressId, shipType, shipFee, deliveryRange, cart);
         System.out.println("CREATE ORDER RESULT = " + check);
         session.removeAttribute("appliedDiscountVoucher");
         session.removeAttribute("appliedShipVoucher");

@@ -27,8 +27,8 @@ public class OrderService {
         this.orderItemDao = new OrderItemDao();
     }
 
-    public boolean addOrder(int userId, double totalAmount, String note, Integer dis, Integer ship, Integer address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
-        int order_id = orderDao.addOrder(userId, totalAmount, note, dis, ship);
+    public boolean addOrder(int userId, double totalAmount, String note, String paymentMethod,Integer dis, Integer ship, Integer address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
+        int order_id = orderDao.addOrder(userId, totalAmount, note, dis, ship,paymentMethod);
         if (order_id != -1) {
             bookService.updateQuantity(cart);
             bookService.updateStock(cart);
