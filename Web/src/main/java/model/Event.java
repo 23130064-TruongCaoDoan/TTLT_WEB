@@ -215,7 +215,7 @@ public class Event {
             sb.append("Độ tuổi: ").append(age_apply);
         }
 
-        return sb.toString(); // KHÔNG có default nữa
+        return sb.toString();
     }
 
 }

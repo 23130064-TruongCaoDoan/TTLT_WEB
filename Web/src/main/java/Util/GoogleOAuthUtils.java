@@ -13,8 +13,8 @@ import java.util.Collections;
 
 public class GoogleOAuthUtils {
 
-    private static final String CLIENT_ID = "";
-    private static final String CLIENT_SECRET = "";
+    private static final String CLIENT_ID = "846603349467";
+    private static final String CLIENT_SECRET = "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";
     private static final String REDIRECT_URI = "http://localhost:8080/Web_war_exploded/login-google";
 
     public static String getToken(String code) throws Exception {

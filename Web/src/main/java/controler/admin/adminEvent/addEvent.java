@@ -14,9 +14,9 @@ import java.util.List;
 
 @WebServlet(name = "addEvent", value = "/addEvent")
 @MultipartConfig(
-        fileSizeThreshold = 1024 * 1024,   // 1MB
-        maxFileSize = 10 * 1024 * 1024,    // 10MB
-        maxRequestSize = 20 * 1024 * 1024 // 20MB
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 10 * 1024 * 1024,
+        maxRequestSize = 20 * 1024 * 1024
 )
 public class addEvent extends HttpServlet {
     @Override
@@ -104,18 +104,12 @@ public class addEvent extends HttpServlet {
                 return;
             }
 
-
             if (age != null && !age.trim().isEmpty()) {
-                // bỏ khoảng trắng: "18, 20,21" → "18,20,21"
                 age = age.replaceAll("\\s+", "");
-
-                // chỉ cho phép: số,số,số...
                 if (!age.matches("^\\d+(,\\d+)*$")) {
                     writeError(response, "Độ tuổi phải là các số, ngăn cách bằng dấu phẩy (VD: 18,20,21)");
                     return;
                 }
-
-                // kiểm tra từng tuổi hợp lệ
                 String[] ages = age.split(",");
                 for (String a : ages) {
                     int ageValue = Integer.parseInt(a);
@@ -125,9 +119,6 @@ public class addEvent extends HttpServlet {
                     }
                 }
             }
-
-
-
             VoucherService voucherService = new VoucherService();
 
             voucherParam = (voucherParam != null && !voucherParam.trim().isEmpty())
@@ -158,8 +149,6 @@ public class addEvent extends HttpServlet {
                     return;
                 }
             }
-
-
             String contentType = imagePart.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
                 writeError(response, "File upload phải là hình ảnh");
@@ -186,7 +175,6 @@ public class addEvent extends HttpServlet {
             List<Integer> listU = userService.getAllUserIds();
 
             List<Integer> listUPoint = userService.getUserPoint(minPoint);
-
 
             boolean success = eventService.addEvent(
                     code.trim(),

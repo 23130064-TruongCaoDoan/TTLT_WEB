@@ -39,14 +39,20 @@
             <div class="forget"><a href="" class="qmk"><span>Quên mật khẩu</span></a></div>
             <div class="buttonLoginAndSignUp">
                 <button type="submit" class="dangNhap">Đăng nhập</button>
+                <div id="or">OR</div>
+                <div class="login-google-and_facebook">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Web_war_exploded/login-google&response_type=code&client_id=846603349467-fma7pe8c0b03i56hibab7psvktbnluj7.apps.googleusercontent.com&approval_prompt=force">
+                        <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png"
+                             alt="google">
+                    </a>
+                    <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=767353226134083&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook&scope=email,public_profile">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/960px-2023_Facebook_icon.svg.png"
+                             alt="facebook">
+                    </a>
+                </div>
                 <div class="signUp"><a href="<c:url value='dangki' />"><span>Đăng ký</span></a></div>
             </div>
-            <div class="login-google">
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Web_war_exploded/login-google&response_type=code&client_id=846603349467-fma7pe8c0b03i56hibab7psvktbnluj7.apps.googleusercontent.com&approval_prompt=force">
-                    <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png" alt="">
-                    <span>Đăng nhập bằng Google</span>
-                </a>
-            </div>
+
         </form>
     </div>
 </div>
@@ -103,10 +109,12 @@
     const form = document.querySelector(".login");
     const userInput = document.getElementById("iUser");
     const errorDiv = document.querySelector(".error");
+
     function checkPassword(password) {
         const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
         return regex.test(password);
     }
+
     form.addEventListener("submit", function (e) {
         let hasError = false;
         errorDiv.innerText = "";
@@ -114,12 +122,10 @@
         if (userInput.value.trim() === "") {
             errorDiv.innerText = "Vui lòng nhập email";
             hasError = true;
-        }
-        else if (passInput.value.trim() === "") {
+        } else if (passInput.value.trim() === "") {
             errorDiv.innerText = "Vui lòng nhập mật khẩu";
             hasError = true;
-        }
-        else if (passInput.value.length < 8 && !checkPassword(passInput.value.trim())) {
+        } else if (passInput.value.length < 8 && !checkPassword(passInput.value.trim())) {
             errorDiv.innerText = "Mật khẩu phải có ít nhất 8 ký tự, có số và kí tự đặc biệt";
             hasError = true;
         }
@@ -127,8 +133,6 @@
             e.preventDefault();
         }
     });
-
-
 
 
 </script>
