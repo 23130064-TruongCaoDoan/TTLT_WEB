@@ -122,7 +122,7 @@ public class EventDao extends BaseDao {
                     .bind("special_voucher", specialVoucher)
                     .bind("min_point", minPoint)
                     .bind("age_apply", age)
-                    .executeAndReturnGeneratedKeys("id")   // 🔥 CỘT PK
+                    .executeAndReturnGeneratedKeys("id")
                     .mapTo(Integer.class)
                     .one();
 
@@ -130,7 +130,6 @@ public class EventDao extends BaseDao {
                 return false;
             }
 
-            // 2. INSERT event_books
             for (Book b : listBookEvent) {
                 handle.createUpdate("""
                                     INSERT INTO event_books(event_id, book_id)

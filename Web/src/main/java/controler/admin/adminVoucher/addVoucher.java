@@ -118,7 +118,7 @@ public class addVoucher extends HttpServlet {
                 );
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Ghi lại stack trace
+            e.printStackTrace();
             response.getWriter().write("{\"success\":false,\"message\":\"Đã xảy ra lỗi\"}");
         }
     }

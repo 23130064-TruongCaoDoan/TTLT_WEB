@@ -46,8 +46,6 @@ public class EventService {
         }
     }
 
-
-
     public boolean existsByCode(String code) {
         return eventDao.existsByCode(code);
     }

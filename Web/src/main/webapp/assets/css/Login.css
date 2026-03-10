@@ -1,5 +1,5 @@
 #content {
-    height: 25vw;
+    height: 30vw;
 }
 #content .login{
     margin: 20px auto;
@@ -204,29 +204,28 @@
     70%  { transform: scale(1.05); }
     100% { transform: scale(1); opacity: 1; }
 }
-.login-google{
-    display: block;
-    border: 1px solid black ;
+.login-google-and_facebook{
+    display: flex;
+    flex-direction: row;
     width: fit-content;
+    gap: 10px;
     margin:0 auto;
     padding: 5px 10px;
     border-radius: 6px;
     margin-top: 3px;
+    margin-bottom: 15px;
 }
-.login-google a{
+.login-google-and_facebook a{
     display: flex;
     text-decoration: none;
     color: black;
     gap: 8px;
 }
-.login-google img{
-    height: 24px;
-    width: 24px;
-    float: left;
+.login-google-and_facebook img{
+    height: 30px;
+    width: 30px;
 }
-
-.login-google span{
-    display: flex;
-    align-items: center;
-    float: right;
+#or {
+    font-size: 10px;
+    color: gray;
 }

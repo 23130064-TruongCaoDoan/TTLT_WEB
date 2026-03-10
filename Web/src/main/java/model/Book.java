@@ -70,7 +70,6 @@ public class Book {
         this.authorId = authorId;
     }
 
-    // Getter và Setter cho tất cả thuộc tính
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
