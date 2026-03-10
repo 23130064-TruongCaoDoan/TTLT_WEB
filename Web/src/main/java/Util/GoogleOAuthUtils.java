@@ -9,7 +9,6 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import model.GoogleUser;
 
-import java.io.FileInputStream;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -22,10 +21,7 @@ public class GoogleOAuthUtils {
     static {
         try {
             Properties prop = new Properties();
-            prop.load(GoogleOAuthUtils.class.getClassLoader().getResourceAsStream("config.properties"));
-            CLIENT_ID = prop.getProperty("google.client.id");
-            CLIENT_SECRET = prop.getProperty("google.client.secret");
-
+            prop.load(GoogleOAuthUtils.class.getClassLoader().getResourceAsStream("google.properties"));
             CLIENT_ID = prop.getProperty("google.client.id");
             CLIENT_SECRET = prop.getProperty("google.client.secret");
 

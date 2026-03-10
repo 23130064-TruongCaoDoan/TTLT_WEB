@@ -5,6 +5,8 @@ import Cart.CartItem;
 import Service.BookService;
 import Service.OrderService;
 import Service.UserService;
+import Util.Token8;
+import Util.VNPayUtils;
 import jakarta.servlet.*;
         import jakarta.servlet.http.*;
         import jakarta.servlet.annotation.*;
@@ -20,6 +22,7 @@ public class CreateOrder extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        doPost(request, response);
     }
 
     @Override
@@ -30,6 +33,7 @@ public class CreateOrder extends HttpServlet {
         User user = (User) session.getAttribute("user");
         String mode = request.getParameter("mode");
         String paymentMethod = request.getParameter("payment");
+        String flagVNPay = request.getParameter("fromVNPay");
 
         Cart cart;
         if ("buynow".equals(mode)) {
@@ -75,10 +79,29 @@ public class CreateOrder extends HttpServlet {
             userService.updateDiem(userId, pointUsed);
         }
 
+        //Xu ly VNPay
+
+        if (flagVNPay != null) {
+            String code = request.getParameter("vnp_ResponseCode");
+            if (!"00".equals(code)) {
+                String msg = "Thanh Toán không thành công";
+                request.setAttribute("error", msg);
+                request.getRequestDispatcher("/ThanhToan").forward(request, response);
+                return;
+            }
+        }
+        if ("vnpay".equals(paymentMethod) && flagVNPay == null) {
+            Token8  token = new Token8();
+            long amount = (long) finalTotal;
+            String url = VNPayUtils.createPaymentUrl(token.generateToken8(), amount);
+            response.sendRedirect(url);
+            return;
+        }
+
 
         OrderService orderService = new OrderService();
         boolean check = orderService.addOrder(userId, finalTotal, note,paymentMethod,disid, shipid, addressId, shipType, shipFee, deliveryRange, cart);
-        System.out.println("CREATE ORDER RESULT = " + check);
+
         session.removeAttribute("appliedDiscountVoucher");
         session.removeAttribute("appliedShipVoucher");
 
