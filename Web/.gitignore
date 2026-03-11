@@ -39,3 +39,5 @@ build/
 .DS_Store
 
 db.properties
+google.properties
+vnpay.properties

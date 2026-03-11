@@ -18,7 +18,7 @@ public class OrderDetailDAO extends BaseDao{
 
             Order order = handle.createQuery("""
                 SELECT id, user_id, order_date, status,
-                       total_amount, note,
+                       total_amount, note, payment_method,
                        dis_voucher_id, ship_voucher_id
                 FROM orders
                 WHERE id = :orderId

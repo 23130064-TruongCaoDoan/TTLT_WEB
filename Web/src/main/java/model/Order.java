@@ -9,6 +9,7 @@ public class Order {
     private String status;
     private double totalAmount;
     private String note;
+    private String paymentMethod;
     private String disVoucherId;
     private String shipVoucherId;
     private boolean reviewed;
@@ -93,5 +94,12 @@ public class Order {
     }
     public void setReviewed(boolean reviewed) {
         this.reviewed = reviewed;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
