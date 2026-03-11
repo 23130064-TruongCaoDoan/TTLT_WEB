@@ -25,7 +25,7 @@ public class VNPayUtils {
             params.put("vnp_OrderType", "other");
 
             params.put("vnp_Locale", "vn");
-            params.put("vnp_ReturnUrl", VNPayConfig.RETURN_URL+ "?fromVNPay=1&payment=vnpay");
+            params.put("vnp_ReturnUrl", VNPayConfig.RETURN_URL);
 
             params.put("vnp_IpAddr", "127.0.0.1");
 

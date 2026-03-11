@@ -9,7 +9,7 @@ public class VNPayConfig {
     public static String HASH_SECRET;
     public static String URL;
 
-    public static String RETURN_URL = "http://localhost:8080/Web_war_exploded/CreateOrder";
+    public static String RETURN_URL = "http://localhost:8080/Web_war_exploded/CreateOrder?fromVNPay=1&payment=vnpay";
 
         static {
             try {
