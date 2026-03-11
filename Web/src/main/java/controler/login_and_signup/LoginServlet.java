@@ -1,6 +1,7 @@
 package controler.login_and_signup;
 
 import Service.UserService;
+import Service.NotificationService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -33,6 +34,11 @@ public class LoginServlet extends HttpServlet {
            }
            HttpSession session = request.getSession();
            session.setAttribute("user",user);
+
+           NotificationService notificationService = new NotificationService();
+           int count = notificationService.countNotification((user.getId()));
+           session.setAttribute("numNotiFy", count);
+
            if(userService.checkRole(user)){
                response.sendRedirect("ThongKe");
            }

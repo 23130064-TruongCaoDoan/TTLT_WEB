@@ -36,5 +36,9 @@ public class NotificationService {
     public List<Notification> getUserNotifications(int userId) {
         return notificationDAO.findByUser(userId);
     }
+
+    public int countNotification(int userId) {
+        return notificationDAO.countByUser(userId);
+    }
 }
 

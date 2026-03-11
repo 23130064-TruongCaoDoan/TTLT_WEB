@@ -165,7 +165,19 @@ body{
 }
 #page-header .thongbao i,#page-header .gio i{
 }
-#page-header .thongbao .number, #page-header .gio .number{
+
+#page-header .thongbao{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#page-header .thongbao .number{
+    color: red;
+    margin-top: 0;
+    font-size: 10px;
+}
+#page-header .gio .number{
     margin-top: 0;
     color: red;
     font-size: 10px;

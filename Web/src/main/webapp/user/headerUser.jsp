@@ -67,7 +67,10 @@
                     <span>Giỏ hàng</span>
                 </a>
                 <a href="thong-bao" class="button bt thongbao">
-                    <i class="fa-solid fa-bell"><span class="number">${numNotiFy}</span></i>
+                    <i class="fa-solid fa-bell"></i>
+                    <c:if test="${numNotiFy > 0}">
+                    <span class="number">${sessionScope.numNotiFy}</span>
+                    </c:if>
                     <span>Thông báo</span>
                 </a>
             </div>
