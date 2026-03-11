@@ -5,7 +5,6 @@ public class MyOrderDTO {
     private String orderDate;
     private String status;
     private double totalAmount;
-
     private int totalQuantity;
     private String firstBookImage;
     private boolean reviewed;

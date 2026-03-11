@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @WebServlet(name = "OrderDetailServlet", value = "/my-order")
 public class OrderDetailServlet extends HttpServlet {
-    private final OrderService service = new OrderService();
+    private final OrderService orderService = new OrderService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -18,7 +18,7 @@ public class OrderDetailServlet extends HttpServlet {
 
         int orderId = Integer.parseInt(req.getParameter("id"));
 
-        OrderDetailDTO dto = service.getOrderDetail(orderId);
+        OrderDetailDTO dto = orderService.getOrderDetail(orderId);
         req.setAttribute("dto", dto);
 
         req.getRequestDispatcher("/user/user-order-detail.jsp")

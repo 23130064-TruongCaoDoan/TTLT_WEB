@@ -80,7 +80,7 @@
                     </div>
                     <div class="payment-method">
                         <h3>Phương thức thanh toán</h3>
-                        <p>Thanh toán khi nhận hàng</p>
+                        <p>${dto.order.paymentMethod}</p>
                     </div>
                     <div class="order-price">                   
                         <h3>Tổng tiền</h3>
