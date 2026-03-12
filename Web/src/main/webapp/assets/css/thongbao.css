@@ -57,3 +57,11 @@
     font-weight: bold;
     color:black;
 }
+.noti-new{
+    background:#eef5ff;
+    font-weight:600;
+}
+
+.noti-old{
+    background:white;
+}

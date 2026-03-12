@@ -35,7 +35,8 @@
                 <hr/>
                 <div style="overflow: scroll;height: 47vh">
                     <c:forEach var="n" items="${notifications}">
-                        <div class="inform-card noti-item"
+                        <div class="inform-card noti-item ${!n.read ? 'noti-new' : 'noti-old'}"
+                             data-id="${n.notiId}"
                              data-title="${n.title}"
                              data-content="${n.noti}"
                              data-time="${n.createdAt}">
@@ -88,12 +89,39 @@
 
         document.querySelectorAll(".noti-item").forEach(item => {
             item.addEventListener("click", () => {
+
+                const id = item.dataset.id
+
                 titleEl.innerText = item.dataset.title;
                 contentEl.innerText = item.dataset.content;
                 timeEl.innerText = item.dataset.time;
 
                 overlay.style.display = "block";
                 popup.style.display = "block";
+
+                item.classList.remove("noti-new");
+                item.classList.add("noti-old");
+
+                fetch("${pageContext.request.contextPath}/read-notification?id=" + id)
+                .then(() => {
+
+                    const badge = document.getElementById("noti-badge");
+
+                    if (badge) {
+                        let count = parseInt(badge.innerText);
+
+                        if (count > 0) {
+                            count--;
+                            badge.innerText = count;
+
+                            if (count === 0) {
+                                badge.style.display = "none";
+                            }
+                        }
+                    }
+
+                })
+                .catch(err => console.log(err));
             });
         });
 

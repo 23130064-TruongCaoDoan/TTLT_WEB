@@ -68,8 +68,8 @@
                 </a>
                 <a href="thong-bao" class="button bt thongbao">
                     <i class="fa-solid fa-bell"></i>
-                    <c:if test="${numNotiFy > 0}">
-                    <span class="number">${sessionScope.numNotiFy}</span>
+                    <c:if test="${sessionScope.numNotiFy > 0}">
+                    <span class="number" id="noti-badge">${sessionScope.numNotiFy}</span>
                     </c:if>
                     <span>Thông báo</span>
                 </a>
