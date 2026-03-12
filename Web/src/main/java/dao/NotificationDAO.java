@@ -37,4 +37,17 @@ public class NotificationDAO extends BaseDao {
                         .list()
         );
     }
+
+    public int countByUser(int userId) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT COUNT(*)
+                        FROM notification
+                        WHERE user_id = :uid 
+                        """)
+                        .bind("uid", userId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
 }
