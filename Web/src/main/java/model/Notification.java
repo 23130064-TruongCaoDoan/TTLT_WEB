@@ -9,6 +9,7 @@ public class Notification {
     private String title;
     private String noti;
     private String createdAt;
+    private boolean read;
 
     public Notification() {
     }
@@ -58,6 +59,14 @@ public class Notification {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }
 

@@ -40,5 +40,17 @@ public class NotificationService {
     public int countNotification(int userId) {
         return notificationDAO.countByUser(userId);
     }
+
+    public int countUnread(int userId){
+        return notificationDAO.countUnread(userId);
+    }
+
+    public void readAll(int userId){
+        notificationDAO.markAsRead(userId);
+    }
+
+    public void markReadById(int id){
+        notificationDAO.markReadById(id);
+    }
 }
 

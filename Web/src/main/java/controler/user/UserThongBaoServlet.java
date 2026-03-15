@@ -24,17 +24,15 @@ public class UserThongBaoServlet extends HttpServlet {
             return;
         }
 
+//        service.readAll(user.getId());
+//        req.getSession().setAttribute("numNotiFy", 0);
+
         List<Notification> list =
                 service.getUserNotifications(user.getId());
 
         int count = service.countNotification(user.getId());
 
         req.setAttribute("notifications", list);
-
-        HttpSession session = req.getSession();
-        session.setAttribute("numNotiFy", 0);
-
-        //req.setAttribute("numNotiFy", count);
 
         req.getRequestDispatcher("/user/user-thongbao.jsp")
                 .forward(req, resp);
