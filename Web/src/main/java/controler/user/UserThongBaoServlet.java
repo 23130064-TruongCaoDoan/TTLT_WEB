@@ -30,6 +30,8 @@ public class UserThongBaoServlet extends HttpServlet {
         List<Notification> list =
                 service.getUserNotifications(user.getId());
 
+        int count = service.countNotification(user.getId());
+
         req.setAttribute("notifications", list);
 
         req.getRequestDispatcher("/user/user-thongbao.jsp")
