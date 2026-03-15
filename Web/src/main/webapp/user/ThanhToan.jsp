@@ -451,7 +451,6 @@
 
 
 
-    //voucher
 
     //voucher
 
@@ -472,7 +471,7 @@
     });
 
 
-    // hiển thị chi tiết voucher
+
     const detailBtns = document.querySelectorAll(".voucher-detail");
     const voucherPopup = document.getElementById("voucherPopup");
     const cancelBtn = document.querySelector("#voucherPopup .cancel");
@@ -481,7 +480,7 @@
         btn.addEventListener("click", () => {
             const voucherItem = btn.closest(".voucher-item");
 
-            // Lấy dữ liệu từ data attributes
+
             const description = voucherItem.dataset.description || voucherItem.querySelector("b").textContent;
             const code = voucherItem.dataset.code || voucherItem.querySelector(".voucher-code").textContent;
             const start = voucherItem.dataset.start || "";
@@ -490,13 +489,13 @@
             const categories = voucherItem.dataset.categories;
             const publishers = voucherItem.dataset.publishers;
 
-            // Cập nhật nội dung popup
+
             document.getElementById("detailDescription").textContent = description;
             document.getElementById("detailCode").textContent = code;
             document.getElementById("detailExpiry").textContent = 'Hiệu lực: ' + start + ' - ' + endDate;
             document.getElementById("detailMinPrice").textContent = minPrice + " đ";
 
-            // Xử lý danh mục và NXB (nếu có)
+
             const categoriesLi = document.getElementById("detailCategoriesLi");
             const publishersLi = document.getElementById("detailPublishersLi");
 
