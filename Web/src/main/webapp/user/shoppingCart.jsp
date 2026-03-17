@@ -323,7 +323,6 @@
         });
     });
 
-    // Đóng popup điều kiện
     cancelBtn.addEventListener("click", () => {
         voucherPopup.style.display = "none";
         popup.style.display = "block";
