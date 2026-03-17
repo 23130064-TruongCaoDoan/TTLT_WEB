@@ -427,15 +427,15 @@
             return formatDate(from) + " – " + formatDate(to);
         }
 
-        // TÍNH RIÊNG
-        const fastRange = calcRange(1, 2); // nhanh: T+2 → T+3
-        const slowRange = calcRange(1, 5); // chậm: T+2 → T+6
 
-        // HIỂN THỊ RIÊNG
+        const fastRange = calcRange(1, 2);
+        const slowRange = calcRange(1, 5);
+
+
         document.getElementById("fastDate").textContent = fastRange;
         document.getElementById("slowDate").textContent = slowRange;
 
-        // MẶC ĐỊNH LẤY THEO RADIO ĐANG CHỌN
+
         function updateHidden() {
             const checked = document.querySelector('input[name="ship"]:checked');
             document.getElementById("deliveryRange").value =
@@ -452,7 +452,6 @@
 
 
 
-    //voucher
 
     const openPopup = document.querySelector(".more-voucher");
     const overlay = document.getElementById("overlay");
@@ -571,7 +570,7 @@
         });
     });
 
-    //
+
 
     const vnpay = document.querySelector(".vnpay");
     const momo = document.querySelector(".momo");
