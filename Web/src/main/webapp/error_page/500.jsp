@@ -11,6 +11,6 @@
     <h1 class="code">500</h1>
     <h2>Lỗi hệ thống</h2>
     <p>Xin lỗi! Máy chủ đang gặp sự cố khi xử lý yêu cầu của bạn.</p>
-    <a href="/home" class="home-btn">Quay về trang chủ</a></div>
+    <a href="/Web_war_exploded/home" class="home-btn">Quay về trang chủ</a></div>
 </body>
 </html>
