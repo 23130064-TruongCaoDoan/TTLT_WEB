@@ -45,7 +45,7 @@ public class ThongKeDao extends BaseDao {
                 FROM `user` u
                 JOIN orders o ON o.user_id = u.id
                 WHERE u.role = 0
-                  AND o.status = 'COMPLETED' AND o.order_date = :year
+                  AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
                 GROUP BY u.id, u.name, u.email, u.point
                 ORDER BY totalSpent DESC
                 LIMIT 10
@@ -84,6 +84,7 @@ public class ThongKeDao extends BaseDao {
                         .one()
         );
     }
+
     public Optional<UserWithTotalSpentDTO> getTopCustomer(LocalDate from, LocalDate to) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
@@ -121,7 +122,7 @@ public class ThongKeDao extends BaseDao {
             JOIN orders o ON o.user_id = u.id
             WHERE u.role = 0
               AND o.status = 'COMPLETED'
-              AND o.order_date =  :year
+              AND YEAR(o.order_date) =  :year
             GROUP BY u.id, u.name, u.email, u.point
             ORDER BY totalSpent DESC
             LIMIT 1
@@ -172,7 +173,7 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND o.order_date = :year
+            WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
             GROUP BY b.id
             ORDER BY totalSold DESC
             LIMIT 1
@@ -223,7 +224,7 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND o.order_date = :year
+            WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
             GROUP BY b.id
             ORDER BY totalSold ASC
             LIMIT 1
@@ -274,7 +275,7 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND o.order_date = :year
+            WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
             GROUP BY b.id
             ORDER BY totalSold DESC
             LIMIT 10
@@ -326,6 +327,11 @@ public class ThongKeDao extends BaseDao {
                         .mapToBean(RevenueDTO.class)
                         .list()
         );
+    }
+    public List<String> listYears() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )
+                .mapTo(String.class).list());
     }
 
 

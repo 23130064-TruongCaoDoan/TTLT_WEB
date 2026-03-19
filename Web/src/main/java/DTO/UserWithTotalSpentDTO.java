@@ -64,4 +64,17 @@ public class UserWithTotalSpentDTO {
     public void setTotalSpent(double totalSpent) {
         this.totalSpent = totalSpent;
     }
+
+    @Override
+    public String toString() {
+        return "UserWithTotalSpentDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", point=" + point +
+                ", totalSpent=" + totalSpent +
+                ", role=" + role +
+                ", status=" + status +
+                '}';
+    }
 }

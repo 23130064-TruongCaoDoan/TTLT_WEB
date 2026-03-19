@@ -56,5 +56,7 @@ public class ThongKeService {
     public List<RevenueDTO> getRevenue(String type) {
         return dao.getRevenue(type);
     }
-
+    public List<String> getListYear(){
+        return dao.listYears();
+    }
 }
