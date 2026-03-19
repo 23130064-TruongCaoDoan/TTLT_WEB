@@ -24,7 +24,7 @@
 .thongke-container .filter-bar {
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 25px;
     gap: 10px;
 }
@@ -159,14 +159,12 @@
     animation: fadeIn 0.3s ease;
 }
 
-/* Nút đóng */
 .close {
     float: right;
     font-size: 25px;
     cursor: pointer;
 }
 
-/* Bảng */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -228,3 +226,20 @@ table thead {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+#dateSelect{
+    display: flex;
+    justify-content: left;
+}
+#dateSelect:hover{
+    cursor: pointer;
+}
+#dateSelect button{
+    background-color: #0a254b;
+    color: white;
+    border-radius: 5px;
+}
+
+#dateSelect div input:hover, button:hover{
+    cursor: pointer;
+}
+

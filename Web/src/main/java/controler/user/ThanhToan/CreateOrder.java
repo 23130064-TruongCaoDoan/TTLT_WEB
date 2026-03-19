@@ -136,7 +136,13 @@ public class CreateOrder extends HttpServlet {
             }
         }
 
-
+        if(paymentMethod.equals("vnpay")){
+            paymentMethod = "Thanh toán qua VNPay";
+        }else if(paymentMethod.equals("momo")){
+            paymentMethod = "Thanh toán qua Momo";
+        }else{
+            paymentMethod ="Thanh toán khi nhận hàng";
+        }
         OrderService orderService = new OrderService();
         boolean check = orderService.addOrder(userId, finalTotal, note,paymentMethod,disid, shipid, addressId, shipType, shipFee, deliveryRange, cart);
 
