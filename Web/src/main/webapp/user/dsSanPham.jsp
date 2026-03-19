@@ -32,33 +32,74 @@
                 Sản Phẩm
             </c:if></h1>
         <c:if test="${not empty icon}">
-        <img src="${icon}" alt="">
+            <img src="${icon}" alt="">
         </c:if>
     </div>
     <div class="content">
         <div class="filter">
-            <div class="recipient">
-                <div class="filter-title"><h2>Bộ lọc</h2></div>
-                <hr>
-                <div class="filter-header" onclick="toggleOptions()">Đối tượng</div>
-                <div class="filter-options" id="options">
-                    <button data-age="0">Trẻ sơ sinh</button>
-                    <button data-age-from="1" data-age-to="3">Trẻ 1-3 tuổi</button>
-                    <button data-age-from="4">Trẻ >4 tuổi</button>
+
+            <div class="filter-title"><h2>Bộ lọc</h2></div>
+            <hr>
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggle('categoryBox')">Thể loại</div>
+                <div class="filter-options" id="categoryBox">
+                    <c:forEach var="c" items="${categories}">
+                        <label><input type="checkbox" value="${c}"> ${c}</label>
+                    </c:forEach>
                 </div>
             </div>
-            <div class="occasions">
-                <hr>
-                <div class="filter-header" onclick="toggleOptions2()">Theo thể loại</div>
-                <div class="filter-options" id="options-2">
-                    <button data-category="Truyện tranh">Truyện tranh</button>
-                    <button data-category="Sách giáo dục">Sách giáo dục</button>
-                    <button data-category="Sách ảnh">Sách ảnh</button>
-                    <button data-category="Giáo dục">Giáo dục</button>
-                    <button data-category="Sách tô màu">Sách tô màu</button>
+
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggle('publisherBox')">Nhà xuất bản</div>
+                <div class="filter-options" id="publisherBox">
+                    <c:forEach var="p" items="${publishers}">
+                        <label><input type="checkbox" value="${p}"> ${p}</label>
+                    </c:forEach>
                 </div>
             </div>
+
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggle('authorBox')">Tác giả</div>
+                <div class="filter-options" id="authorBox">
+                    <c:forEach var="a" items="${authors}">
+                        <label><input type="checkbox" value="${a}"> ${a}</label>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggle('ageBox')">Độ tuổi</div>
+                <div class="filter-options" id="ageBox">
+                    <label><input type="radio" name="age" value="0-1"> 0-1 tuổi</label>
+                    <label><input type="radio" name="age" value="1-3"> 1-3 tuổi</label>
+                    <label><input type="radio" name="age" value="4-10"> 4-10 tuổi</label>
+                    <label><input type="radio" name="age" value="10+"> >10 tuổi</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-header">Khoảng giá</div>
+                <div class="price-slider">
+                    <input type="range" id="priceRange" min="0" max="500000" step="10000">
+                    <div class="price-value">
+                        Tối đa: <span id="priceValue">0</span> đ
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-header">Năm xuất bản</div>
+                <select id="yearSelect">
+                    <option value="">-- Chọn năm --</option>
+                    <c:forEach var="y" items="${years}">
+                        <option value="${y}">${y}</option>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <button id="applyFilter" class="apply-filter">Lọc</button>
             <button class="clear-filter">Xoá bộ lọc</button>
+
         </div>
         <c:if test="${empty bookList}"><span STYLE="text-align: center; font-size: 20px; color: gray; margin: auto">KHÔNG CÓ SẢN PHẨM</span></c:if>
         <div class="listProducts">
@@ -182,56 +223,96 @@
             toast.classList.remove("show");
         }, 2000);
     }
-</script>
-<script>
-    const BASE_URL = "${pageContext.request.contextPath}/filter";
-    function toggleOptions() {
-        const el = document.getElementById("options");
-        if (el) {
-            el.style.display = el.style.display === "none" ? "block" : "none";
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const BASE_URL = "${pageContext.request.contextPath}/dsSanPham";
+        const params = new URLSearchParams(window.location.search);
+
+        document.querySelectorAll("#categoryBox input").forEach(cb => {
+            cb.onchange = () => {
+                const selected = Array.from(
+                    document.querySelectorAll("#categoryBox input:checked")
+                ).map(i => i.value);
+
+                if (selected.length > 0) {
+                    params.set("category", selected.join(","));
+                } else {
+                    params.delete("category");
+                }
+            };
+        });
+
+        document.querySelectorAll("#publisherBox input").forEach(cb => {
+            cb.onchange = () => {
+                const selected = Array.from(
+                    document.querySelectorAll("#publisherBox input:checked")
+                ).map(i => i.value);
+
+                if (selected.length > 0) {
+                    params.set("publisher", selected.join(","));
+                } else {
+                    params.delete("publisher");
+                }
+            };
+        });
+
+        document.querySelectorAll("#authorBox input").forEach(cb => {
+            cb.onchange = () => {
+                const selected = Array.from(
+                    document.querySelectorAll("#authorBox input:checked")
+                ).map(i => i.value);
+
+                if (selected.length > 0) {
+                    params.set("author", selected.join(","));
+                } else {
+                    params.delete("author");
+                }
+            };
+        });
+
+        document.querySelectorAll("input[name='age']").forEach(r => {
+            r.onchange = () => {
+                params.set("age", r.value);
+            };
+        });
+
+        const priceRange = document.getElementById("priceRange");
+        const priceValue = document.getElementById("priceValue");
+
+        if (priceRange && priceValue) {
+            priceValue.innerText = Number(priceRange.value).toLocaleString();
+
+            priceRange.oninput = function () {
+                priceValue.innerText = Number(this.value).toLocaleString();
+            };
+
+            priceRange.onchange = function () {
+                params.set("maxPrice", this.value);
+            };
         }
-    }
 
-    function toggleOptions2() {
-        const el = document.getElementById("options-2");
-        if (el) {
-            el.style.display = el.style.display === "none" ? "block" : "none";
+        const yearSelect = document.getElementById("yearSelect");
+        if (yearSelect) {
+            yearSelect.onchange = function () {
+                if (this.value) {
+                    params.set("year", this.value);
+                } else {
+                    params.delete("year");
+                }
+            };
         }
-    }
-    const params = new URLSearchParams(window.location.search);
 
-
-    document.querySelectorAll("[data-age-from]").forEach(btn => {
-        btn.onclick = () => {
-            params.set("ageFrom", btn.dataset.ageFrom);
-            if (btn.dataset.ageTo) {
-                params.set("ageTo", btn.dataset.ageTo);
-            } else {
-                params.set("ageTo", 100);
-            }
+        document.getElementById("applyFilter").onclick = () => {
             params.delete("page");
-            reload();
-        }
+            window.location.href = BASE_URL + "?" + params.toString();
+        };
+
+        document.querySelector(".clear-filter").onclick = () => {
+            window.location.href = BASE_URL;
+        };
+
     });
-
-
-
-    document.querySelectorAll("[data-category]").forEach(btn => {
-        btn.onclick = () => {
-            params.set("category", btn.dataset.category);
-            params.delete("page");
-            reload();
-        }
-    });
-
-    console.log("FILTER JS LOADED");
-    document.querySelector(".clear-filter").onclick = () => {
-        window.location.href = "${pageContext.request.contextPath}/dsSanPham";
-    };
-
-    function reload(){
-        window.location.href = BASE_URL + "?" + params.toString();
-    }
 </script>
 
 </html>
