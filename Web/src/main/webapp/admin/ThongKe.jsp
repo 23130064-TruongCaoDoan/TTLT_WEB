@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,18 +19,30 @@
             <h2>Thống kê</h2>
             <div class="filter-bar">
                 <select id="filter">
-                    <option value="month" ${type == 'month' ? 'selected' : ''}>Thống kê theo tháng</option>
-                    <option value="week"  ${type == 'week'  ? 'selected' : ''}>Thống kê theo tuần</option>
                     <option value="day"   ${type == 'day'   ? 'selected' : ''}>Thống kê theo ngày</option>
                     <option value="year"  ${type == 'year'  ? 'selected' : ''}>Thống kê theo năm</option>
                 </select>
-
+                <select name="yearFiler" id="yearSelect" style="display: none">
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+                <form  action="ThongKe" method="get" id="dateSelect">
+                    <div>
+                        <label for="fromDate">Từ ngày:</label>
+                        <input type="date" name="fromDate" id="fromDate" value="${from}" required>
+                        <label for="toDate">Đến ngày:</label>
+                        <input type="date" name="toDate" id="toDate" value="${to}" required>
+                        <button type="submit">Thống kê</button>
+                    </div>
+                </form>
             </div>
-            <div class="cards">
+            <div class="cards" id="cards">
                 <div class="card">
                     <i class="fa-solid fa-money-bill-wave"></i>
                     <h3>Tổng doanh thu</h3>
-                    <p>${totalRevenue} ₫</p>
+
+                    <p><fmt:formatNumber value="${totalRevenue}" type="number"
+                                         groupingUsed="true" maxFractionDigits="0"/> Đ</p>
                 </div>
                 <div class="card">
                     <i class="fa-solid fa-user-tie"></i>
@@ -98,7 +111,6 @@
                         </div>
                     </c:forEach>
                 </div>
-
             </div>
         </div>
     </div>
@@ -146,7 +158,6 @@
                             <th>Loại sách</th>
                             <th>Độ tuổi</th>
                             <th>Hình ảnh</th>
-                           
                         </tr>
                         </thead>
                         <tbody>
@@ -162,8 +173,6 @@
                                 <td><img src="${b.coverImgUrl}" width="60"></td>
                             </tr>
                         </c:forEach>
-
-
                         </tbody>
                     </table>
                 </div>
@@ -199,11 +208,27 @@
         });
     }
     popup_panel()
-
+</script>
+<script>
     document.getElementById("filter").addEventListener("change", function () {
-        window.location = "ThongKe?type=" + this.value;
+        if(this.value=='day') {
+            document.getElementById("dateSelect").style.display = "block";
+        }else{
+            document.getElementById("dateSelect").style.display = "none";
+            document.getElementById("yearSelect").style.display = "block";
+        }
     });
+</script>
 
+<script>
+    document.getElementById("dateSelect").addEventListener("submit", function (e) {
 
+        e.preventDefault();
+
+        let from = document.getElementById("fromDate").value;
+        let to = document.getElementById("toDate").value;
+        window.location.href = "ThongKe?type="+"day"+"&fromDate=" + from + "&toDate=" + to;
+
+    });
 </script>
 </html>
