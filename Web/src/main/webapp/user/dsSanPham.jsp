@@ -224,10 +224,16 @@
         }, 2000);
     }
 
+    function toggle(id){
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === "flex") ? "none" : "flex";
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
 
         const BASE_URL = "${pageContext.request.contextPath}/dsSanPham";
         const params = new URLSearchParams(window.location.search);
+
 
         document.querySelectorAll("#categoryBox input").forEach(cb => {
             cb.onchange = () => {

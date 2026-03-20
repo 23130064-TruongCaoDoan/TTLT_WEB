@@ -2,6 +2,7 @@ package Service;
 
 import Cart.Cart;
 import Cart.CartItem;
+import dao.AuthorDao;
 import dao.BookDao;
 import jakarta.servlet.http.Part;
 import model.Book;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class BookService {
     private BookDao hd = new BookDao();
+    private AuthorDao ad = new AuthorDao();
     private UploadService uploadService = new UploadService();
 
     public List<Book> getBooksDiscounted() {
@@ -391,5 +393,21 @@ public class BookService {
         return hd.findByCategoryAndAge(
                 category, ageFrom, ageTo, limit, offset
         );
+    }
+
+    public List<String> getAllCategories() {
+        return hd.getAllCategories();
+    }
+
+    public List<String> getAllAuthors() {
+        return ad.getAllAuthors();
+    }
+
+    public List<String> getAllPublishers() {
+        return hd.getAllPublishers();
+    }
+
+    public List<Integer> getAllYears() {
+        return hd.getAllYears();
     }
 }

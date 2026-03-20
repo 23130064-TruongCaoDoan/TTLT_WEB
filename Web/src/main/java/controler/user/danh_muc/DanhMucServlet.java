@@ -103,6 +103,12 @@ public class DanhMucServlet extends HttpServlet {
             }
         }
 
+
+        request.setAttribute("categories", bookService.getAllCategories());
+        request.setAttribute("authors", bookService.getAllAuthors());
+        request.setAttribute("publishers", bookService.getAllPublishers());
+        request.setAttribute("years", bookService.getAllYears());
+
         request.setAttribute("idEvent", idEvent);
         request.setAttribute("title", title);
         request.setAttribute("type", type);
