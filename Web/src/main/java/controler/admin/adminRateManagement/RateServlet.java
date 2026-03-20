@@ -94,7 +94,6 @@ public class RateServlet extends HttpServlet {
                 stars[i] = type.equals("all") ?commentService.countByStar(i, from, to):commentService.countByStar(i, from, to, type);
             }else{
                 stars[i] = type.equals("all") ?commentService.countByStar(i):commentService.countByStar(i,type);
-                System.out.println(stars[i]);
             }
             max = Math.max(max, stars[i]);
         }
@@ -111,9 +110,6 @@ public class RateServlet extends HttpServlet {
             listRate = type.equals("all") ? commentService.getCommentAdmin() : commentService.getCommentAdmin(type);
 
         }
-
-
-
 
         request.setAttribute("from", from);
         request.setAttribute("to", to);

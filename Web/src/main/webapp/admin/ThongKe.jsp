@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
     <link rel="stylesheet" href="assets/css_admin/ThongKe.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 <body>
 <main class="main">
@@ -92,27 +94,9 @@
                         <h3>Top 10 Khách hàng mua nhiều nhất</h3>
                     </div>
                 </div>
-
                 <div class="chart">
                     <h2>Biểu đồ doanh thu</h2>
-                    <div class="bar-container">
-                        <c:forEach items="${revenueData}" var="r">
-                            <div>
-                                <div class="figure">${r.revenue} ₫</div>
-                                <c:choose>
-                                    <c:when test="${singleBar}">
-                                        <div class="bar" style="height:250px"></div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div class="bar"
-                                             style="height:${((r.revenue - minRevenue) / rangeRevenue) * 200 + 60}px;">
-                                        </div>
-                                    </c:otherwise>
-                                </c:choose>
-                                <div class="bar-label">${r.label}</div>
-                            </div>
-                        </c:forEach>
-                    </div>
+                    <canvas id="revenueChart"></canvas>
                 </div>
             </div>
         </div>
@@ -212,12 +196,33 @@
         fetch(url)
             .then(res => res.text())
             .then(html => {
+
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(html, "text/html");
 
-                document.querySelector("#thongke-content").innerHTML = doc.querySelector("#thongke-content").innerHTML;
-                document.querySelector("#top10-customer-panel").innerHTML = doc.querySelector("#top10-customer-panel").innerHTML;
-                document.querySelector("#top10-product-panel").innerHTML = doc.querySelector("#top10-product-panel").innerHTML;
+                let newContent = doc.querySelector("#thongke-content");
+
+                document.querySelector("#thongke-content").innerHTML =
+                    newContent.innerHTML;
+
+                document.querySelector("#top10-customer-panel").innerHTML =
+                    doc.querySelector("#top10-customer-panel").innerHTML;
+
+                document.querySelector("#top10-product-panel").innerHTML =
+                    doc.querySelector("#top10-product-panel").innerHTML;
+
+                let scripts = doc.querySelectorAll("script");
+
+                scripts.forEach(s => {
+                    if (s.innerText) {
+                        eval(s.innerText);
+                    }
+                });
+
+                setTimeout(() => {
+                    initChart();
+                }, 0);
+
             });
     }
     document.getElementById("filter").addEventListener("change", function () {
@@ -248,5 +253,65 @@
         loadThongKe("ThongKe?type=day&fromDate=" + from + "&toDate=" + to);
 
     });
+</script>
+<script>
+    let chartInstance = null;
+    function initChart() {
+        const labels = [
+        <c:forEach var="l" items="${revenueChartData}">
+            "${l.label}",
+        </c:forEach>
+        ];
+
+        const revenueData = [
+            <c:forEach var="r" items="${revenueChartData}">
+                ${r.revenue},
+            </c:forEach>
+        ];
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Tổng doanh thu',
+                data: revenueData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        color: 'rgb(54, 162, 235)',
+                        anchor: 'end',
+                        align: 'end',
+                        formatter: (value) => value.toLocaleString() + "Đ",
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+        const canvas = document.getElementById("revenueChart");
+        if (!canvas) return;
+
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        chartInstance = new Chart(canvas, config);
+    }
+    initChart();
 </script>
 </html>
