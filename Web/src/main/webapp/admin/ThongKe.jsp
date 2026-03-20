@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,87 +19,101 @@
             <h2>Thống kê</h2>
             <div class="filter-bar">
                 <select id="filter">
-                    <option value="month" ${type == 'month' ? 'selected' : ''}>Thống kê theo tháng</option>
-                    <option value="week"  ${type == 'week'  ? 'selected' : ''}>Thống kê theo tuần</option>
                     <option value="day"   ${type == 'day'   ? 'selected' : ''}>Thống kê theo ngày</option>
                     <option value="year"  ${type == 'year'  ? 'selected' : ''}>Thống kê theo năm</option>
                 </select>
-
-            </div>
-            <div class="cards">
-                <div class="card">
-                    <i class="fa-solid fa-money-bill-wave"></i>
-                    <h3>Tổng doanh thu</h3>
-                    <p>${totalRevenue} ₫</p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-user-tie"></i>
-                    <h3>Khách hàng mua nhiều nhất</h3>
-                    <p><c:choose>
-                        <c:when test="${topCustomer != null}">
-                            ${topCustomer.name}
-                        </c:when>
-                        <c:otherwise>
-                            Chưa có dữ liệu
-                        </c:otherwise>
-                    </c:choose></p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-box-open"></i>
-                    <h3>Sản phẩm bán chạy nhất</h3>
-                    <p><c:choose>
-                        <c:when test="${bestBook != null}">
-                            ${bestBook.title}
-                        </c:when>
-                        <c:otherwise>
-                            Chưa có dữ liệu
-                        </c:otherwise>
-                    </c:choose>
-                    </p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-box"></i>
-                    <h3>Sản phẩm bán ít nhất</h3>
-                    <p><c:choose>
-                        <c:when test="${worstBook != null}">
-                            ${worstBook.title}
-                        </c:when>
-                        <c:otherwise>
-                            Chưa có dữ liệu
-                        </c:otherwise>
-                    </c:choose></p>
-                </div>
-                <div class="card top10-product">
-                    <i class="fa-solid fa-box"></i>
-                    <h3>Top 10 Sản phẩm bán chạy nhất</h3>
-                </div>
-                <div class="card top10-customer">
-                    <i class="fa-solid fa-user-tie"></i>
-                    <h3>Top 10 Khách hàng mua nhiều nhất</h3>
-                </div>
-            </div>
-
-            <div class="chart">
-                <h2>Biểu đồ doanh thu</h2>
-                <div class="bar-container">
-                    <c:forEach items="${revenueData}" var="r">
-                        <div>
-                            <div class="figure">${r.revenue} ₫</div>
-                            <c:choose>
-                                <c:when test="${singleBar}">
-                                    <div class="bar" style="height:250px"></div>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="bar"
-                                         style="height:${((r.revenue - minRevenue) / rangeRevenue) * 200 + 60}px;">
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
-                            <div class="bar-label">${r.label}</div>
-                        </div>
+                <select name="yearFiler" id="yearSelect" style="display: none">
+                    <c:forEach var="y" items="${listYear}">
+                        <option value="${y}">${y}</option>
                     </c:forEach>
+                </select>
+                <form  action="ThongKe" method="get" id="dateSelect">
+                    <div>
+                        <label for="fromDate">Từ ngày:</label>
+                        <input type="date" name="fromDate" id="fromDate" value="${from}" required>
+                        <label for="toDate">Đến ngày:</label>
+                        <input type="date" name="toDate" id="toDate" value="${to}" required>
+                        <button type="submit">Thống kê</button>
+                    </div>
+                </form>
+            </div>
+                <div id="thongke-content">
+                <div class="cards" id="cards">
+                    <div class="card">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <h3>Tổng doanh thu</h3>
+
+                        <p><fmt:formatNumber value="${totalRevenue}" type="number"
+                                             groupingUsed="true" maxFractionDigits="0"/> Đ</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <h3>Khách hàng mua nhiều nhất</h3>
+                        <p><c:choose>
+                            <c:when test="${topCustomer != null}">
+                                ${topCustomer.name}
+                            </c:when>
+                            <c:otherwise>
+                                Chưa có dữ liệu
+                            </c:otherwise>
+                        </c:choose></p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h3>Sản phẩm bán chạy nhất</h3>
+                        <p><c:choose>
+                            <c:when test="${bestBook != null}">
+                                ${bestBook.title}
+                            </c:when>
+                            <c:otherwise>
+                                Chưa có dữ liệu
+                            </c:otherwise>
+                        </c:choose>
+                        </p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-box"></i>
+                        <h3>Sản phẩm bán ít nhất</h3>
+                        <p><c:choose>
+                            <c:when test="${worstBook != null}">
+                                ${worstBook.title}
+                            </c:when>
+                            <c:otherwise>
+                                Chưa có dữ liệu
+                            </c:otherwise>
+                        </c:choose></p>
+                    </div>
+                    <div class="card top10-product">
+                        <i class="fa-solid fa-box"></i>
+                        <h3>Top 10 Sản phẩm bán chạy nhất</h3>
+                    </div>
+                    <div class="card top10-customer">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <h3>Top 10 Khách hàng mua nhiều nhất</h3>
+                    </div>
                 </div>
 
+                <div class="chart">
+                    <h2>Biểu đồ doanh thu</h2>
+                    <div class="bar-container">
+                        <c:forEach items="${revenueData}" var="r">
+                            <div>
+                                <div class="figure">${r.revenue} ₫</div>
+                                <c:choose>
+                                    <c:when test="${singleBar}">
+                                        <div class="bar" style="height:250px"></div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="bar"
+                                             style="height:${((r.revenue - minRevenue) / rangeRevenue) * 200 + 60}px;">
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                                <div class="bar-label">${r.label}</div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -122,11 +137,11 @@
                                 <td>${c.name}</td>
                                 <td>${c.email}</td>
                                 <td>${c.point}</td>
-                                <td>${c.totalSpent}</td>
+                                <td><fmt:formatNumber value="${c.totalSpent}" type="number"
+                                                                     groupingUsed="true" maxFractionDigits="0"/></td>
                             </tr>
                         </c:forEach>
 
-                        
                         </tbody>
                     </table>
                 </div>
@@ -146,7 +161,6 @@
                             <th>Loại sách</th>
                             <th>Độ tuổi</th>
                             <th>Hình ảnh</th>
-                           
                         </tr>
                         </thead>
                         <tbody>
@@ -155,15 +169,14 @@
                                 <td>${b.bookCode}</td>
                                 <td>${b.title}</td>
                                 <td>—</td>
-                                <td>${b.price}</td>
+                                <td><fmt:formatNumber value="${b.price}" type="number"
+                                                                groupingUsed="true" maxFractionDigits="0"/></td>
                                 <td>${b.totalSold}</td>
                                 <td>${b.type}</td>
                                 <td>${b.age}+</td>
                                 <td><img src="${b.coverImgUrl}" width="60"></td>
                             </tr>
                         </c:forEach>
-
-
                         </tbody>
                     </table>
                 </div>
@@ -173,37 +186,67 @@
 </main>
 </body>
 <script>
-    const panel = document.getElementById("top10-customer-panel");
+    document.addEventListener("click", function (e) {
 
-    document.querySelector(".top10-customer").addEventListener("click", () => {
-        panel.style.display = "flex";
+        if (e.target.closest(".top10-customer")) {
+            document.getElementById("top10-customer-panel").style.display = "flex";
+        }
+
+        if (e.target.closest(".top10-product")) {
+            document.getElementById("top10-product-panel").style.display = "flex";
+        }
+
+        if (e.target.id === "top10-customer-panel") {
+            e.target.style.display = "none";
+        }
+
+        if (e.target.id === "top10-product-panel") {
+            e.target.style.display = "none";
+        }
+
     });
+</script>
 
-    panel.addEventListener("click", (e) => {
-        if (e.target === panel) {
-            panel.style.display = "none";
+<script>
+    function loadThongKe(url) {
+        fetch(url)
+            .then(res => res.text())
+            .then(html => {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(html, "text/html");
+
+                document.querySelector("#thongke-content").innerHTML = doc.querySelector("#thongke-content").innerHTML;
+                document.querySelector("#top10-customer-panel").innerHTML = doc.querySelector("#top10-customer-panel").innerHTML;
+                document.querySelector("#top10-product-panel").innerHTML = doc.querySelector("#top10-product-panel").innerHTML;
+            });
+    }
+    document.getElementById("filter").addEventListener("change", function () {
+        let type = this.value;
+        if (type === "year") {
+            document.getElementById("yearSelect").style.display = "block";
+            document.getElementById("dateSelect").style.display = "none";
+            let year = document.getElementById("yearSelect").value;
+            loadThongKe("ThongKe?type=year&year=" + year);
+        } else {
+            document.getElementById("yearSelect").style.display = "none";
+            document.getElementById("dateSelect").style.display = "block";
+            loadThongKe("ThongKe?type=day");
         }
     });
 
-    const popup_panel = () =>{
-        const top10ProductPanel = document.getElementById("top10-product-panel");
 
-        document.querySelector('.top10-product').addEventListener("click", () => {
-        top10ProductPanel.style.display = "flex";
-        });
-
-        top10ProductPanel.addEventListener("click", (e) => {
-            if (e.target === top10ProductPanel) {
-                top10ProductPanel.style.display = "none";
-            }
-        });
-    }
-    popup_panel()
-
-    document.getElementById("filter").addEventListener("change", function () {
-        window.location = "ThongKe?type=" + this.value;
+    document.getElementById("yearSelect").addEventListener("change", function () {
+        let year = this.value;
+        loadThongKe("ThongKe?type=year&year=" + year);
     });
 
 
+    document.getElementById("dateSelect").addEventListener("submit", function (e) {
+        e.preventDefault();
+        let from = document.getElementById("fromDate").value;
+        let to = document.getElementById("toDate").value;
+        loadThongKe("ThongKe?type=day&fromDate=" + from + "&toDate=" + to);
+
+    });
 </script>
 </html>
