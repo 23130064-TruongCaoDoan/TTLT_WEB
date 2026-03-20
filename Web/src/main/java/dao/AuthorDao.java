@@ -14,4 +14,10 @@ public class AuthorDao extends BaseDao {
         );
     }
 
+    public List<String> getAllAuthors() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("Select distinct name FROM AUTHORS")
+                        .mapTo(String.class).list()
+                );
+    }
 }

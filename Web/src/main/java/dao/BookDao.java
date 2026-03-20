@@ -7,6 +7,13 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 public class BookDao extends BaseDao {
+    public List<String> getAllCategories() {
+        return getJdbi().withHandle(handle ->
+            handle.createQuery("select distinct type from BOOKS")
+                    .mapTo(String.class).list()
+        );
+    }
+
     public List<Book> getBooksDiscounted() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT * FROM BOOKS WHERE price_discounted > 0 AND is_sell=1 ORDER BY updated_at DESC")
@@ -602,5 +609,19 @@ public class BookDao extends BaseDao {
 
             return query.mapToBean(Book.class).list();
         });
+    }
+
+    public List<String> getAllPublishers() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT distinct publisher FROM BOOKS")
+                        .mapTo(String.class).list()
+                );
+    }
+
+    public List<Integer> getAllYears() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT distinct published_date FROM BOOKS")
+                        .mapTo(Integer.class).list()
+        );
     }
 }
