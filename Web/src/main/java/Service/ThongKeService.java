@@ -53,8 +53,11 @@ public class ThongKeService {
     public List<BookWithSoldDTO> getTop10Books(String year) {
         return dao.getTop10Books(year);
     }
-    public List<RevenueDTO> getRevenue(String type) {
-        return dao.getRevenue(type);
+    public List<RevenueDTO> getRevenueChart(LocalDate from, LocalDate to) {
+        return dao.getRevenueChart(from,to);
+    }
+    public List<RevenueDTO> getRevenueChart(String year) {
+        return dao.getRevenueChart(year);
     }
     public List<String> getListYear(){
         return dao.listYears();

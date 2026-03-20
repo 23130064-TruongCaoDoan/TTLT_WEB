@@ -19,4 +19,12 @@ public class RevenueDTO {
     public void setRevenue(double revenue) {
         this.revenue = revenue;
     }
+
+    @Override
+    public String toString() {
+        return "RevenueDTO{" +
+                "label='" + label + '\'' +
+                ", revenue=" + revenue +
+                '}';
+    }
 }

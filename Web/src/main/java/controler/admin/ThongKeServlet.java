@@ -13,6 +13,7 @@ import model.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ThongKe", value = "/ThongKe")
@@ -29,6 +30,7 @@ public class ThongKeServlet extends HttpServlet {
         BookWithSoldDTO getWorstSeller=null;
         List<BookWithSoldDTO> getTop10Books=null;
         String year=request.getParameter("year");
+        List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
 
 
 
@@ -71,6 +73,7 @@ public class ThongKeServlet extends HttpServlet {
             getBestSeller = thongKeService.getBestSeller(year);
             getWorstSeller = thongKeService.getWorstSeller(year);
             getTop10Books = thongKeService.getTop10Books(year);
+            getTotalRevenueChart = thongKeService.getRevenueChart(year);
         }else {
             totalRevenue = thongKeService.getTotalRevenue(from,to);
             getTop10Users = thongKeService.getTop10Users(from,to);
@@ -78,6 +81,7 @@ public class ThongKeServlet extends HttpServlet {
             getBestSeller = thongKeService.getBestSeller(from,to);
             getWorstSeller = thongKeService.getWorstSeller(from,to);
             getTop10Books = thongKeService.getTop10Books(from,to);
+            getTotalRevenueChart = thongKeService.getRevenueChart(from,to);
         }
         request.setAttribute("totalRevenue",totalRevenue);
         request.setAttribute("top10Customers", getTop10Users);
@@ -86,6 +90,7 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("worstBook", getWorstSeller);
         request.setAttribute("top10Books", getTop10Books);
         request.setAttribute("listYear", thongKeService.getListYear());
+        request.setAttribute("revenueChartData", getTotalRevenueChart);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);
     }

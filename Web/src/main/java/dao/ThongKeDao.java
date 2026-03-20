@@ -5,6 +5,7 @@ import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -285,45 +286,35 @@ public class ThongKeDao extends BaseDao {
                         .list()
         );
     }
-    public List<RevenueDTO> getRevenue(String type) {
-        String sql;
-
-        switch (type) {
-            case "day":
-                sql = """
-                SELECT DATE(order_date) AS label,
-                       SUM(total_amount) AS revenue
-                FROM orders
-                WHERE status = 'COMPLETED'
-                GROUP BY DATE(order_date)
-                ORDER BY DATE(order_date)
-                LIMIT 20
-            """;
-                break;
-            case "year":
-                sql = """
-                SELECT YEAR(order_date) AS label,
-                       SUM(total_amount) AS revenue
-                FROM orders
-                WHERE status = 'COMPLETED'
-                GROUP BY YEAR(order_date)
-                ORDER BY YEAR(order_date)
-            """;
-                break;
-
-            default: // month
-                sql = """
-                SELECT CONCAT('Tháng ', MONTH(order_date)) AS label,
-                       SUM(total_amount) AS revenue
-                FROM orders
-                WHERE status = 'COMPLETED'
-                GROUP BY MONTH(order_date), CONCAT('Tháng ', MONTH(order_date))
-                ORDER BY MONTH(order_date)
-            """;
-        }
-
-        return getJdbi().withHandle(h ->
-                h.createQuery(sql)
+    public List<RevenueDTO> getRevenueChart(LocalDate from, LocalDate to) {
+        return  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT DATE(o.order_date) AS label, SUM(o.total_amount) AS revenue
+                        FROM ORDERS o
+                        INNER JOIN USER u ON u.id = o.user_id
+                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+                        GROUP BY DATE(o.order_date)
+                        ORDER BY DATE(o.order_date)
+                        LIMIT 30
+                        """)
+                        .bind("from",from)
+                        .bind("to", to)
+                        .mapToBean(RevenueDTO.class)
+                        .list()
+        );
+    }
+    public List<RevenueDTO> getRevenueChart(String year) {
+        return  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT CONCAT('Tháng ', MONTH(o.order_date)) AS label, SUM(total_amount) AS revenue
+                        FROM ORDERS o
+                        INNER JOIN USER u ON u.id = o.user_id
+                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                        GROUP BY MONTH(o.order_date)
+                        ORDER BY MONTH(o.order_date)
+                        LIMIT 30
+                        """)
+                        .bind("year", year)
                         .mapToBean(RevenueDTO.class)
                         .list()
         );
@@ -334,6 +325,9 @@ public class ThongKeDao extends BaseDao {
                 .mapTo(String.class).list());
     }
 
-
-
+    public static void main(String[] args) {
+        ThongKeDao thongkeDao = new ThongKeDao();
+        LocalDate now = LocalDate.now();
+        System.out.println(thongkeDao.getRevenueChart(now,now.plusDays(1)));
+    }
 }
