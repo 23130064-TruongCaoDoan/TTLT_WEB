@@ -41,7 +41,10 @@
             <div class="filter-title"><h2>Bộ lọc</h2></div>
             <hr>
             <div class="filter-group">
-                <div class="filter-header" onclick="toggle('categoryBox')">Thể loại</div>
+                <div class="filter-header" onclick="toggle(this,'categoryBox')">
+                    Thể loại
+                    <i class="fa-solid fa-chevron-down arrow"></i>
+                </div>
                 <div class="filter-options" id="categoryBox">
                     <c:forEach var="c" items="${categories}">
                         <label><input type="checkbox" value="${c}"> ${c}</label>
@@ -50,7 +53,10 @@
             </div>
 
             <div class="filter-group">
-                <div class="filter-header" onclick="toggle('publisherBox')">Nhà xuất bản</div>
+                <div class="filter-header" onclick="toggle(this,'publisherBox')">
+                    Nhà xuất bản
+                    <i class="fa-solid fa-chevron-down arrow"></i>
+                </div>
                 <div class="filter-options" id="publisherBox">
                     <c:forEach var="p" items="${publishers}">
                         <label><input type="checkbox" value="${p}"> ${p}</label>
@@ -59,7 +65,10 @@
             </div>
 
             <div class="filter-group">
-                <div class="filter-header" onclick="toggle('authorBox')">Tác giả</div>
+                <div class="filter-header" onclick="toggle(this,'authorBox')">
+                    Tác giả
+                    <i class="fa-solid fa-chevron-down arrow"></i>
+                </div>
                 <div class="filter-options" id="authorBox">
                     <c:forEach var="a" items="${authors}">
                         <label><input type="checkbox" value="${a}"> ${a}</label>
@@ -68,7 +77,10 @@
             </div>
 
             <div class="filter-group">
-                <div class="filter-header" onclick="toggle('ageBox')">Độ tuổi</div>
+                <div class="filter-header" onclick="toggle(this,'ageBox')">
+                    Độ tuổi
+                    <i class="fa-solid fa-chevron-down arrow"></i>
+                </div>
                 <div class="filter-options" id="ageBox">
                     <label><input type="radio" name="age" value="0-1"> 0-1 tuổi</label>
                     <label><input type="radio" name="age" value="1-3"> 1-3 tuổi</label>
@@ -224,9 +236,17 @@
         }, 2000);
     }
 
-    function toggle(id){
+    function toggle(header, id) {
         const el = document.getElementById(id);
-        el.style.display = (el.style.display === "flex") ? "none" : "flex";
+        const arrow = header.querySelector(".arrow");
+
+        if (el.style.display === "flex") {
+            el.style.display = "none";
+            arrow.classList.remove("rotate");
+        } else {
+            el.style.display = "flex";
+            arrow.classList.add("rotate");
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {

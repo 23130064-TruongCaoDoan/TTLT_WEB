@@ -287,3 +287,10 @@ a {
     cursor: pointer;
 }
 
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.arrow.rotate {
+    transform: rotate(180deg);
+}
