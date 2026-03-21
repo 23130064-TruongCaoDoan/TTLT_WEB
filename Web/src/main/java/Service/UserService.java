@@ -78,8 +78,8 @@ public class UserService {
     public List<Integer> getUserPoint(int minPoint) {
         return userDao.getUserIdsByMinPoint(minPoint);
     }
-    public void updateProfile(int id, String name, String phone, String email, LocalDate birthday) {
-        userDao.updateProfile(id, name, phone, email, birthday);
+    public void updateProfile(int id, String name, String phone, String email,boolean sex, LocalDate birthday) {
+        userDao.updateProfile(id, name, phone, email, sex, birthday);
     }
     public void updateEmail(int id, String email) {
         userDao.updateEmail(id, email);
@@ -105,12 +105,4 @@ public class UserService {
     }
 
 
-
-//    public static void main(String[] args) {
-//        UserService userService = new UserService();
-//        PasswordUtil passwordUtil = new PasswordUtil();
-//        String oldPassword =passwordUtil.hashPassword("Doanga123@");
-//        System.out.println(oldPassword);
-////        System.out.println(userService.checkPassword());
-//    }
 }

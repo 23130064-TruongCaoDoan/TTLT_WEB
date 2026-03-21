@@ -22,6 +22,8 @@ public class SetUpAccount extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
+        LocalDate today = LocalDate.now();
+        request.setAttribute("today", today);
         request.setAttribute("user", user);
         request.getRequestDispatcher("user/user-hoSoCaNhan.jsp").forward(request, response);
     }
@@ -37,15 +39,26 @@ public class SetUpAccount extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
-        LocalDate birthday = LocalDate.parse(request.getParameter("birthday"));
+        String sex = request.getParameter("sex");
+        System.out.println(sex);
+        boolean gender = false;
+        if(sex.equals("1")){
+            gender = true;
+        }
+        System.out.println(gender);
+        String birthdayStr = request.getParameter("birthday");
+        LocalDate birthday = null;
+        if(!(birthdayStr==null||birthdayStr.equals(""))) {
+             birthday = LocalDate.parse(birthdayStr);
+        }
         int id = user.getId();
-        System.out.println(id);
         UserService userService = new UserService();
         try {
-            userService.updateProfile(id,name,phone, email, birthday);
+            userService.updateProfile(id,name,phone, email, gender,birthday);
             user.setName(name);
             user.setPhone(phone);
             user.setEmail(email);
+            user.setSex(gender);
             user.setBirthday(birthday);
             session.setAttribute("user", user);
             request.setAttribute("error", "Cập nhật thành công!");
@@ -55,4 +68,5 @@ public class SetUpAccount extends HttpServlet {
             request.setAttribute("error", "Lỗi cập nhật profile!");
         }
     }
+
 }
