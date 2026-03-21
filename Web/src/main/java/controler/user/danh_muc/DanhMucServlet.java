@@ -56,9 +56,16 @@ public class DanhMucServlet extends HttpServlet {
                 break;
             default:
                 totalBooks = bookService.countBooks();
+                break;
         }
 
         int totalPages = (int) Math.ceil((double) totalBooks / pageSize);
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+        if (page < 1) {
+            page = 1;
+        }
         if (page > totalPages) {
             page = totalPages;
         }
@@ -96,6 +103,14 @@ public class DanhMucServlet extends HttpServlet {
             }
         }
 
+
+        request.setAttribute("categories", bookService.getAllCategories());
+        request.setAttribute("authors", bookService.getAllAuthors());
+        request.setAttribute("publishers", bookService.getAllPublishers());
+        request.setAttribute("years", bookService.getAllYears());
+
+        request.setAttribute("idEvent", idEvent);
+        request.setAttribute("title", title);
         request.setAttribute("type", type);
         request.setAttribute("color", color);
         request.setAttribute("search", search);

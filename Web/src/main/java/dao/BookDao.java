@@ -7,6 +7,13 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 public class BookDao extends BaseDao {
+    public List<String> getAllCategories() {
+        return getJdbi().withHandle(handle ->
+            handle.createQuery("select distinct type from BOOKS")
+                    .mapTo(String.class).list()
+        );
+    }
+
     public List<Book> getBooksDiscounted() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT * FROM BOOKS WHERE price_discounted > 0 AND is_sell=1 ORDER BY updated_at DESC")
@@ -184,11 +191,11 @@ public class BookDao extends BaseDao {
 
     public List<Book> getAllBookByEvent(int limit, int offset, int idEvent) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT b.* " +
+                handle.createQuery("SELECT DISTINCT b.* " +
                                 "FROM BOOKS b " +
                                 "INNER JOIN event_books eb ON eb.book_id = b.id " +
                                 "INNER JOIN events e ON e.id = eb.event_id " +
-                                "WHERE is_sell=1 AND e.id LIKE :id " +
+                                "WHERE is_sell=1 AND e.id = :id " +
                                 "ORDER BY add_date DESC LIMIT :limit OFFSET :offset")
                         .bind("limit", limit)
                         .bind("offset", offset)
@@ -221,7 +228,7 @@ public class BookDao extends BaseDao {
                 handle.createQuery(
                                 "SELECT COUNT(*) " +
                                         "FROM BOOKS b " +
-                                        "JOIN AUTHORS a ON b.author_id = a.id " +
+                                        "LEFT JOIN AUTHORS a ON b.author_id = a.id " +
                                         "WHERE b.is_sell = 1 " +
                                         "AND (b.title LIKE :search OR a.name LIKE :search OR b.type LIKE :search)"
                         )
@@ -258,12 +265,11 @@ public class BookDao extends BaseDao {
 
     public int countBooksByEvent(int idEvent) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*)" +
+                handle.createQuery("SELECT COUNT(DISTINCT b.id) " +
                                 "FROM BOOKS b " +
                                 "INNER JOIN event_books eb ON eb.book_id = b.id " +
                                 "INNER JOIN events e ON e.id = eb.event_id " +
-                                "WHERE is_sell=1 AND e.id LIKE :id " +
-                                "ORDER BY add_date DESC")
+                                "WHERE is_sell=1 AND e.id = :id ")
                         .bind("id", idEvent)
                         .mapTo(int.class)
                         .one()
@@ -603,5 +609,19 @@ public class BookDao extends BaseDao {
 
             return query.mapToBean(Book.class).list();
         });
+    }
+
+    public List<String> getAllPublishers() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT distinct publisher FROM BOOKS")
+                        .mapTo(String.class).list()
+                );
+    }
+
+    public List<Integer> getAllYears() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT distinct published_date FROM BOOKS")
+                        .mapTo(Integer.class).list()
+        );
     }
 }

@@ -157,8 +157,7 @@
     background-color: #f1f1f1;
 }
 
-
-.clear-filter {
+#applyFilter {
     margin-top: 15px;
     width: 100%;
     padding: 10px;
@@ -169,8 +168,19 @@
     font-weight: bold;
     cursor: pointer;
 }
+.clear-filter {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 30px;
+    border: #0d3164;
+    background-color: #f2f2f2;
+    color: #0d3164;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-.clear-filter:hover {
+.clear-filter:hover,#applyFilter:hover {
     background-color: white;
     color: #0d3164;
     border: 1px solid #0d3164;
@@ -227,4 +237,60 @@ a {
     grid-column: 1 / -1;
     width: 100%;
     padding-right: 30px;
+}
+
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-header {
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.filter-options {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-options label {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ===== PRICE SLIDER ===== */
+.price-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#priceRange {
+    width: 100%;
+    cursor: pointer;
+}
+
+.price-value {
+    font-size: 14px;
+    color: #003366;
+    font-weight: 600;
+}
+
+#yearSelect {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.arrow.rotate {
+    transform: rotate(180deg);
 }

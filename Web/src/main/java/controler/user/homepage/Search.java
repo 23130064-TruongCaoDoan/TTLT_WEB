@@ -44,6 +44,12 @@ public class Search extends HttpServlet {
                 page = totalPages;
             }
             int offset = (page - 1) * pageSize;
+
+            request.setAttribute("categories", bookService.getAllCategories());
+            request.setAttribute("authors", bookService.getAllAuthors());
+            request.setAttribute("publishers", bookService.getAllPublishers());
+            request.setAttribute("years", bookService.getAllYears());
+
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages",totalPages);
             List<Book> bookList = bookService.findListBook(search, pageSize, offset);
