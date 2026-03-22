@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>Title</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/search-suggest.css">
 </head>
 <body>
 <div id="home-page">
@@ -48,7 +49,8 @@
                 </div>
                 <form action="search" method="get" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" name="bSearch" placeholder="Tìm kiếm sách"/>
+                    <input type="search" class="search-input" name="bSearch" autocomplete="off" placeholder="Tìm kiếm sách"/>
+                    <div class="suggest-box"></div>
                     <button type="submit">Tìm Kiếm</button>
                 </form>
                 <a href="<c:url value='${empty user ? "/login" : "/SetUpAccount"}' />" class="button bt taikhoan">
@@ -78,5 +80,6 @@
     </div>
 </div>
 <div id="toast" class="toast"></div>
+<script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 </body>
 </html>
