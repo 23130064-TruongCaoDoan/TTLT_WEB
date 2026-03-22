@@ -2,8 +2,8 @@ package dao;
 
 import DTO.UserWithTotalSpentDTO;
 import model.User;
+import org.jdbi.v3.core.result.ResultIterable;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -86,13 +86,14 @@ public class UserDao extends BaseDao {
                         .isPresent()
         );
     }
-    public void updateProfile(int id, String name, String phone, String email, LocalDate birthday) {
+    public void updateProfile(int id, String name, String phone, String email, boolean sex, LocalDate birthday) {
         getJdbi().withHandle(handle ->
-                handle.createUpdate("UPDATE user SET name = :name, phone=:phone, email=:email, birthday=:birthday WHERE id = :id")
+                handle.createUpdate("UPDATE user SET name = :name, phone=:phone, email=:email,sex=:sex, birthday=:birthday WHERE id = :id")
                 .bind("id", id)
                 .bind("name", name)
                 .bind("phone", phone)
                 .bind("email", email)
+                .bind("sex", sex)
                 .bind("birthday", birthday)
                 .execute()
                 );

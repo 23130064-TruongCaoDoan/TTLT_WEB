@@ -47,14 +47,16 @@
                     <div class="form-group">
                         <label>Giới tính</label>
                         <div class="gender-group">
-                            <label><input type="radio" name="gioitinh" value="Nam" <c:if test="${!isDefault}">checked</c:if> > Nam</label>
-                            <label><input type="radio" name="gioitinh" value="Nu" <c:if test="${isDefault}">checked</c:if> > Nữ</label>
+                            <label for="male">Nam</label>
+                            <input type="radio" name="sex" value="0" id="male" <c:if test="${!user.sex}">checked</c:if>>
+                            <label for="female">Nữ</label>
+                            <input type="radio" name="sex" value="1" id="female" <c:if test="${user.sex}">checked</c:if>>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Birthday</label>
                         <div class="birthday-group">
-                            <input type="date" name="birthday" value="${user.birthday}">
+                            <input type="date" name="birthday" value="${user.birthday}" max="${today}">
                         </div>
                     </div>
                     <button class="btn-save">Lưu thay đổi</button>
@@ -128,7 +130,6 @@
                 phoneInput.focus();
                 return;
             }
-
             if (!phoneRegex.test(phone)) {
                 e.preventDefault();
                 phoneError.innerText = "Số điện thoại không hợp lệ VD:09xx...";

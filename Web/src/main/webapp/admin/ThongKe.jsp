@@ -32,9 +32,9 @@
                 <form  action="ThongKe" method="get" id="dateSelect">
                     <div>
                         <label for="fromDate">Từ ngày:</label>
-                        <input type="date" name="fromDate" id="fromDate" value="${from}" required>
+                        <input type="date" name="fromDate" id="fromDate" value="${from}" max="" required>
                         <label for="toDate">Đến ngày:</label>
-                        <input type="date" name="toDate" id="toDate" value="${to}" required>
+                        <input type="date" name="toDate" id="toDate" value="${to}" min="" required>
                         <button type="submit">Thống kê</button>
                     </div>
                 </form>
@@ -170,6 +170,14 @@
 </main>
 </body>
 <script>
+    document.getElementById("fromDate").addEventListener("change", function (){
+       document.getElementById("toDate").setAttribute("min", this.value);
+    });
+    document.getElementById("toDate").addEventListener("change", function (){
+        document.getElementById("fromDate").setAttribute("max", this.value);
+    });
+</script>
+<script>
     document.addEventListener("click", function (e) {
 
         if (e.target.closest(".top10-customer")) {
@@ -187,7 +195,6 @@
         if (e.target.id === "top10-product-panel") {
             e.target.style.display = "none";
         }
-
     });
 </script>
 
