@@ -1,0 +1,26 @@
+.search {
+    position: relative;
+}
+
+.suggest-box {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    width: 100%;
+    z-index: 999;
+    display: none;
+}
+
+.suggest-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggest-item:hover,
+.suggest-item.active {
+    background: #e8f0fe;
+}
+
+suggest-input{
+    font-weight: 500;
+}
