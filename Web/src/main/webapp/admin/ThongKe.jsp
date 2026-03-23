@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -281,6 +282,9 @@
             datasets: [{
                 label: 'Tổng doanh thu',
                 data: revenueData,
+                maxBarThickness: 50,
+                categoryPercentage: 0.7,
+                barPercentage: 0.7,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgb(54, 162, 235)',
                 borderWidth: 1
@@ -301,7 +305,7 @@
                         color: 'rgb(54, 162, 235)',
                         anchor: 'end',
                         align: 'end',
-                        formatter: (value) => value.toLocaleString() + "Đ",
+                        formatter: (value) => value.toLocaleString("vi-VN") + " Đ",
                         font: {
                             weight: 'bold',
                             size: 14

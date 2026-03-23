@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -154,12 +155,12 @@
                                         đ</p></div>
                                     <c:if test="${item.book.getPriceDiscounted() >0}">
                                         <div class="order-price-old"><p class="cost"><fmt:formatNumber
-                                                value="${item.book.getPrice()}" pattern="#,###"/> đ</p></div>
+                                                value="${item.book.getPrice()}" pattern="#.###"/> đ</p></div>
                                     </c:if>
                                 </div>
                                 <div class="order-qty">${item.quantity}</div>
                                 <div class="order-total"><p class="cost"><fmt:formatNumber
-                                        value="${item.price*item.quantity}" pattern="#,###"/> đ</p></div>
+                                        value="${item.price*item.quantity}" pattern="#.###"/> đ</p></div>
                             </div>
                         </c:forEach>
                     </div>
