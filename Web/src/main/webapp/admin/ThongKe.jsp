@@ -263,12 +263,28 @@
     });
 </script>
 <script>
+    function formatterDate(date) {
+        let element = date.split('-');
+        let y = element[0];
+        let m = element[1];
+        let d = element[2];
+        return d + "-" + m + "-" + y;
+    }
+    let type = document.getElementById("filter").value;
     let chartInstance = null;
     function initChart() {
         const labels = [
-        <c:forEach var="l" items="${revenueChartData}">
-            "${l.label}",
-        </c:forEach>
+            <c:forEach var="l" items="${revenueChartData}" varStatus="s">
+                <c:choose>
+                    <c:when test="${type == 'year'}">
+                        "${l.label}"
+                    </c:when>
+                    <c:otherwise>
+                        formatterDate("${l.label}")
+                    </c:otherwise>
+                </c:choose>
+                <c:if test="${!s.last}">,</c:if>
+            </c:forEach>
         ];
 
         const revenueData = [

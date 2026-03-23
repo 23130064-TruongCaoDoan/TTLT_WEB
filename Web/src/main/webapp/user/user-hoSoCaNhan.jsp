@@ -47,9 +47,9 @@
                     <div class="form-group">
                         <label>Giới tính</label>
                         <div class="gender-group">
-                            <label for="male">Nam</label>
+                            <label for="male" style="margin: 0">Nam</label>
                             <input type="radio" name="sex" value="0" id="male" <c:if test="${!user.sex}">checked</c:if>>
-                            <label for="female">Nữ</label>
+                            <label for="female" style="margin: 0">Nữ</label>
                             <input type="radio" name="sex" value="1" id="female" <c:if test="${user.sex}">checked</c:if>>
                         </div>
                     </div>

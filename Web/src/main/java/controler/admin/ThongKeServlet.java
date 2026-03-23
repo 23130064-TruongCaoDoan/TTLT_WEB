@@ -13,6 +13,7 @@ import model.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,6 @@ public class ThongKeServlet extends HttpServlet {
         List<BookWithSoldDTO> getTop10Books=null;
         String year=request.getParameter("year");
         List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
-
 
 
         HttpSession session = request.getSession(false);
@@ -91,6 +91,7 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("top10Books", getTop10Books);
         request.setAttribute("listYear", thongKeService.getListYear());
         request.setAttribute("revenueChartData", getTotalRevenueChart);
+        request.setAttribute("type", type);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);
     }
