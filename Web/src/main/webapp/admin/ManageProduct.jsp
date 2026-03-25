@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/search-suggest.css">
     <link rel="stylesheet" href="assets/css_admin/mProduct.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
 </head>
@@ -20,11 +21,15 @@
                 <div class="function">
                     <button id="add" type="button">Thêm sản phẩm</button>
                     <div class="find">
+                    <div class="search-wrapper admin-search">
                         <input type="text"
-                               class="search"
+                               class="search-input"
                                name="q"
                                placeholder="Tìm kiếm sản phẩm"
-                               value="${param.q}">
+                               autocomplete="off"
+                               value="${param.q}"/>
+                               <div class="suggest-box"></div>
+                        </div>
                         <button class="buttonSearch" type="submit">Tìm kiếm</button>
                     </div>
                 </div>
@@ -248,5 +253,6 @@
         document.getElementById("start_date").required = true;
     })
 </script>
+<script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 </body>
 </html>
