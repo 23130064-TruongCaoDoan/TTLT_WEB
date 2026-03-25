@@ -291,15 +291,12 @@
     <c:import url="footerUser.jsp"> </c:import>
 </div>
 <script>
-
     // mua ngay
     document.getElementById("buy").addEventListener("click", function () {
         document.getElementById("buyNowQuantity").value =
             document.getElementById("number-quantity").value;
     });
 
-
-    //
     const contextPath = "${pageContext.request.contextPath}";
 
     let isProcessing = false;
@@ -359,17 +356,10 @@
         input.value = Math.min(parseInt(input.value) + 1, parseInt(input.max));
     }
 
-
     const writeBtn = document.getElementById("writeReviewBtn");
     const form = document.getElementById("reviewForm");
     const submitBtn = document.getElementById("submitReview");
     const commentList = document.querySelector(".comment-list");
-
-    // Bấm Write a Review
-    writeBtn.addEventListener("click", () => {
-        form.style.display = form.style.display === "block" ? "none" : "block";
-        // writeBtn.style.display = "none";
-    });
 
     function addToCartDetail() {
         const bookId = document.getElementById("bookId").value;
@@ -392,28 +382,6 @@
             toast.classList.remove("show");
         }, 2000);
     }
-    const isLoggedIn = <%= isLoggedIn %>;
-    document.getElementById("reviewForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        console.log("submit");
-
-        if (!isLoggedIn) {
-            window.location.href = "login";
-            return;
-        }
-
-        fetch(this.action, {
-            method: "POST",
-            body: new FormData(this),
-            credentials: "same-origin"
-        })
-            .then(res => {
-                if (res.ok) {
-                    window.location.reload();
-                }
-            })
-            .catch(err => console.error(err));
-    });
 </script>
 <script>
     document.getElementById("ratingFilter").addEventListener("change", function () {
