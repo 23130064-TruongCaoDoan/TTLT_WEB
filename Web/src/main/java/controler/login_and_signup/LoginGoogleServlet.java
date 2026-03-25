@@ -28,7 +28,8 @@ public class LoginGoogleServlet extends HttpServlet {
                 request.getSession().setAttribute("user", user);
             } else {
                 userService.addUser(userLogin.getName(), userLogin.getEmail());
-                request.getSession().setAttribute("user", userLogin);
+                user=userService.findUser(userLogin.getEmail());
+                request.getSession().setAttribute("user", user);
             }
 
             System.out.println(userLogin.getName());
