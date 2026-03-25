@@ -128,5 +128,4 @@ document.querySelectorAll(".search-input").forEach(input => {
             loadSuggest(e.target.value.trim());
         },300);
     });
-
 });
