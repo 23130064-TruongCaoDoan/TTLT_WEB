@@ -10,6 +10,7 @@ main{
     flex-direction: row;
     gap: 30px;
     margin: 10px;
+    overflow: hidden;
 }
 a{
     text-decoration: none;

@@ -1,5 +1,8 @@
 package DTO;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class MyOrderDTO {
     private int orderId;
     private String orderDate;
@@ -20,7 +23,10 @@ public class MyOrderDTO {
     }
 
     public String getOrderDate() {
-        return orderDate;
+        DateTimeFormatter input = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter output = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+        LocalDateTime dt = LocalDateTime.parse(orderDate, input);
+        return dt.format(output);
     }
 
     public void setOrderDate(String orderDate) {

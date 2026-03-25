@@ -624,4 +624,20 @@ public class BookDao extends BaseDao {
                         .mapTo(Integer.class).list()
         );
     }
+
+    public List<String> getSuggest(String keyword) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                    SELECT DISTINCT title
+                    FROM BOOKS
+                    WHERE is_sell = 1
+                      AND title LIKE :keyword
+                    ORDER BY title
+                    LIMIT 8
+            """)
+                        .bind("keyword", "%" + keyword + "%")
+                        .mapTo(String.class)
+                        .list()
+        );
+    }
 }

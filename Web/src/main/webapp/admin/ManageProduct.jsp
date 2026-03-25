@@ -1,11 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/search-suggest.css">
     <link rel="stylesheet" href="assets/css_admin/mProduct.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
 </head>
@@ -20,11 +23,15 @@
                 <div class="function">
                     <button id="add" type="button">Thêm sản phẩm</button>
                     <div class="find">
+                    <div class="search-wrapper admin-search">
                         <input type="text"
-                               class="search"
+                               class="search-input"
                                name="q"
                                placeholder="Tìm kiếm sản phẩm"
-                               value="${param.q}">
+                               autocomplete="off"
+                               value="${param.q}"/>
+                               <div class="suggest-box"></div>
+                        </div>
                         <button class="buttonSearch" type="submit">Tìm kiếm</button>
                     </div>
                 </div>
@@ -77,7 +84,8 @@
                             <td>${p.bookCode}</td>
                             <td>${p.title}</td>
                             <td>${p.author}</td>
-                            <td>${p.price}</td>
+                            <td style="white-space: nowrap;" ><p><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"
+                                                  maxFractionDigits="0"/></p></td>
                             <td>${p.stock}</td>
                             <td>${p.type}</td>
                             <td>${p.age}+</td>
@@ -248,5 +256,6 @@
         document.getElementById("start_date").required = true;
     })
 </script>
+<script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 </body>
 </html>

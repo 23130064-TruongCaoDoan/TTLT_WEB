@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +83,8 @@
                                 <td>${u.name}</td>
                                 <td>${u.email}</td>
                                 <td>${u.point}</td>
-                                <td>${u.totalSpent}</td>
+                                <td><p><fmt:formatNumber value="${u.totalSpent}" type="number" groupingUsed="true"
+                                                         maxFractionDigits="0"/></p></td>
                                 <td>
                                     <form method="post" action="${pageContext.request.contextPath}/change-role">
                                         <input type="hidden" name="userId" value="${u.id}">
