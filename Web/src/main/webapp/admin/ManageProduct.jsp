@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,7 +84,8 @@
                             <td>${p.bookCode}</td>
                             <td>${p.title}</td>
                             <td>${p.author}</td>
-                            <td>${p.price}</td>
+                            <td style="white-space: nowrap;" ><p><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"
+                                                  maxFractionDigits="0"/></p></td>
                             <td>${p.stock}</td>
                             <td>${p.type}</td>
                             <td>${p.age}+</td>

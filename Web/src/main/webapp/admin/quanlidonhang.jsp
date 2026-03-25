@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +59,8 @@
                             <tr>
                                 <td>${o.id}</td>
                                 <td>${o.userName}</td>
-                                <td>${o.totalAmount} đ</td>
+                                <td ><p><fmt:formatNumber value="${o.totalAmount}" type="number" groupingUsed="true"
+                                                      maxFractionDigits="0"/> đ</p></td>
                                 <td>${o.orderDate}</td>
                                 <td>${o.status}</td>
                                 <td>
