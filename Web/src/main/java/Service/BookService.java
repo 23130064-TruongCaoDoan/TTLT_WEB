@@ -414,7 +414,6 @@ public class BookService {
     public List<String> getSuggest(String keyword) {
         if (keyword == null || keyword.trim().isEmpty())
             return new ArrayList<>();
-
         return hd.getSuggest(keyword.trim());
     }
 }
