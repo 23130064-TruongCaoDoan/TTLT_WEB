@@ -80,7 +80,7 @@
                             <td>${p.title}</td>
                             <td>${p.author}</td>
                             <td style="white-space: nowrap;" ><p><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"
-                                                  maxFractionDigits="0"/></p></td>
+                                                  maxFractionDigits="0"/> đ</p></td>
                             <td>${p.stock}</td>
                             <td>${p.type}</td>
                             <td>${p.age}+</td>

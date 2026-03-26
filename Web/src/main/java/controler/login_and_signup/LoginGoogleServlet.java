@@ -25,13 +25,11 @@ public class LoginGoogleServlet extends HttpServlet {
             User user;
             if(userService.checkExit(userLogin.getEmail())) {
                 user = userService.findUser(userLogin.getEmail());
-                request.getSession().setAttribute("user", user);
             } else {
                 userService.addUser(userLogin.getName(), userLogin.getEmail());
-                request.getSession().setAttribute("user", userLogin);
+                user = userService.findUser(userLogin.getEmail());
             }
-
-            System.out.println(userLogin.getName());
+            request.getSession().setAttribute("user", user);
             response.sendRedirect("home");
             return;
         }catch (Exception e){

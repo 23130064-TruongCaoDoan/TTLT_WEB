@@ -84,7 +84,7 @@
                                 <td>${u.email}</td>
                                 <td>${u.point}</td>
                                 <td><p><fmt:formatNumber value="${u.totalSpent}" type="number" groupingUsed="true"
-                                                         maxFractionDigits="0"/></p></td>
+                                                         maxFractionDigits="0"/> đ</p></td>
                                 <td>
                                     <form method="post" action="${pageContext.request.contextPath}/change-role">
                                         <input type="hidden" name="userId" value="${u.id}">
