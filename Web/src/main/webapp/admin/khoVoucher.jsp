@@ -127,8 +127,19 @@
             <label>Điều Kiện</label>
             <div class="condition-group">
                 <input type="number" name="gia" id="gia" placeholder="Đơn hàng trên">
-                <input type="text" name="loaisach" id="loaisach" placeholder="Loại sách">
-                <input type="text" name="nxb" id="nxb" placeholder="Nhà xuất bản">
+
+                <select name ="loaisach" id="loaisach">
+                    <option value="">Tất cả loại sách</option>
+                    <c:forEach items="${listTypes}" var="type">
+                        <option value="${type}">${type}</option>
+                    </c:forEach>
+                </select>
+
+                <select name="nxb" id="nxb">
+                    <c:forEach items="${listPublishers}" var="pub">
+                        <option value="${pub}">${pub}</option>
+                    </c:forEach>
+                </select>
             </div>
             <small class="error"></small>
         </div>
