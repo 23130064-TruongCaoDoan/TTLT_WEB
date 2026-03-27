@@ -52,10 +52,8 @@ public class BookService {
         return hd.countBooks();
     }
 
-    public void addBook(Map<String, String[]> params, Part mainImage,
-                        List<Part> detailImages) throws Exception {
+    public void addBook(Map<String, String[]> params, Part mainImage, List<Part> detailImages) throws Exception {
 
-        // ===== STRING =====
         String code = params.get("code")[0];
         String title = params.get("title")[0];
         String type = params.get("type")[0];
@@ -65,7 +63,6 @@ public class BookService {
         String description = params.get("description")[0];
         String provider = params.get("provider")[0];
 
-        // ===== INT / DOUBLE (CÓ DEFAULT) =====
         int authorId = Integer.parseInt(params.get("author_id")[0]);
         int stock = Integer.parseInt(params.get("stock")[0]);
         int pagesNumber = Integer.parseInt(params.get("pageNumber")[0]);
@@ -74,27 +71,18 @@ public class BookService {
         int price = Integer.parseInt(params.get("price")[0]);
 
         String priceDiscountStr = params.get("price_discounted")[0];
-        int priceDiscounted = (priceDiscountStr == null || priceDiscountStr.isBlank())
-                ? price
-                : Integer.parseInt(priceDiscountStr);
+        int priceDiscounted = (priceDiscountStr == null || priceDiscountStr.isBlank()) ? price : Integer.parseInt(priceDiscountStr);
 
         String weightStr = params.get("weight")[0];
-        double weight = (weightStr == null || weightStr.isBlank())
-                ? 0
-                : Double.parseDouble(weightStr);
+        double weight = (weightStr == null || weightStr.isBlank()) ? 0 : Double.parseDouble(weightStr);
 
-        // ===== DATE =====
         String startDate = params.get("startDate")[0];
         int publishedYear = Integer.parseInt(startDate.substring(0, 4));
 
-        // ===== ẢNH BÌA =====
-        String coverImgUrl =
-                uploadService.upload(mainImage, "books/main");
-        // ===== ẢNH CHI TIÊT =====
-        List<String> detailImgUrls =
-                uploadService.uploadMultiple(detailImages, "books/detail");
 
-        // ===== SET BOOK =====
+        String coverImgUrl = uploadService.upload(mainImage, "books/main");
+        List<String> detailImgUrls = uploadService.uploadMultiple(detailImages, "books/detail");
+
         Book book = new Book();
         book.setBookCode(code);
         book.setTitle(title);
@@ -415,5 +403,8 @@ public class BookService {
         if (keyword == null || keyword.trim().isEmpty())
             return new ArrayList<>();
         return hd.getSuggest(keyword.trim());
+    }
+    public List<String> getType(){
+        return hd.getCategory();
     }
 }
