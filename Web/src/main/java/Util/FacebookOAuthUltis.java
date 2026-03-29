@@ -6,11 +6,29 @@ import org.cloudinary.json.JSONObject;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Properties;
 
 public class FacebookOAuthUltis {
-    private static final String APP_ID = "767353226134083";
-    private static final String APP_SECRET = "98f7827dde4f40bbbb5c38fe0a4e43f2";
+    private static String APP_ID ;
+    private static String APP_SECRET ;
     private static final String REDIRECT_URI = "http://localhost:8080/Web_war_exploded/login-facebook";
+
+
+    static {
+        try {
+            Properties prop = new Properties();
+            prop.load(GoogleOAuthUtils.class.getClassLoader().getResourceAsStream("facebook.properties"));
+            APP_ID = prop.getProperty("facebook.app.id");
+            APP_SECRET = prop.getProperty("facebook.app.secret");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getAppId() {
+        return APP_ID;
+    }
 
     public static String getToken(String code) throws Exception {
 

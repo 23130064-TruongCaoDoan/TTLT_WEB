@@ -2,6 +2,7 @@ package controler.login_and_signup;
 
 import Service.UserService;
 import Service.NotificationService;
+import Util.FacebookOAuthUltis;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -18,6 +19,8 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("home");
             return;
         }
+        request.setAttribute("fbClientId", FacebookOAuthUltis.getAppId());
+
         request.getRequestDispatcher("user/login.jsp").forward(request, response);
     }
 

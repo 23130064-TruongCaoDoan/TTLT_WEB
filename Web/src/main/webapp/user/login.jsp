@@ -45,7 +45,7 @@
                         <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png"
                              alt="google">
                     </a>
-                    <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=767353226134083&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook&scope=email,public_profile">
+                    <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=${fbClientId}&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook&scope=email,public_profile">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/960px-2023_Facebook_icon.svg.png"
                              alt="facebook">
                     </a>

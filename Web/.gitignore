@@ -38,6 +38,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
+email.properties
+facebook.properties
+db.properties
 db.properties
 google.properties
 vnpay.properties
