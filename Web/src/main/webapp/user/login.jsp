@@ -6,9 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/Login.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Login.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/footer.css">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -58,14 +58,19 @@
 </div>
 <c:import url="footerUser.jsp"></c:import>
 <div class="overlay" id="overlay"></div>
-<form action="quenMK" method="post" class="quenmk">
+<div class="quenmk">
     <p>GỬI LẠI MẬT KHẨU</p>
-    <div class="khung">
-        <input type="email" name="emailMK" class="nhapemail" placeholder="Nhập email lấy lại mật khẩu" required>
+    <form class="khung" action="send_otp" method="post">
+        <input type="email" name="emailMK" class="nhapemail" placeholder="Nhập email lấy OTP cho tài khoản" required>
         <div class="errorEmail" style="color: red; font-size: 14px;margin-top: 5px">${errorMail}</div>
+        <button type="submit" class="send">Lấy OTP</button>
+    </form>
+    <div class="khung" >
+        <input name="otp" class="nhapemail" placeholder="Nhập mã OTP">
+        <div class="errorVerify" style="color: red; font-size: 14px;margin-top: 5px">${errorVerify}</div>
+        <button type="submit" class="send" id="verify">Xác thực</button>
     </div>
-    <button type="submit" class="send">Chấp nhận</button>
-</form>
+</div>
 <script>
 
     const passInput = document.getElementById('iPass');
