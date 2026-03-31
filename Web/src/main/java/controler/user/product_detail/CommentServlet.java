@@ -43,14 +43,6 @@ public class CommentServlet extends HttpServlet {
         }
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        OrderService  orderService = new OrderService();
-        OrderDetailDTO order = orderService.getOrderDetail(orderId);
-        List<MyOrderDTO> orders = orderService.getMyOrders(user.getId());
-        if (order.getOrder().isReviewed()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Đơn hàng này đã được đánh giá");
-            return;
-        }
-
         int rating = Integer.parseInt(request.getParameter("rating"));
         String content = request.getParameter("content");
         Part imagePart = request.getPart("image");
@@ -62,7 +54,6 @@ public class CommentServlet extends HttpServlet {
         commentService.insertComment(user.getId(), bookId,orderId, rating, content, imageUrl);
         request.setAttribute("message", "Đánh giá thành công");
 
-        request.setAttribute("orders", orders);
         response.setStatus(HttpServletResponse.SC_OK);
 
     }

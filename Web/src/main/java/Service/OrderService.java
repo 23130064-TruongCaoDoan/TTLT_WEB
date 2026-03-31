@@ -39,9 +39,6 @@ public class OrderService {
 
         return order_id != -1;
     }
-    public void setReviewed(int order_id) {
-        orderDao.setReviewed(order_id);
-    }
     public List<MyOrderDTO> getMyOrders(int userId) {
         return orderDao.findOrdersByUserId(userId);
     }

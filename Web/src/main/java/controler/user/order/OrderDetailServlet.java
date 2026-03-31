@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static Util.Format.formatter;
 import static Util.Format.formatterDate;
 
 @WebServlet(name = "OrderDetailServlet", value = "/my-order")
@@ -33,23 +34,19 @@ public class OrderDetailServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         int orderId = Integer.parseInt(request.getParameter("id"));
         OrderDetailDTO dto = orderService.getOrderDetail(orderId);
-        System.out.println(dto);
-        System.out.println(dto.getItems());
 
         CommentService commentService = new CommentService();
         Set<Integer> bookReviewList = commentService.getReviewedBookIds(user.getId(), orderId);
-        System.out.println(bookReviewList);
         for (OrderItemDTO orderItemDTO : dto.getItems()){
             boolean isReviewed = bookReviewList.contains(orderItemDTO.getBookId());
             orderItemDTO.setReviewed(isReviewed);
         }
 
-        LocalDate orderDate = LocalDateTime.parse(dto.getOrder().getOrderDate(), formatterDate).toLocalDate();
+        LocalDate orderDate = LocalDateTime.parse(dto.getOrder().getOrderDate(), formatter).toLocalDate();
 
         LocalDate dateCreateFunc = LocalDate.of(2026, 3, 31);
 
         boolean isNewOrder = !orderDate.isBefore(dateCreateFunc);
-
         request.setAttribute("isNewOrder", isNewOrder);
         request.setAttribute("dto", dto);
 

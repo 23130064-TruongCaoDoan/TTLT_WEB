@@ -10,7 +10,7 @@ public class MyOrderDTO {
     private double totalAmount;
     private int totalQuantity;
     private String firstBookImage;
-    private boolean reviewed;
+
 
 
     public int getOrderId() {
@@ -74,13 +74,7 @@ public class MyOrderDTO {
                 ", totalAmount=" + totalAmount +
                 ", totalQuantity=" + totalQuantity +
                 ", firstBookImage='" + firstBookImage + '\'' +
-                ", reviewed=" + reviewed +
                 '}';
     }
-    public boolean isReviewed() {
-        return reviewed;
-    }
-    public void setReviewed(boolean reviewed) {
-        this.reviewed = reviewed;
-    }
+
 }

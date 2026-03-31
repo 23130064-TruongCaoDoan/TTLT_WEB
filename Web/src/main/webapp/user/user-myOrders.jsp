@@ -101,14 +101,6 @@
                                     <button onclick="window.location='my-order?id=${o.orderId}'">
                                         Xem chi tiết
                                     </button>
-
-                                    <c:if test="${o.status.toLowerCase() == 'completed' && !o.reviewed}">
-                                        <button class="action-btn writeReviewBtn"
-                                                data-order-id="${o.orderId}">
-                                            Viết đánh giá
-                                        </button>
-                                    </c:if>
-
                                 </div>
                             </div>
                         </div>

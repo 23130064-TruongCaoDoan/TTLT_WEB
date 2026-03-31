@@ -160,23 +160,25 @@
                                 <p class="cost">
                                     <fmt:formatNumber value="${item.subtotal}" type="currency"/>
                                 </p>
-                                    <c:choose>
-                                        <c:when test="${!item.reviewed}">
-                                            <button class="writeReviewBtn" data-order-id="${dto.order.id}" data-book-id="${item.bookId}">
-                                                Viết đánh giá
-                                            </button>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="color: green">Đã đánh giá</span>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <c:if test="${isNewOrder}">
+                                        <c:choose>
+                                            <c:when test="${!item.reviewed && dto.order.status.toLowerCase() == 'completed'}">
+                                                <button class="writeReviewBtn" data-order-id="${dto.order.id}" data-book-id="${item.bookId}">
+                                                    Viết đánh giá
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="color: green">Đã đánh giá</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:if>
                             </div>
                         </div>
                     </c:forEach>
                 </div>
-                <div class="total-order-detail"style="display: flex;gap:5vw; justify-content: flex-end;margin-right: 7vw;margin-top: 20px;">
+                <div class="total-order-detail">
                     <h3>TỔNG TIỀN: </h3>
-                    <p>
+                    <p class="total">
                         <fmt:formatNumber value="${dto.order.totalAmount}" type="currency"/>
                     </p>
                 </div>
