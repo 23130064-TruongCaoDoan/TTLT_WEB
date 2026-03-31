@@ -8,6 +8,7 @@ public class OrderItemDTO {
     private int priceDiscounted;
     private int quantity;
     private double subtotal;
+    private boolean isReviewed;
 
     public int getBookId() {
         return bookId;
@@ -55,6 +56,13 @@ public class OrderItemDTO {
 
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public boolean isReviewed() {
+        return isReviewed;
+    }
+    public void setReviewed(boolean reviewed) {
+        isReviewed = reviewed;
     }
 
     @Override

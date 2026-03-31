@@ -13,8 +13,8 @@ public class OrderDao extends BaseDao {
             return getJdbi().withHandle(handle ->
                     handle.createUpdate("""
                                         INSERT INTO `ORDERS`
-                                        (user_id, total_amount, note, status, payment_method, dis_voucher_id, ship_voucher_id, reviewed)
-                                        VALUES (:user_id, :total_amount, :note, :status,:payment_method, :dis_voucher_id, :ship_voucher_id,0)
+                                        (user_id, total_amount, note, status, payment_method, dis_voucher_id, ship_voucher_id)
+                                        VALUES (:user_id, :total_amount, :note, :status,:payment_method, :dis_voucher_id, :ship_voucher_id)
                                     """)
                             .bind("user_id", userId)
                             .bind("total_amount", totalAmount)
@@ -43,7 +43,6 @@ public class OrderDao extends BaseDao {
                         o.status        AS status,
                         o.payment_method AS paymentMethod,
                         o.total_amount  AS totalAmount,
-                        o.reviewed        AS reviewed,
                 
                         SUM(oi.quantity) AS totalQuantity,
                         MIN(b.cover_img_url) AS firstBookImage
@@ -97,15 +96,6 @@ public class OrderDao extends BaseDao {
         );
     }
 
-    public void setReviewed(int orderId) {
-        getJdbi().withHandle(handle ->
-                handle.createUpdate("""
-                                UPDATE ORDERS SET reviewed = 1 WHERE id = :orderId
-                                """)
-                        .bind("orderId", orderId)
-                        .execute()
-        );
-    }
 
     public boolean updateOrder(int id, Double orderTotalPrice, String orderStatus) {
         return getJdbi().withHandle(handle -> (

@@ -1,6 +1,11 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import static Util.Format.formatterDate;
 
 public class CommentAdmin {
     private int id;
@@ -8,7 +13,7 @@ public class CommentAdmin {
     private String name;
     private int rating;
     private String content;
-    private LocalDate createAt;
+    private Date createAt;
     private boolean isActive;
 
     public CommentAdmin() {
@@ -31,11 +36,11 @@ public class CommentAdmin {
         isActive = active;
     }
 
-    public LocalDate getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDate createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 

@@ -8,6 +8,8 @@ import model.RatingStartView;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CommentDao extends BaseDao{
     public List<CommentView> getAllComment(int bookId) {
@@ -22,18 +24,33 @@ public class CommentDao extends BaseDao{
                         .list()
         );
     }
-    public void insertComment(int userId, int bookId, int rating, String content, String imgURL) {
+    public void insertComment(int userId, int bookId, int orderId, int rating, String content, String imgURL) {
         getJdbi().useHandle(handle ->
                 handle.createUpdate(
-                                "INSERT INTO comments(user_id, book_id, rating, content, create_at, img_comment, is_active) " +
-                                        "VALUES (:userId, :bookId, :rating, :content, NOW(), :imgURL , 1)"
+                                "INSERT INTO comments(user_id, book_id, order_id, rating, content, create_at, img_comment, is_active) " +
+                                        "VALUES (:userId, :bookId, :orderId, :rating, :content, NOW(), :imgURL , 1)"
                         )
                         .bind("userId", userId)
                         .bind("bookId", bookId)
+                        .bind("orderId", orderId)
                         .bind("rating", rating)
                         .bind("content", content)
                         .bind("imgURL", imgURL)
                         .execute()
+        );
+    }
+    public Set<Integer> getReviewedBookIds(int userId, int orderId) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT book_id
+                                    FROM comments
+                                    WHERE user_id = :userId
+                                      AND order_id = :orderId
+                                    """)
+                        .bind("userId", userId)
+                        .bind("orderId", orderId)
+                        .mapTo(Integer.class)
+                        .collect(Collectors.toSet())
         );
     }
     public Double getAverageRating(int bookId) {
@@ -235,7 +252,7 @@ public class CommentDao extends BaseDao{
                                             AND c.create_at >= :from
                                             AND c.create_at <= :to
                                         GROUP BY b.id, b.title
-                                        ORDER BY rating ASC
+                                        ORDER BY rating ASC,c.create_at DESC
                                     """)
                     .bind("from", from)
                     .bind("to", to)
@@ -253,7 +270,8 @@ public class CommentDao extends BaseDao{
                                         WHERE b.type = :type
                                             AND rating BETWEEN 1 AND 3
                                         GROUP BY b.id, b.title
-                                        ORDER BY rating ASC
+                                        ORDER BY rating ASC,c.create_at DESC
+
                                     """)
                     .bind("type", type)
                     .mapToBean(AdminBookRateView.class)
@@ -268,7 +286,7 @@ public class CommentDao extends BaseDao{
                                         INNER JOIN books b ON b.id = c.book_id
                                         WHERE rating BETWEEN 1 AND 3
                                         GROUP BY b.id, b.title
-                                        ORDER BY rating ASC
+                                        ORDER BY rating ASC,c.create_at DESC
                                     """)
                     .mapToBean(AdminBookRateView.class)
                     .list();
@@ -282,6 +300,7 @@ public class CommentDao extends BaseDao{
                                         FROM comments c
                                         JOIN books b ON c.book_id = b.id
                                         JOIN user u ON c.user_id = u.id
+                                        ORDER BY c.create_at DESC
                                         """)
                         .mapToBean(CommentAdmin.class)
                         .list()
@@ -295,6 +314,7 @@ public class CommentDao extends BaseDao{
                                         JOIN books b ON c.book_id = b.id
                                         JOIN user u ON c.user_id = u.id
                                         WHERE  c.create_at >= :from AND c.create_at <= :to
+                                        ORDER BY c.create_at DESC
                                         """)
                         .bind("from", from)
                         .bind("to", to)
@@ -310,6 +330,7 @@ public class CommentDao extends BaseDao{
                                         JOIN books b ON c.book_id = b.id
                                         JOIN user u ON c.user_id = u.id
                                         WHERE  c.create_at >= :from AND c.create_at <= :to AND b.type = :type
+                                        ORDER BY c.create_at DESC
                                         """)
                         .bind("from", from)
                         .bind("to", to)
@@ -326,6 +347,7 @@ public class CommentDao extends BaseDao{
                                         JOIN books b ON c.book_id = b.id
                                         JOIN user u ON c.user_id = u.id
                                         WHERE b.type = :type
+                                        ORDER BY c.create_at DESC
                                         """)
                         .bind("type", type)
                         .mapToBean(CommentAdmin.class)
@@ -337,7 +359,7 @@ public class CommentDao extends BaseDao{
         getJdbi().withHandle(handle ->
                 handle.createUpdate("""
                                     UPDATE comments
-                                    SET is_active = CASE 
+                                    SET is_active = CASE
                                         WHEN is_active = 1 THEN 0
                                         ELSE 1
                                     END
@@ -354,12 +376,12 @@ public class CommentDao extends BaseDao{
                         .execute()
         );
     }
+
     public static void main(String[] args) {
         CommentDao dao = new CommentDao();
         List<RatingStartView> comments = dao.getRatingStartView(2);
         LocalDate from =  LocalDate.of(2018, 1, 1);
         LocalDate to =  LocalDate.now();
-        System.out.println(dao.getCommentAdmin());
     }
 
 }

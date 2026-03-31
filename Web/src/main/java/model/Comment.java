@@ -2,6 +2,8 @@ package model;
 
 import java.time.LocalDate;
 
+import static Util.Format.formatterDate;
+
 public class Comment {
     private int id;
     private int bookId;
@@ -31,11 +33,11 @@ public class Comment {
         this.id = id;
     }
 
-    public int getbookId() {
+    public int getBookId() {
         return bookId;
     }
 
-    public void setbookId(int bookId) {
+    public void setBookId(int bookId) {
         this.bookId = bookId;
     }
 

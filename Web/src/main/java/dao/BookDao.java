@@ -551,12 +551,7 @@ public class BookDao extends BaseDao {
         );
     }
 
-    public int countByCategoryAndAge(
-            String category,
-            int ageFrom,
-            int ageTo
-    ) {
-
+    public int countByCategoryAndAge(String category, int ageFrom, int ageTo) {
         StringBuilder sql = new StringBuilder("""
             SELECT COUNT(*)
             FROM books
@@ -639,5 +634,10 @@ public class BookDao extends BaseDao {
                         .mapTo(String.class)
                         .list()
         );
+    }
+    public List<String> getCategory(){
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT DISTINCT type FROM BOOKS")
+                        .mapTo(String.class).list());
     }
 }

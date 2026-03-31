@@ -78,7 +78,6 @@
     const tinh = document.getElementById("tinh");
     const xa = document.getElementById("xa");
 
-    // Load danh sách Tỉnh
     fetch("https://provinces.open-api.vn/api/v2/p/")
         .then(res => res.json())
         .then(data => {
@@ -90,7 +89,6 @@
             });
         });
 
-    // Khi đổi Tỉnh => load thẳng Xã/Phường
     tinh.addEventListener("change", function () {
         xa.innerHTML = `<option value="">-- Chọn xã/phường --</option>`;
         if (!this.value) return;
@@ -108,7 +106,6 @@
             });
     });
 
-    // Submit form
     document.getElementById("addressForm").addEventListener("submit", function (e) {
         document.getElementById("tinhInput").value =
             tinh.options[tinh.selectedIndex]?.textContent || "";

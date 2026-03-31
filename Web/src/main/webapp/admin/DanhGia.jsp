@@ -1,5 +1,8 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,10 +39,9 @@
                         <label for="typeFilter">Thể loại:</label>
                         <select id="typeFilter" name="typeFilter">
                             <option value="0" ${type==0?"selected":""}>Tất cả</option>
-                            <option value="1" ${type==1?"selected":""}>Truyện tranh</option>
-                            <option value="2" ${type==2?"selected":""}>Sách ảnh</option>
-                            <option value="3" ${type==3?"selected":""}>Sách giáo dục</option>
-                            <option value="4" ${type==4?"selected":""}>Sách tô màu</option>
+                            <c:forEach var="item" items="${listType}" varStatus="i">
+                                <option value="${i.count}" ${type==i.count?"selected":""}>${item} </option>
+                            </c:forEach>
                         </select>
                     </div>
                     <button type="submit" id="applyFilter" class="btn-filter">Lọc</button>
@@ -92,6 +94,7 @@
                         </c:forEach>
                     </ul>
                 </div>
+
                 <div class="top-box">
                     <h3>Sách bị đánh giá thấp</h3>
                     <ul id="topLowRated">
@@ -166,7 +169,7 @@
                             </td>
 
                             <td>
-                                <fmt:formatDate value="${r.createAt}" pattern="dd/MM/yyyy"/>
+                                <p><fmt:formatDate value="${r.createAt}" pattern="dd/MM/yyyy"/></p>
                             </td>
 
                             <td>
@@ -192,27 +195,8 @@
                 </table>
             </div>
         </div>
+    </div>
 </main>
-<script>
-    const overlay = document.getElementById("overlay");
-    const add = document.getElementById("addEvent");
-    const sua = document.querySelector(".sua");
-    const popup = document.getElementById("eventForm");
-
-    overlay.addEventListener("click", () => {
-        overlay.style.display = "none";
-        popup.style.display = "none";
-    });
-    sua.addEventListener("click", () => {
-        overlay.style.display = "block";
-        popup.style.display = "block";
-    });
-    add.addEventListener("click", () => {
-        overlay.style.display = "block";
-        popup.style.display = "block";
-    });
-</script>
-
 <script>
     function deleteReview(id) {
         if (!confirm("Bạn chắc chắn muốn xóa đánh giá này?")) return;

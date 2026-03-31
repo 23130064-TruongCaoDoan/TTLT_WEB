@@ -6,4 +6,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Format {
     public static DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+
 }
