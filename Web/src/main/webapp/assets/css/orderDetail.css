@@ -229,3 +229,14 @@
     margin: 10px 0 10px 0;
     background-color: white;
 }
+p.cost{
+    margin-top: 70px;
+}
+button.writeReviewBtn{
+    background-color: #0A25AA;
+    color: white;
+    margin-top:20px ;
+    border:none;
+    border-radius: 6px;
+    padding: 8px;
+}

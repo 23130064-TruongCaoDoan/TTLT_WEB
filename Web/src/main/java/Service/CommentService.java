@@ -1,19 +1,22 @@
 package Service;
 
-import dao.BookDao;
 import dao.CommentDao;
 import model.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public class CommentService {
     private CommentDao hd=new CommentDao();
     public List<CommentView> getCommentView(int bookId){
         return hd.getAllComment(bookId);
     }
-    public void insertComment(int userId, int bookId, int rating, String content, String imgURL) {
-        hd.insertComment(userId, bookId, rating, content, imgURL);
+    public void insertComment(int userId, int bookId, int orderId, int rating, String content, String imgURL) {
+        hd.insertComment(userId, bookId, orderId,rating, content, imgURL);
+    }
+    public Set<Integer> getReviewedBookIds(int userId, int orderId) {
+        return hd.getReviewedBookIds(userId, orderId);
     }
     public Double getAverageRating(int bookId){
         return hd.getAverageRating(bookId);

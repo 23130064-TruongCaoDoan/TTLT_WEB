@@ -123,28 +123,6 @@
     </div>
 <c:import url="/user/footerUser.jsp"></c:import>
 
-    <div id="overlay" class="overlay"></div>
-    <div id="reviewPopup" class="popup" style="display: none;">
-
-        <form id="reviewForm" action="${pageContext.request.contextPath}/comment" method="post" enctype="multipart/form-data">
-            <input type="hidden" id="order" name="orderId">
-            <label>Đánh giá</label>
-            <select id="reviewStars" name="rating" required>
-                <option value="5">★★★★★</option>
-                <option value="4">★★★★</option>
-                <option value="3">★★★</option>
-                <option value="2">★★</option>
-                <option value="1">★</option>
-            </select>
-            <label>Nhận xét</label>
-            <textarea rows="4" placeholder="Nhập đánh giá của bạn..." name="content" required></textarea>
-            <input type="file" name="image" accept="image/*" >
-            <div class="popup-actions">
-                <button type="submit" id="submitReview">Gửi</button>
-                <button type="button" class="close-popup">Hủy</button>
-            </div>
-        </form>
-    </div>
 <script>
         const menuItems = document.querySelectorAll(".menu-item");
         menuItems.forEach(item => {
@@ -154,72 +132,5 @@
             });
         });
 </script>
-<script>
-    const overlay = document.getElementById("overlay");
-    const popup = document.getElementById("reviewPopup");
-    const closeBtn = document.querySelector(".close-popup");
-    const orderIdInput = document.getElementById("order");
-    const reviewForm = document.getElementById("reviewForm");
-
-    // Mở popup
-    document.querySelectorAll(".writeReviewBtn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const orderId = btn.dataset.orderId;
-            orderIdInput.value = orderId;
-
-            overlay.style.display = "block";
-            popup.style.display = "block";
-        });
-    });
-
-    function closePopup() {
-        overlay.style.display = "none";
-        popup.style.display = "none";
-        reviewForm.reset();
-        orderIdInput.value = "";
-    }
-
-    overlay.addEventListener("click", closePopup);
-    closeBtn.addEventListener("click", closePopup);
-
-    reviewForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const submitBtn = document.getElementById("submitReview");
-        const formData = new FormData(this);
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Đang gửi...";
-
-        fetch(this.action, {
-            method: "POST",
-            body: formData,
-            credentials: "same-origin"
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
-            })
-            .then(data => {
-                alert("Đánh giá của bạn đã được gửi thành công!");
-                closePopup();
-
-                setTimeout(() => {
-                    window.location.reload();
-                }, 500);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Có lỗi xảy ra. Vui lòng thử lại!");
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Gửi";
-            });
-    });
-</script>
-
 </body>
 </html>

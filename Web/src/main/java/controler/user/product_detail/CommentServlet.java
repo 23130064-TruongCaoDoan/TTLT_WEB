@@ -45,7 +45,6 @@ public class CommentServlet extends HttpServlet {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         OrderService  orderService = new OrderService();
         OrderDetailDTO order = orderService.getOrderDetail(orderId);
-        List<OrderItemDTO> items = order.getItems();
         List<MyOrderDTO> orders = orderService.getMyOrders(user.getId());
         if (order.getOrder().isReviewed()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Đơn hàng này đã được đánh giá");
@@ -59,15 +58,8 @@ public class CommentServlet extends HttpServlet {
         UploadService uploadService = new UploadService();
         String imageUrl = uploadService.upload(imagePart, "comments");
         CommentService commentService = new CommentService();
-        int bookId;
-        for (OrderItemDTO item : items) {
-            bookId = item.getBookId();
-            commentService.insertComment(user.getId(), bookId, rating, content, imageUrl);
-        }
-        orderService.setReviewed(orderId);
-
-
-
+        int bookId = Integer.parseInt(request.getParameter("bookId"));
+        commentService.insertComment(user.getId(), bookId,orderId, rating, content, imageUrl);
         request.setAttribute("message", "Đánh giá thành công");
 
         request.setAttribute("orders", orders);

@@ -8,6 +8,8 @@ import model.RatingStartView;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CommentDao extends BaseDao{
     public List<CommentView> getAllComment(int bookId) {
@@ -22,18 +24,33 @@ public class CommentDao extends BaseDao{
                         .list()
         );
     }
-    public void insertComment(int userId, int bookId, int rating, String content, String imgURL) {
+    public void insertComment(int userId, int bookId, int orderId, int rating, String content, String imgURL) {
         getJdbi().useHandle(handle ->
                 handle.createUpdate(
-                                "INSERT INTO comments(user_id, book_id, rating, content, create_at, img_comment, is_active) " +
-                                        "VALUES (:userId, :bookId, :rating, :content, NOW(), :imgURL , 1)"
+                                "INSERT INTO comments(user_id, book_id, order_id, rating, content, create_at, img_comment, is_active) " +
+                                        "VALUES (:userId, :bookId, :orderId, :rating, :content, NOW(), :imgURL , 1)"
                         )
                         .bind("userId", userId)
                         .bind("bookId", bookId)
+                        .bind("orderId", orderId)
                         .bind("rating", rating)
                         .bind("content", content)
                         .bind("imgURL", imgURL)
                         .execute()
+        );
+    }
+    public Set<Integer> getReviewedBookIds(int userId, int orderId) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT book_id
+                                    FROM comments
+                                    WHERE user_id = :userId
+                                      AND order_id = :orderId
+                                    """)
+                        .bind("userId", userId)
+                        .bind("orderId", orderId)
+                        .mapTo(Integer.class)
+                        .collect(Collectors.toSet())
         );
     }
     public Double getAverageRating(int bookId) {
@@ -365,7 +382,6 @@ public class CommentDao extends BaseDao{
         List<RatingStartView> comments = dao.getRatingStartView(2);
         LocalDate from =  LocalDate.of(2018, 1, 1);
         LocalDate to =  LocalDate.now();
-        System.out.println(dao.getCommentAdmin(to, to.plusDays(1)));
     }
 
 }

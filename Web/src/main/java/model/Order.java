@@ -51,9 +51,6 @@ public class Order {
         this.userId = userId;
     }
 
-//    public String getOrderDate() {
-//        return orderDate;
-//    }
     public String getOrderDate() {
         DateTimeFormatter input = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter output = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");

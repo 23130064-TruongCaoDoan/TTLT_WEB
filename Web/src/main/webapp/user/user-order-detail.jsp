@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="assets/css/home.css">
     <link rel="stylesheet" href="assets/css/errolpage.css">
     <link rel="stylesheet" href="assets/css/user.css">
-    <link rel="stylesheet" href="assets/css/address.css">
     <link rel="stylesheet" href="assets/css/myOrder.css">
     <link rel="stylesheet" href="assets/css/orderDetail.css">
     <link rel="stylesheet" href="assets/css/shoppingCart.css">
@@ -161,8 +160,17 @@
                                 <p class="cost">
                                     <fmt:formatNumber value="${item.subtotal}" type="currency"/>
                                 </p>
+                                    <c:choose>
+                                        <c:when test="${!item.reviewed}">
+                                            <button class="writeReviewBtn" data-order-id="${dto.order.id}" data-book-id="${item.bookId}">
+                                                Viết đánh giá
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="color: green">Đã đánh giá</span>
+                                        </c:otherwise>
+                                    </c:choose>
                             </div>
-
                         </div>
                     </c:forEach>
                 </div>
@@ -175,10 +183,34 @@
                 </div>
             </div>
         </div>
-
         </div>
     </div>
+
     <c:import url="/user/footerUser.jsp"></c:import>
+    <div id="overlay" class="overlay"></div>
+
+    <div id="reviewPopup" class="popup" style="display: none;">
+
+        <form id="reviewForm" action="${pageContext.request.contextPath}/comment" method="post" enctype="multipart/form-data">
+            <label>Đánh giá</label>
+            <select id="reviewStars" name="rating" required>
+                <option value="5">★★★★★</option>
+                <option value="4">★★★★</option>
+                <option value="3">★★★</option>
+                <option value="2">★★</option>
+                <option value="1">★</option>
+            </select>
+            <label>Nhận xét</label>
+            <input type="hidden" id="orderIdInput" name="orderId">
+            <input type="hidden" id="bookIdInput" name="bookId">
+            <textarea rows="4" placeholder="Nhập đánh giá của bạn..." name="content" required></textarea>
+            <input type="file" name="image" accept="image/*" >
+            <div class="popup-actions">
+                <button type="submit" id="submitReview">Gửi</button>
+                <button type="button" class="close-popup">Hủy</button>
+            </div>
+        </form>
+    </div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const menuItems = document.querySelectorAll(".menu-item");
@@ -191,5 +223,73 @@
         });
     });
 </script>
+<script>
+    const overlay = document.getElementById("overlay");
+    const popup = document.getElementById("reviewPopup");
+    const closeBtn = document.querySelector(".close-popup");
+    const orderIdInput = document.getElementById("orderIdInput");
+    const bookIdInput = document.getElementById("bookIdInput")
+    const reviewForm = document.getElementById("reviewForm");
+
+    document.querySelectorAll(".writeReviewBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const orderId = btn.dataset.orderId;
+            const bookId = btn.dataset.bookId;
+            orderIdInput.value = orderId;
+            bookIdInput.value = bookId;
+
+            overlay.style.display = "block";
+            popup.style.display = "block";
+        });
+    });
+
+    function closePopup() {
+        overlay.style.display = "none";
+        popup.style.display = "none";
+        reviewForm.reset();
+        orderIdInput.value = "";
+    }
+
+    overlay.addEventListener("click", closePopup);
+    closeBtn.addEventListener("click", closePopup);
+
+    reviewForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById("submitReview");
+        const formData = new FormData(this);
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Đang gửi...";
+
+        fetch(this.action, {
+            method: "POST",
+            body: formData,
+            credentials: "same-origin"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert("Đánh giá của bạn đã được gửi thành công!");
+                closePopup();
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Có lỗi xảy ra. Vui lòng thử lại!");
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Gửi";
+            });
+        });
+    </script>
 </body>
 </html>
