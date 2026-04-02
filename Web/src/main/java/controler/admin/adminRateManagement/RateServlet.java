@@ -1,5 +1,6 @@
 package controler.admin.adminRateManagement;
 
+import Service.BookService;
 import Service.CommentService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,6 +25,7 @@ public class RateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         User user = (User)session.getAttribute("user");
+        BookService bookService = new BookService();
         if(user==null){
             response.sendRedirect("login");
             return;
@@ -44,21 +46,24 @@ public class RateServlet extends HttpServlet {
             stars[i] = commentService.countByStar(i, from, to);
             max = Math.max(max, stars[i]);
         }
+
         List<AdminBookRateView> listHigh = commentService.getAdminBookRateHigh(from,to);
         List<AdminBookRateView> listLow = commentService.getAdminBookRateLow(from, to);
         List<CommentAdmin> listRate = commentService.getCommentAdmin(from, to);
-
+        List<String> listType = bookService.getType();
         request.setAttribute("stars", stars);
         request.setAttribute("max", max == 0 ? 1 : max);
         request.setAttribute("listHigh", listHigh);
         request.setAttribute("listLow", listLow);
         request.setAttribute("listRate", listRate);
+        request.setAttribute("listType", listType);
         request.getRequestDispatcher("admin/DanhGia.jsp").forward(request, response);
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String fromStr = request.getParameter("startDate");
         String toStr = request.getParameter("endDate");
+        BookService bookService = new BookService();
 
         int number = Integer.parseInt(request.getParameter("typeFilter"));
 
@@ -110,6 +115,8 @@ public class RateServlet extends HttpServlet {
             listRate = type.equals("all") ? commentService.getCommentAdmin() : commentService.getCommentAdmin(type);
 
         }
+        List<String> listType = bookService.getType();
+
 
         request.setAttribute("from", from);
         request.setAttribute("to", to);
@@ -118,8 +125,8 @@ public class RateServlet extends HttpServlet {
         request.setAttribute("listHigh", listHigh);
         request.setAttribute("listLow", listLow);
         request.setAttribute("listRate", listRate);
+        request.setAttribute("listType", listType);
         request.setAttribute("max", max == 0 ? 1 : max);
-
         request.getRequestDispatcher("admin/DanhGia.jsp").forward(request, response);
     }
 }

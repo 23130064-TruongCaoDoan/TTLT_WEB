@@ -1,10 +1,12 @@
 package controler.admin.adminVoucher;
 
+import Service.BookService;
 import Service.UserService;
 import Service.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import jdk.jfr.Category;
 import model.User;
 import model.Voucher;
 
@@ -35,6 +37,13 @@ public class KhoVoucher extends HttpServlet {
         }
         VoucherService voucherService = new VoucherService();
         List<Voucher> listVoucher = voucherService.getListVoucher();
+
+        BookService bookService = new BookService();
+        List<String> listTypes = bookService.getAllBookTypes();
+        List<String> listPublishers = bookService.getAllPublishers();
+
+        request.setAttribute("listTypes", listTypes);
+        request.setAttribute("listPublishers", listPublishers);
 
         request.setAttribute("listVoucher", listVoucher);
         request.getRequestDispatcher("admin/khoVoucher.jsp").forward(request, response);
