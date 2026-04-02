@@ -41,6 +41,5 @@ build/
 email.properties
 facebook.properties
 db.properties
-db.properties
 google.properties
 vnpay.properties

@@ -6,9 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/Login.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Login.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/footer.css">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -58,14 +58,22 @@
 </div>
 <c:import url="footerUser.jsp"></c:import>
 <div class="overlay" id="overlay"></div>
-<form action="quenMK" method="post" class="quenmk">
+<div class="quenmk">
     <p>GỬI LẠI MẬT KHẨU</p>
-    <div class="khung">
-        <input type="email" name="emailMK" class="nhapemail" placeholder="Nhập email lấy lại mật khẩu" required>
-        <div class="errorEmail" style="color: red; font-size: 14px;margin-top: 5px">${errorMail}</div>
+    <div class="khungk">
+        <input type="email" name="emailMK" class="nhapemail" placeholder="Nhập email lấy OTP cho tài khoản" required>
+        <div class="errorEmail">${errorMail}</div>
+        <button type="button" class="send" onclick="send_OTP()">Lấy OTP</button>
     </div>
-    <button type="submit" class="send">Chấp nhận</button>
-</form>
+    <div class="otp-box" style="display: none">
+        <div class="khung">
+            <input name="otp" class="nhapOTP" placeholder="Nhập mã OTP">
+            <div class="errorVerify">${errorVerify}</div>
+            <button type="button" class="send" id="verify" onclick="verify_OTP()">Xác thực</button>
+        </div>
+        <p id="time" style="color: #444444; font-size: 18px;margin: 15px"></p>
+    </div>
+</div>
 <script>
 
     const passInput = document.getElementById('iPass');
@@ -83,10 +91,24 @@
     const quenmk = document.querySelector(".qmk");
     const send = document.querySelector(".send");
 
+    const emailInput = document.querySelector("input[name='emailMK']");
+    const errorEmailDiv = document.querySelector(".errorEmail");
+
+    const otpInput = document.querySelector(".nhapOTP");
+    const errorVerifyDiv = document.querySelector(".errorVerify");
+
     quenmk.addEventListener('click', (e) => {
         e.preventDefault();
         overlay.style.display = "block";
         popup.style.display = "block";
+        errorEmailDiv.innerText = "";
+        document.querySelector(".otp-box").style.display = "none";
+        document.querySelector(".khungk").style.display = "block";
+        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearInputError(emailInput);
+        clearInputError(otpInput);
+        clearInterval(countdownInterval);
+        document.getElementById("time").innerText = "";
     });
     overlay.addEventListener('click', () => {
         overlay.style.display = "none";
@@ -96,7 +118,6 @@
     overlay.style.display = "block";
     popup.style.display = "block";
     </c:if>
-    const errorEmail = document.querySelector(".error.Email");
     const successAlert = document.querySelector('.login-success-alert');
     if (successAlert) {
         setTimeout(() => {
@@ -133,6 +154,173 @@
             e.preventDefault();
         }
     });
+
+
+    let countdownTime = 120;
+    let countdownInterval;
+
+    function startCountdown() {
+
+        const timeDisplay = document.getElementById("time");
+        const verifyBtn = document.getElementById("verify");
+
+        if (!timeDisplay || !verifyBtn) return;
+
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+
+        countdownTime = 120;
+        verifyBtn.disabled = false;
+
+        countdownInterval = setInterval(function () {
+            let minutes = Math.floor(countdownTime / 60);
+            let seconds = countdownTime % 60;
+
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            timeDisplay.innerText = "Mã OTP hết hạn sau: " + minutes + ":" + seconds;
+
+            countdownTime--;
+
+            if (countdownTime < 0) {
+                clearInterval(countdownInterval);
+                timeDisplay.innerText = "OTP đã hết hạn!";
+                verifyBtn.disabled = true;
+            }
+        }, 1000);
+    }
+
+    function showInputError(inputElement) {
+        inputElement.classList.remove("success");
+        inputElement.classList.add("error");
+    }
+
+    function showInputSuccess(inputElement) {
+        inputElement.classList.remove("error");
+        inputElement.classList.add("success");
+    }
+
+    function clearInputError(inputElement) {
+        inputElement.classList.remove("error");
+        inputElement.classList.remove("success");
+    }
+
+
+
+    function clearMessageError(email,otp) {
+        email.innerText = "";
+        email.classList.remove("error", "success");
+        otp.innerText = "";
+        otp.classList.remove("error", "success");
+    }
+
+    function isValidEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    function send_OTP() {
+        const email = emailInput.value.trim();
+        errorEmailDiv.innerText = "";
+        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearInputError(emailInput);
+        if (email == "") {
+            errorEmailDiv.innerText = "Vui lòng nhập email";
+
+            errorEmailDiv.classList.remove("success");
+            errorEmailDiv.classList.add("error");
+            showInputError(emailInput);
+            return;
+        }
+        if (!isValidEmail(email)) {
+            errorEmailDiv.innerText = "Email Không đúng định dạng";
+            errorEmailDiv.classList.remove("success");
+            errorEmailDiv.classList.add("error");
+            showInputError(emailInput);
+            return;
+        }
+
+        errorEmailDiv.innerText ="Đang gửi";
+        fetch("send_otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "emailMK=" + encodeURIComponent(email)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.successSend === "success") {
+                    document.querySelector(".otp-box").style.display = "block";
+                    document.querySelector(".khungk").style.display = "none";
+
+                    startCountdown();
+
+                } else {
+                    errorEmailDiv.innerText = data.message;
+                    errorEmailDiv.classList.remove("success");
+                    errorEmailDiv.classList.add("error");
+                    showInputError(errorEmailDiv);
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+            });
+    }
+
+    function verify_OTP() {
+
+        const otp = otpInput.value.trim();
+
+        errorVerifyDiv.innerText = "";
+        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearInputError(otpInput);
+
+        if (otp === "") {
+            errorVerifyDiv.innerText = "Vui lòng nhập mã OTP";
+            errorVerifyDiv.classList.add("error");
+            showInputError(otpInput);
+            return;
+        }
+
+        fetch("verify_otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "otp=" + encodeURIComponent(otp)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.successVerify === "success") {
+                    errorVerifyDiv.innerText = data.message;
+                    errorVerifyDiv.classList.add("success");
+                    clearInterval(countdownInterval);
+                    document.getElementById("time").innerText = "";
+                    setTimeout(() => {
+                        popup.style.display = "none";
+                        overlay.style.display = "none";
+
+
+                        errorVerifyDiv.innerText = "";
+                        errorVerifyDiv.classList.remove("success");
+
+                        document.querySelector(".nhapOTP").value = "";
+                        document.querySelector(".otp-box").style.display = "none";
+                        document.querySelector(".khungk").style.display = "block";
+                    }, 2500);
+
+                } else {
+                    errorVerifyDiv.innerText = data.message;
+                    errorVerifyDiv.classList.add("error");
+                    showInputError(otpInput);
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+            });
+    }
+
 
 
 </script>

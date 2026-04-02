@@ -153,12 +153,6 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     border: 1px solid #0d3164;
 }
-.quenmk .error{
-    font-size: 13px;
-    color: red;
-    margin-top: 10px;
-    display: none;
-}
 .login-success-alert {
     background: linear-gradient(135deg, #d4edda, #c3e6cb);
     color: #155724;
@@ -228,4 +222,31 @@
 #or {
     font-size: 10px;
     color: gray;
+}
+
+.khungk{
+    margin-bottom: 20px;
+}
+
+.errorEmail {
+    font-size: 14px;
+    margin-top: 5px;
+}
+.errorVerify {
+    font-size: 14px;
+    margin-top: 5px;
+}
+.errorEmail.error,.errorVerify.error {
+    color: red;
+}
+
+.errorEmail.success,.errorVerify.success {
+    color: green;
+}
+.nhapOTP.error,.nhapemail.error {
+    border-color: red;
+}
+
+.nhapOTP.success,.nhapemail.success {
+    border-color: green;
 }
