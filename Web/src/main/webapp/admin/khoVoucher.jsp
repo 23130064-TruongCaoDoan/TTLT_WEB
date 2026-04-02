@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Kho voucher</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <link rel="stylesheet" href="assets/css_admin/khoVoucher.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/notifySuccess.css">
@@ -128,14 +130,15 @@
             <div class="condition-group">
                 <input type="number" name="gia" id="gia" placeholder="Đơn hàng trên">
 
-                <select name ="loaisach" id="loaisach">
-                    <option value="">Tất cả loại sách</option>
+                <select name ="loaisach" id="loaisach" multiple>
+                    <option value="" selected>Tất cả loại sách</option>
                     <c:forEach items="${listTypes}" var="type">
                         <option value="${type}">${type}</option>
                     </c:forEach>
                 </select>
 
-                <select name="nxb" id="nxb">
+                <select name="nxb" id="nxb" multiple>
+                    <option value="" selected>Tất cả Nhà Xuất Bản</option>
                     <c:forEach items="${listPublishers}" var="pub">
                         <option value="${pub}">${pub}</option>
                     </c:forEach>
@@ -248,10 +251,13 @@
             hasError = true;
         } else clearError(description);
 
+        const selectedLoaiSach = getMultiSelectValues(loaisach);
+        const selectedNXB = getMultiSelectValues(nxb);
+
         if (
             price.value.trim() === "" &&
-            loaisach.value.trim() === "" &&
-            nxb.value.trim() === ""
+            selectedLoaiSach === "" &&
+            selectedNXB === ""
         ) {
             setGroupError("condition-group", "Vui lòng nhập ít nhất 1 điều kiện");
             hasError = true;
@@ -337,8 +343,8 @@
         usage_limit.value = limit;
         value.value = valuee;
         price.value = conditionPrice;
-        loaisach.value = conditionBook;
-        nxb.value = conditionPulisher;
+        setChoicesValues(loaiSachChoices, conditionBook);
+        setChoicesValues(nxbChoices, conditionPulisher);
 
 
         overlay.style.display = "block";
@@ -356,8 +362,8 @@
                 "&code=" + encodeURIComponent(code.value) +
                 "&description=" + encodeURIComponent(description.value) +
                 "&gia=" + encodeURIComponent(price.value) +
-                "&loaisach=" + encodeURIComponent(loaisach.value) +
-                "&nxb=" + encodeURIComponent(nxb.value) +
+                "&loaisach=" + encodeURIComponent(getMultiSelectValues(loaisach)) +
+                "&nxb=" + encodeURIComponent(getMultiSelectValues(nxb)) +
                 "&type=" + encodeURIComponent(type.value) +
                 "&start_date=" + encodeURIComponent(start_date.value) +
                 "&end_date=" + encodeURIComponent(end_date.value) +
@@ -391,8 +397,8 @@
                 "code=" + encodeURIComponent(code.value) +
                 "&description=" + encodeURIComponent(description.value) +
                 "&gia=" + encodeURIComponent(price.value) +
-                "&loaisach=" + encodeURIComponent(loaisach.value) +
-                "&nxb=" + encodeURIComponent(nxb.value) +
+                "&loaisach=" + encodeURIComponent(getMultiSelectValues(loaisach)) +
+                "&nxb=" + encodeURIComponent(getMultiSelectValues(nxb)) +
                 "&type=" + encodeURIComponent(type.value) +
                 "&start_date=" + encodeURIComponent(start_date.value) +
                 "&end_date=" + encodeURIComponent(end_date.value) +
@@ -468,6 +474,77 @@
             })
             .catch(err => console.log(err));
     }
+
+    let loaiSachChoices;
+        let nxbChoices;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loaiSachChoices = new Choices('#loaisach', {
+                removeItemButton: true,
+                searchEnabled: true,
+                placeholderValue: 'Chọn loại sách'
+            });
+
+            nxbChoices = new Choices('#nxb', {
+                removeItemButton: true,
+                searchEnabled: true,
+                placeholderValue: 'Chọn nhà xuất bản'
+            });
+
+            function setupExclusiveAll(choicesInstance) {
+                const el = choicesInstance.passedElement.element;
+                let isUpdating = false;
+
+                el.addEventListener('addItem', function(event) {
+                    if (isUpdating) return;
+                    const addedValue = event.detail.value;
+
+                    if (addedValue === "") {
+                        isUpdating = true;
+                        choicesInstance.removeActiveItems();
+                        choicesInstance.setChoiceByValue("");
+                        isUpdating = false;
+                    } else {
+                        const selectedValues = choicesInstance.getValue(true);
+                        if (selectedValues.includes("")) {
+                            isUpdating = true;
+                            choicesInstance.removeActiveItemsByValue("");
+                            isUpdating = false;
+                        }
+                    }
+                });
+
+                el.addEventListener('removeItem', function() {
+                    if (isUpdating) return;
+                    const selectedValues = choicesInstance.getValue(true);
+                    if (!selectedValues || selectedValues.length === 0) {
+                        isUpdating = true;
+                        choicesInstance.setChoiceByValue("");
+                        isUpdating = false;
+                    }
+                });
+            }
+
+            setupExclusiveAll(loaiSachChoices);
+            setupExclusiveAll(nxbChoices);
+        });
+
+        function getMultiSelectValues(selectElement) {
+            const selectedOptions = Array.from(selectElement.selectedOptions).map(opt => opt.value);
+            if (selectedOptions.length === 0 || selectedOptions.includes("")) return "";
+            return selectedOptions.join(",");
+        }
+
+        function setChoicesValues(choiceInstance, valuesString) {
+            choiceInstance.removeActiveItems();
+            if (valuesString && valuesString !== "null" && valuesString.trim() !== "") {
+                const values = valuesString.split(",").map(v => v.trim());
+                choiceInstance.setChoiceByValue(values);
+            } else {
+                choiceInstance.setChoiceByValue("");
+            }
+        }
+
 </script>
 </body>
 </html>
