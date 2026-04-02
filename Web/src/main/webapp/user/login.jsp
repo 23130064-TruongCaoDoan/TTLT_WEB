@@ -60,15 +60,18 @@
 <div class="overlay" id="overlay"></div>
 <div class="quenmk">
     <p>GỬI LẠI MẬT KHẨU</p>
-    <form class="khung" action="send_otp" method="post">
+    <div class="khungk">
         <input type="email" name="emailMK" class="nhapemail" placeholder="Nhập email lấy OTP cho tài khoản" required>
-        <div class="errorEmail" style="color: red; font-size: 14px;margin-top: 5px">${errorMail}</div>
-        <button type="submit" class="send">Lấy OTP</button>
-    </form>
-    <div class="khung" >
-        <input name="otp" class="nhapemail" placeholder="Nhập mã OTP">
-        <div class="errorVerify" style="color: red; font-size: 14px;margin-top: 5px">${errorVerify}</div>
-        <button type="submit" class="send" id="verify">Xác thực</button>
+        <div class="errorEmail">${errorMail}</div>
+        <button type="button" class="send" onclick="send_OTP()">Lấy OTP</button>
+    </div>
+    <div class="otp-box" style="display: none">
+        <div class="khung">
+            <input name="otp" class="nhapOTP" placeholder="Nhập mã OTP">
+            <div class="errorVerify">${errorVerify}</div>
+            <button type="button" class="send" id="verify">Xác thực</button>
+        </div>
+        <p id="time" style="color: #444444; font-size: 18px;margin: 15px"></p>
     </div>
 </div>
 <script>
@@ -92,6 +95,10 @@
         e.preventDefault();
         overlay.style.display = "block";
         popup.style.display = "block";
+        errorEmailDiv.innerText = "";
+        document.querySelector(".otp-box").style.display = "none";
+        document.querySelector(".khungk").style.display = "block";
+        clearMessageErrorMail();
     });
     overlay.addEventListener('click', () => {
         overlay.style.display = "none";
@@ -101,7 +108,6 @@
     overlay.style.display = "block";
     popup.style.display = "block";
     </c:if>
-    const errorEmail = document.querySelector(".error.Email");
     const successAlert = document.querySelector('.login-success-alert');
     if (successAlert) {
         setTimeout(() => {
@@ -138,6 +144,101 @@
             e.preventDefault();
         }
     });
+
+
+    let countdownTime = 120;
+    let countdownInterval;
+
+    function startCountdown() {
+
+        const timeDisplay = document.getElementById("time");
+        const verifyBtn = document.getElementById("verify");
+
+        if (!timeDisplay || !verifyBtn) return;
+
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+
+        countdownTime = 120;
+        verifyBtn.disabled = false;
+
+        countdownInterval = setInterval(function () {
+            let minutes = Math.floor(countdownTime / 60);
+            let seconds = countdownTime % 60;
+
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            timeDisplay.innerText = "Mã OTP hết hạn sau: " + minutes + ":" + seconds;
+
+            countdownTime--;
+
+            if (countdownTime < 0) {
+                clearInterval(countdownInterval);
+                timeDisplay.innerText = "OTP đã hết hạn!";
+                verifyBtn.disabled = true;
+            }
+        }, 1000);
+    }
+
+    const emailInput = document.querySelector("input[name='emailMK']");
+    const errorEmailDiv = document.querySelector(".errorEmail");
+
+
+    function clearMessageErrorMail() {
+        errorEmailDiv.innerText = "";
+        errorEmailDiv.classList.remove("error", "success");
+    }
+
+    function isValidEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    function send_OTP() {
+        const email = emailInput.value.trim();
+        errorEmailDiv.innerText = "";
+        clearMessageErrorMail();
+        if (email == "") {
+            errorEmailDiv.innerText = "Vui lòng nhập email";
+            errorEmailDiv.classList.remove("success");
+            errorEmailDiv.classList.add("error");
+            return;
+        }
+        if (!isValidEmail(email)) {
+            errorEmailDiv.innerText = "Email Không đúng định dạng";
+            errorEmailDiv.classList.remove("success");
+            errorEmailDiv.classList.add("error");
+            return;
+        }
+
+        errorEmailDiv.innerText ="Đang gửi";
+        fetch("send_otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "emailMK=" + encodeURIComponent(email)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.successSend === "success") {
+                    document.querySelector(".otp-box").style.display = "block";
+                    document.querySelector(".khungk").style.display = "none";
+
+                    startCountdown();
+
+                } else {
+                    errorEmailDiv.innerText = data.message;
+                    errorEmailDiv.classList.remove("success");
+                    errorEmailDiv.classList.add("error");
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+            });
+    }
+
+
 
 
 </script>
