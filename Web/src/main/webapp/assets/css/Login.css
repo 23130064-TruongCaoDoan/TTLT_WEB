@@ -232,11 +232,15 @@
     font-size: 14px;
     margin-top: 5px;
 }
-.errorEmail.error,errorVerify.error {
+.errorVerify {
+    font-size: 14px;
+    margin-top: 5px;
+}
+.errorEmail.error,.errorVerify.error {
     color: red;
 }
 
-.errorEmail.success,errorVerify.success {
+.errorEmail.success,.errorVerify.success {
     color: green;
 }
 .nhapOTP.error,.nhapemail.error {

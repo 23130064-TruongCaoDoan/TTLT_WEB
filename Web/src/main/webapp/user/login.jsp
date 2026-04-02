@@ -69,7 +69,7 @@
         <div class="khung">
             <input name="otp" class="nhapOTP" placeholder="Nhập mã OTP">
             <div class="errorVerify">${errorVerify}</div>
-            <button type="button" class="send" id="verify">Xác thực</button>
+            <button type="button" class="send" id="verify" onclick="verify_OTP()">Xác thực</button>
         </div>
         <p id="time" style="color: #444444; font-size: 18px;margin: 15px"></p>
     </div>
@@ -91,6 +91,12 @@
     const quenmk = document.querySelector(".qmk");
     const send = document.querySelector(".send");
 
+    const emailInput = document.querySelector("input[name='emailMK']");
+    const errorEmailDiv = document.querySelector(".errorEmail");
+
+    const otpInput = document.querySelector(".nhapOTP");
+    const errorVerifyDiv = document.querySelector(".errorVerify");
+
     quenmk.addEventListener('click', (e) => {
         e.preventDefault();
         overlay.style.display = "block";
@@ -98,7 +104,11 @@
         errorEmailDiv.innerText = "";
         document.querySelector(".otp-box").style.display = "none";
         document.querySelector(".khungk").style.display = "block";
-        clearMessageErrorMail();
+        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearInputError(emailInput);
+        clearInputError(otpInput);
+        clearInterval(countdownInterval);
+        document.getElementById("time").innerText = "";
     });
     overlay.addEventListener('click', () => {
         overlay.style.display = "none";
@@ -180,13 +190,28 @@
         }, 1000);
     }
 
-    const emailInput = document.querySelector("input[name='emailMK']");
-    const errorEmailDiv = document.querySelector(".errorEmail");
+    function showInputError(inputElement) {
+        inputElement.classList.remove("success");
+        inputElement.classList.add("error");
+    }
+
+    function showInputSuccess(inputElement) {
+        inputElement.classList.remove("error");
+        inputElement.classList.add("success");
+    }
+
+    function clearInputError(inputElement) {
+        inputElement.classList.remove("error");
+        inputElement.classList.remove("success");
+    }
 
 
-    function clearMessageErrorMail() {
-        errorEmailDiv.innerText = "";
-        errorEmailDiv.classList.remove("error", "success");
+
+    function clearMessageError(email,otp) {
+        email.innerText = "";
+        email.classList.remove("error", "success");
+        otp.innerText = "";
+        otp.classList.remove("error", "success");
     }
 
     function isValidEmail(email) {
@@ -197,17 +222,21 @@
     function send_OTP() {
         const email = emailInput.value.trim();
         errorEmailDiv.innerText = "";
-        clearMessageErrorMail();
+        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearInputError(emailInput);
         if (email == "") {
             errorEmailDiv.innerText = "Vui lòng nhập email";
+
             errorEmailDiv.classList.remove("success");
             errorEmailDiv.classList.add("error");
+            showInputError(emailInput);
             return;
         }
         if (!isValidEmail(email)) {
             errorEmailDiv.innerText = "Email Không đúng định dạng";
             errorEmailDiv.classList.remove("success");
             errorEmailDiv.classList.add("error");
+            showInputError(emailInput);
             return;
         }
 
@@ -231,6 +260,7 @@
                     errorEmailDiv.innerText = data.message;
                     errorEmailDiv.classList.remove("success");
                     errorEmailDiv.classList.add("error");
+                    showInputError(errorEmailDiv);
                 }
             })
             .catch(error => {
@@ -238,6 +268,58 @@
             });
     }
 
+    function verify_OTP() {
+
+        const otp = otpInput.value.trim();
+
+        errorVerifyDiv.innerText = "";
+        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearInputError(otpInput);
+
+        if (otp === "") {
+            errorVerifyDiv.innerText = "Vui lòng nhập mã OTP";
+            errorVerifyDiv.classList.add("error");
+            showInputError(otpInput);
+            return;
+        }
+
+        fetch("verify_otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "otp=" + encodeURIComponent(otp)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.successVerify === "success") {
+                    errorVerifyDiv.innerText = data.message;
+                    errorVerifyDiv.classList.add("success");
+                    clearInterval(countdownInterval);
+                    document.getElementById("time").innerText = "";
+                    setTimeout(() => {
+                        popup.style.display = "none";
+                        overlay.style.display = "none";
+
+
+                        errorVerifyDiv.innerText = "";
+                        errorVerifyDiv.classList.remove("success");
+
+                        document.querySelector(".nhapOTP").value = "";
+                        document.querySelector(".otp-box").style.display = "none";
+                        document.querySelector(".khungk").style.display = "block";
+                    }, 2500);
+
+                } else {
+                    errorVerifyDiv.innerText = data.message;
+                    errorVerifyDiv.classList.add("error");
+                    showInputError(otpInput);
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+            });
+    }
 
 
 
