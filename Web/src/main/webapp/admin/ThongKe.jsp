@@ -94,6 +94,11 @@
                         <i class="fa-solid fa-user-tie"></i>
                         <h3>Top 10 Khách hàng mua nhiều nhất</h3>
                     </div>
+                    <div class="card">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <h3>Số lượng sản phẩm đã bán</h3>
+                        <p><fmt:formatNumber value="${totalSoldProducts}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
+                    </div>
                 </div>
                 <div class="chart">
                     <h2>Biểu đồ doanh thu</h2>
@@ -189,11 +194,19 @@
             document.getElementById("top10-product-panel").style.display = "flex";
         }
 
+        if (e.target.closest(".out-of-stock-card")) {
+            document.getElementById("out-of-stock-panel").style.display = "flex";
+        }
+
         if (e.target.id === "top10-customer-panel") {
             e.target.style.display = "none";
         }
 
         if (e.target.id === "top10-product-panel") {
+            e.target.style.display = "none";
+        }
+
+        if (e.target.id === "out-of-stock-panel") {
             e.target.style.display = "none";
         }
     });
@@ -218,6 +231,9 @@
 
                 document.querySelector("#top10-product-panel").innerHTML =
                     doc.querySelector("#top10-product-panel").innerHTML;
+
+                document.querySelector("#out-of-stock-panel").innerHTML =
+                    doc.querySelector("#out-of-stock-panel").innerHTML;
 
                 let scripts = doc.querySelectorAll("script");
 

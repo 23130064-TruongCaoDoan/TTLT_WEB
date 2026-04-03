@@ -62,4 +62,10 @@ public class ThongKeService {
     public List<String> getListYear(){
         return dao.listYears();
     }
+    public int getTotalSoldProducts(LocalDate from, LocalDate to) {
+        return  dao.getTotalSoldProducts(from, to);
+    }
+    public int getTotalSoldProducts(String year) {
+        return dao.getTotalSoldProducts(year);
+    }
 }
