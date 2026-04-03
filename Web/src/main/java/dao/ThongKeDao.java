@@ -3,6 +3,7 @@ package dao;
 import DTO.BookWithSoldDTO;
 import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
+import model.Book;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -347,6 +348,40 @@ public class ThongKeDao extends BaseDao {
                         .mapTo(Integer.class)
                         .findFirst()
                         .orElse(0));
+    }
+
+    public int getTotalStock() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(stock)
+                        FROM books
+                        """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public int getOutOfStockCount() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*)
+                        FROM books
+                        WHERE stock = 0
+                        """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public  List<Book> getOutOfStockBooks() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                            SELECT *
+                            FROM books
+                            WHERE stock = 0
+                            """)
+                        .mapToBean(Book.class)
+                        .list());
     }
 
     public List<String> listYears() {

@@ -34,7 +34,9 @@ public class ThongKeServlet extends HttpServlet {
         String year=request.getParameter("year");
         List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
         int totalSoldProducts = 0;
-
+        int totalStock = 0;
+        int outOfStockCount = 0;
+        List<Book> outOfStockBooks = null;
 
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -68,6 +70,11 @@ public class ThongKeServlet extends HttpServlet {
 
         request.setAttribute("from",from);
         request.setAttribute("to",to);
+
+        totalStock = thongKeService.getTotalStock();
+        outOfStockCount = thongKeService.getOutOfStockCount();
+        outOfStockBooks = thongKeService.getOutOfStockBooks();
+
         if("year".equals(type)){
             totalRevenue = thongKeService.getTotalRevenue(year);
             getTop10Users = thongKeService.getTop10Users(year);
@@ -97,6 +104,9 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("revenueChartData", getTotalRevenueChart);
         request.setAttribute("type", type);
         request.setAttribute("totalSoldProducts", totalSoldProducts);
+        request.setAttribute("totalStock", totalStock);
+        request.setAttribute("outOfStockCount", outOfStockCount);
+        request.setAttribute("outOfStockBooks", outOfStockBooks);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);
     }
