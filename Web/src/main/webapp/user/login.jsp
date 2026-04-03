@@ -282,6 +282,7 @@
             showInputError(otpInput);
             return;
         }
+        errorVerifyDiv.innerText ="Đang xử lí";
 
         fetch("verify_otp", {
             method: "POST",
