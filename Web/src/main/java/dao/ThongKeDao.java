@@ -349,6 +349,17 @@ public class ThongKeDao extends BaseDao {
                         .orElse(0));
     }
 
+    public int getTotalStock() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(stock)
+                        FROM books
+                        """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
     public List<String> listYears() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )

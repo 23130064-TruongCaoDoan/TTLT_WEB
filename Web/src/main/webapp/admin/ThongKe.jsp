@@ -99,6 +99,11 @@
                         <h3>Số lượng sản phẩm đã bán</h3>
                         <p><fmt:formatNumber value="${totalSoldProducts}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
                     </div>
+                    <div class="card">
+                        <i class="fa-solid fa-warehouse"></i>
+                        <h3>Tổng tồn kho</h3>
+                        <p><fmt:formatNumber value="${totalStock}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
+                    </div>
                 </div>
                 <div class="chart">
                     <h2>Biểu đồ doanh thu</h2>

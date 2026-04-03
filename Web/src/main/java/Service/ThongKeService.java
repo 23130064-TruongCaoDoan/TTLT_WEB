@@ -68,4 +68,7 @@ public class ThongKeService {
     public int getTotalSoldProducts(String year) {
         return dao.getTotalSoldProducts(year);
     }
+    public int getTotalStock() {
+        return dao.getTotalStock();
+    }
 }
