@@ -24,6 +24,8 @@ public class cancelVoucher extends HttpServlet {
         HttpSession session = request.getSession();
 
         String voucherIdStr = request.getParameter("voucherId");
+        Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
+        if (numApplyVoucher == null) numApplyVoucher = 0;
         boolean success = false;
 
         if (voucherIdStr != null) {
@@ -34,15 +36,20 @@ public class cancelVoucher extends HttpServlet {
 
             if (discount != null && discount.getId() == voucherId) {
                 session.removeAttribute("appliedDiscountVoucher");
+                numApplyVoucher--;
                 success = true;
             }
 
             if (ship != null && ship.getId() == voucherId) {
                 session.removeAttribute("appliedShipVoucher");
+                numApplyVoucher--;
                 success = true;
             }
         }
+        session.setAttribute("numApplyVoucher", numApplyVoucher);
 
-        response.getWriter().write("{\"success\": " + success + "}");
+        response.getWriter().write(
+                "{ \"success\": " + success +", \"num\": " + numApplyVoucher + " }"
+        );
     }
 }

@@ -57,7 +57,6 @@
                     <div class="section-title">PHƯƠNG THỨC VẬN CHUYỂN</div>
                     <div class="shipping-item">
                         <input type="radio" name="ship" value="fast"
-                               onchange="document.getElementById('checkoutForm').submit()"
                         ${shipType=='fast'?'checked':''}>
                         <div>
                             <strong>Giao hàng nhanh: 60.000 đ</strong><br>
@@ -66,7 +65,6 @@
                     </div>
                     <div class="shipping-item">
                         <input type="radio" name="ship" value="standard"
-                               onchange="document.getElementById('checkoutForm').submit()"
                         ${shipType=='standard'?'checked':''}>
                         <div>
                             <strong>Giao hàng tiêu chuẩn: 30.000 đ</strong><br>
@@ -272,25 +270,19 @@
                                 <span>HSD:${voucher.getStartDateFormatted()} - ${voucher.getEndDateFormatted()}</span>
                                 <c:choose>
                                     <c:when test="${sessionScope.appliedDiscountVoucher != null && sessionScope.appliedDiscountVoucher.id == voucher.id}">
-                                        <form action="cancelVoucher" method="post">
-                                            <button type="submit"
-                                                    style="background:#dc3545;color:white;border:none;padding:6px 12px;border-radius:4px;">
-                                                <input type="hidden" name="page" value="2">
-                                                <input type="hidden" name="type" value="discount">
-                                                Hủy
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                onclick="cancelVoucher(${sessionScope.appliedDiscountVoucher.id})"
+                                                class="cancel-btn">
+                                            Hủy
+                                        </button>
                                     </c:when>
                                     <c:otherwise>
                                         <c:if test="${empty sessionScope.appliedDiscountVoucher}">
-                                            <form action="applyVoucher" method="post">
-                                                <input type="hidden" name="voucherId" value="${voucher.id}">
-                                                <input type="hidden" name="page" value="2">
-                                                <button type="submit"
-                                                        style="background:#28a745;color:white;border:none;padding:6px 12px;border-radius:4px;">
-                                                    Áp dụng
-                                                </button>
-                                            </form>
+                                            <button type="button"
+                                                    onclick="applyVoucher(${voucher.id})"
+                                                    class="apply-btn">
+                                                Áp dụng
+                                            </button>
                                         </c:if>
                                         <c:if test="${not empty sessionScope.appliedDiscountVoucher}">
                                             <button disabled
@@ -339,25 +331,19 @@
                                 <span>HSD:${voucher.getStartDateFormatted()} - ${voucher.getEndDateFormatted()}</span>
                                 <c:choose>
                                     <c:when test="${sessionScope.appliedShipVoucher != null && sessionScope.appliedShipVoucher.id == voucher.id}">
-                                        <form action="cancelVoucher" method="post">
-                                            <input type="hidden" name="page" value="2">
-                                            <input type="hidden" name="type" value="ship">
-                                            <button type="submit"
-                                                    style="background:#dc3545;color:white;border:none;padding:6px 12px;border-radius:4px;">
-                                                Hủy
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                onclick="cancelVoucher(${sessionScope.appliedShipVoucher.id})"
+                                                class="cancel-btn">
+                                            Hủy
+                                        </button>
                                     </c:when>
                                     <c:otherwise>
                                         <c:if test="${empty sessionScope.appliedShipVoucher}">
-                                            <form action="applyVoucher" method="post">
-                                                <input type="hidden" name="page" value="2">
-                                                <input type="hidden" name="voucherId" value="${voucher.id}">
-                                                <button type="submit"
-                                                        style="background:#28a745;color:white;border:none;padding:6px 12px;border-radius:4px;">
-                                                    Áp dụng
-                                                </button>
-                                            </form>
+                                            <button type="button"
+                                                    onclick="applyVoucher(${voucher.id})"
+                                                    class="apply-btn">
+                                                Áp dụng
+                                            </button>
                                         </c:if>
                                         <c:if test="${not empty sessionScope.appliedShipVoucher}">
                                             <button disabled
@@ -686,6 +672,48 @@
             }, 3400);
         }
     });
+
+
+
+    function applyVoucher(voucherId) {
+
+        fetch("applyVoucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "voucherId=" + voucherId
+        })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+
+            })
+            .catch(err => console.log(err));
+    }
+
+    function cancelVoucher(voucherId) {
+
+        fetch("cancelVoucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "voucherId=" + voucherId
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(err => console.log(err));
+    }
 </script>
 </body>
 </html>
