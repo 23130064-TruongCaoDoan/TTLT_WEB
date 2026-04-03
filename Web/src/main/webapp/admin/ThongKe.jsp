@@ -99,16 +99,6 @@
                         <h3>Số lượng sản phẩm đã bán</h3>
                         <p><fmt:formatNumber value="${totalSoldProducts}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
                     </div>
-                    <div class="card">
-                        <i class="fa-solid fa-warehouse"></i>
-                        <h3>Tổng tồn kho</h3>
-                        <p><fmt:formatNumber value="${totalStock}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
-                    </div>
-                    <div class="card out-of-stock-card">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <h3>Sản phẩm đã hết</h3>
-                        <p>${outOfStockCount} sản phẩm</p>
-                    </div>
                 </div>
                 <div class="chart">
                     <h2>Biểu đồ doanh thu</h2>
@@ -180,41 +170,6 @@
                         </tbody>
                     </table>
                 </div>
-        </div>
-    </div>
-    <div id="out-of-stock-panel">
-        <div id="out-of-stock-container">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Mã sách</th>
-                        <th>Tên sách</th>
-                        <th>Tác giả</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Loại sách</th>
-                        <th>Độ tuổi</th>
-                        <th>Hình ảnh</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${outOfStockBooks}" var="b">
-                        <tr>
-                            <td>${b.bookCode}</td>
-                            <td>${b.title}</td>
-                            <td>—</td>
-                            <td><fmt:formatNumber value="${b.price}" type="number"
-                                                  groupingUsed="true" maxFractionDigits="0"/></td>
-                            <td style="color: red; font-weight: bold;">0</td>
-                            <td>${b.type}</td>
-                            <td>${b.age}+</td>
-                            <td><img src="${b.coverImgUrl}" width="60"></td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 

@@ -4,7 +4,6 @@ import DTO.BookWithSoldDTO;
 import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
 import dao.ThongKeDao;
-import model.Book;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -68,16 +67,5 @@ public class ThongKeService {
     }
     public int getTotalSoldProducts(String year) {
         return dao.getTotalSoldProducts(year);
-    }
-    public int getTotalStock() {
-        return dao.getTotalStock();
-    }
-
-    public  int getOutOfStockCount() {
-        return dao.getOutOfStockCount();
-    }
-
-    public List<Book> getOutOfStockBooks() {
-        return dao.getOutOfStockBooks();
     }
 }
