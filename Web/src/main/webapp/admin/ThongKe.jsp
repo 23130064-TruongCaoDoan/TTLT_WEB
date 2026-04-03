@@ -182,7 +182,41 @@
                 </div>
         </div>
     </div>
-
+    <div id="out-of-stock-panel">
+        <div id="out-of-stock-container">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Mã sách</th>
+                        <th>Tên sách</th>
+                        <th>Tác giả</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Loại sách</th>
+                        <th>Độ tuổi</th>
+                        <th>Hình ảnh</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${outOfStockBooks}" var="b">
+                        <tr>
+                            <td>${b.bookCode}</td>
+                            <td>${b.title}</td>
+                            <td>—</td>
+                            <td><fmt:formatNumber value="${b.price}" type="number"
+                                                  groupingUsed="true" maxFractionDigits="0"/></td>
+                            <td style="color: red; font-weight: bold;">0</td>
+                            <td>${b.type}</td>
+                            <td>${b.age}+</td>
+                            <td><img src="${b.coverImgUrl}" width="60"></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </main>
 </body>
