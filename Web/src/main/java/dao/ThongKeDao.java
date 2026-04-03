@@ -319,6 +319,36 @@ public class ThongKeDao extends BaseDao {
                         .list()
         );
     }
+
+    public int getTotalSoldProducts(LocalDate from, LocalDate to) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(oi.quantity)
+                        FROM order_items oi
+                        JOIN orders o ON  o.id = oi.order_id
+                        WHERE o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+                        """)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public int getTotalSoldProducts(String year) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(oi.quantity)
+                        FROM order_items oi
+                        JOIN orders o ON o.id = oi.order_id
+                        WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                        """)
+                        .bind("year", year)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
     public List<String> listYears() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )
