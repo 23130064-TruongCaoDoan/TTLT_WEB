@@ -104,6 +104,11 @@
                         <h3>Tổng tồn kho</h3>
                         <p><fmt:formatNumber value="${totalStock}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
                     </div>
+                    <div class="card out-of-stock-card">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <h3>Sản phẩm đã hết</h3>
+                        <p>${outOfStockCount} sản phẩm</p>
+                    </div>
                 </div>
                 <div class="chart">
                     <h2>Biểu đồ doanh thu</h2>
@@ -177,6 +182,7 @@
                 </div>
         </div>
     </div>
+
 
 </main>
 </body>
