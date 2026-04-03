@@ -46,5 +46,6 @@ public class OrderItem {
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
+
 }
 

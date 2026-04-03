@@ -239,13 +239,20 @@ p.cost{
     margin-top: 72px;
     text-align: center;
 }
-button.writeReviewBtn{
+button.writeReviewBtn, button.viewReview{
     background-color: #0A25AA;
     color: white;
     border:none;
     border-radius: 6px;
     padding: 8px;
     margin-top:auto;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+button.writeReviewBtn:hover,button.viewReview:hover{
+    cursor: pointer;
 }
 div.total-order-detail{
     display: flex;

@@ -145,11 +145,15 @@
                     </div>
                     <c:forEach var="item" items="${dto.items}">
                         <div class="card-item">
-
-                            <img src="${item.coverImgUrl}" alt=""/>
-
+                            <c:url var="detailUrl" value="/productDetail">
+                                <c:param name="id" value="${item.bookId}"/>
+                                <c:param name="type" value="${item.type}"/>
+                            </c:url>
+                            <a href="${detailUrl}"><img src="${item.coverImgUrl}" alt=""/></a>
                             <div class="item-info">
-                                <h4>${item.title}</h4>
+                                <a href="${detailUrl}" style="text-decoration: none">
+                                    <h4>${item.title}</h4>
+                                </a>
                             </div>
 
                             <div class="quantity">
@@ -161,16 +165,18 @@
                                     <fmt:formatNumber value="${item.subtotal}" type="currency"/>
                                 </p>
                                     <c:if test="${isNewOrder}">
-                                        <c:choose>
-                                            <c:when test="${!item.reviewed && dto.order.status.toLowerCase() == 'completed'}">
-                                                <button class="writeReviewBtn" data-order-id="${dto.order.id}" data-book-id="${item.bookId}">
-                                                    Viết đánh giá
-                                                </button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span style="color: green">Đã đánh giá</span>
-                                            </c:otherwise>
-                                        </c:choose>
+                                        <c:if test="${!item.reviewed && isCompleted}">
+                                            <button class="writeReviewBtn" data-order-id="${dto.order.id}" data-book-id="${item.bookId}">
+                                                Viết đánh giá
+                                            </button>
+                                        </c:if>
+
+                                        <c:if test="${item.reviewed}">
+                                            <button class="viewReview" data-order-id="${dto.order.id}" data-book-id="${item.bookId}">
+                                                Xem đánh giá
+                                            </button>
+                                        </c:if>
+
                                     </c:if>
                             </div>
                         </div>

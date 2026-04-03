@@ -23,7 +23,6 @@ public class OrderItemDao extends BaseDao{
                         .bind("subtotal", item.getPrice() * item.getQuantity())
                         .add();
             }
-
             batch.execute();
         });
     }

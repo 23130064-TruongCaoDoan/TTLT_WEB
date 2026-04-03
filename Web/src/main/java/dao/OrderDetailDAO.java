@@ -61,6 +61,7 @@ public class OrderDetailDAO extends BaseDao{
             List<OrderItemDTO> items = handle.createQuery("""
                 SELECT oi.book_id,
                        b.title,
+                       b.type,
                        b.cover_img_url,
                        b.price_discounted,
                        oi.quantity,

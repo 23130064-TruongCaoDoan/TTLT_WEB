@@ -49,6 +49,7 @@ public class OrderDetailServlet extends HttpServlet {
         boolean isNewOrder = !orderDate.isBefore(dateCreateFunc);
         request.setAttribute("isNewOrder", isNewOrder);
         request.setAttribute("dto", dto);
+        request.setAttribute("isCompleted", "COMPLETED".equalsIgnoreCase(dto.getOrder().getStatus()));
 
         request.getRequestDispatcher("/user/user-order-detail.jsp")
                 .forward(request, response);
