@@ -3,6 +3,7 @@ package controler.user.voucher;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.Voucher;
 
 import java.io.IOException;
 
@@ -14,28 +15,34 @@ public class cancelVoucher extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession();
-        String type = request.getParameter("type");
-        int numApplyVoucher= (int) session.getAttribute("numApplyVoucher");
-        if ("discount".equals(type) && session.getAttribute("appliedDiscountVoucher") != null) {
-            session.removeAttribute("appliedDiscountVoucher");
-            numApplyVoucher--;
-        }
-        else if ("ship".equals(type) && session.getAttribute("appliedShipVoucher") != null) {
-            session.removeAttribute("appliedShipVoucher");
-            numApplyVoucher--;
-        }
-        session.setAttribute("numApplyVoucher", numApplyVoucher);
 
-        int page = Integer.parseInt(request.getParameter("page")==null?"0":request.getParameter("page"));
+        String voucherIdStr = request.getParameter("voucherId");
+        boolean success = false;
 
-        if (page == 1) {
-            response.sendRedirect("ShoppingCart");
+        if (voucherIdStr != null) {
+            int voucherId = Integer.parseInt(voucherIdStr);
+
+            Voucher discount = (Voucher) session.getAttribute("appliedDiscountVoucher");
+            Voucher ship = (Voucher) session.getAttribute("appliedShipVoucher");
+
+            if (discount != null && discount.getId() == voucherId) {
+                session.removeAttribute("appliedDiscountVoucher");
+                success = true;
+            }
+
+            if (ship != null && ship.getId() == voucherId) {
+                session.removeAttribute("appliedShipVoucher");
+                success = true;
+            }
         }
-        if (page == 2) {
-            response.sendRedirect("ThanhToan");
-        }
+
+        response.getWriter().write("{\"success\": " + success + "}");
     }
-
 }

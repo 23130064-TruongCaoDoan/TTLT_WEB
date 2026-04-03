@@ -117,11 +117,11 @@
                                 <div>
                                     <p>HSD: ${sessionScope.appliedDiscountVoucher.getEndDateFormatted()}</p>
                                 </div>
-                                <form action="cancelVoucher" method="post" style="display:inline;">
-                                    <input type="hidden" name="page" value="1">
-                                    <input type="hidden" name="type" value="discount">
-                                    <button type="submit">Hủy</button>
-                                </form>
+                                <button type="button"
+                                        onclick="cancelVoucher(${sessionScope.appliedDiscountVoucher.id})"
+                                        class="cancel-btn">
+                                    Hủy
+                                </button>
                             </div>
                         </div>
                     </c:when>
@@ -185,23 +185,19 @@
                                 <span>HSD:${voucher.getStartDateFormatted()} - ${voucher.getEndDateFormatted()}</span>
                                 <c:choose>
                                     <c:when test="${sessionScope.appliedDiscountVoucher != null && sessionScope.appliedDiscountVoucher.id == voucher.id}">
-                                        <form action="cancelVoucher" method="post">
-                                            <button type="submit" style="background:#dc3545;color:white;border:none;padding:6px 12px;border-radius:4px;">
-                                                <input type="hidden" name="page" value="1">
-                                                <input type="hidden" name="type" value="discount">
-                                                Hủy
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                onclick="cancelVoucher(${sessionScope.appliedDiscountVoucher.id})"
+                                                class="cancel-btn">
+                                            Hủy
+                                        </button>
                                     </c:when>
                                     <c:otherwise>
                                         <c:if test="${empty sessionScope.appliedDiscountVoucher}">
-                                            <form action="applyVoucher" method="post">
-                                                <input type="hidden" name="page" value="1">
-                                                <input type="hidden" name="voucherId" value="${voucher.id}">
-                                                <button type="submit" style="background:#28a745;color:white;border:none;padding:6px 12px;border-radius:4px;">
-                                                    Áp dụng
-                                                </button>
-                                            </form>
+                                            <button type="button"
+                                                    onclick="applyVoucher(${voucher.id})"
+                                                    class="apply-btn">
+                                                Áp dụng
+                                            </button>
                                         </c:if>
                                         <c:if test="${not empty sessionScope.appliedDiscountVoucher}">
                                             <button disabled style="opacity:0.6;cursor:not-allowed;padding:6px 12px;border-radius:4px;">
@@ -277,7 +273,6 @@
     });
 
 
-    // hiển thị chi tiết voucher
     const detailBtns = document.querySelectorAll(".voucher-detail");
     const voucherPopup = document.getElementById("voucherPopup");
     const cancelBtn = document.querySelector("#voucherPopup .cancel");
@@ -295,13 +290,11 @@
             const categories = voucherItem.dataset.categories;
             const publishers = voucherItem.dataset.publishers;
 
-            // Cập nhật nội dung popup
             document.getElementById("detailDescription").textContent = description;
             document.getElementById("detailCode").textContent = code;
             document.getElementById("detailExpiry").textContent = 'Hiệu lực: '+ start +' - '+endDate;
             document.getElementById("detailMinPrice").textContent = minPrice + " VNĐ";
 
-            // Xử lý danh mục và NXB (nếu có)
             const categoriesLi = document.getElementById("detailCategoriesLi");
             const publishersLi = document.getElementById("detailPublishersLi");
 
@@ -423,6 +416,49 @@
         setTimeout(() => {
             toast.classList.remove("show");
         }, 5000);
+    }
+
+
+
+
+    function applyVoucher(voucherId) {
+
+        fetch("applyVoucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "voucherId=" + voucherId
+        })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+
+            })
+            .catch(err => console.log(err));
+    }
+
+    function cancelVoucher(voucherId) {
+
+        fetch("cancelVoucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "voucherId=" + voucherId
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(err => console.log(err));
     }
 </script>
 </body>
