@@ -680,5 +680,45 @@ public class BookDao extends BaseDao {
     }
 
     public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT b.* FROM books b ");
+            if (type == 4 || idEvent > 0) {
+                sql.append("INNER JOIN event_books eb ON eb.book_id = b.id ");
+                sql.append("INNER JOIN events e ON e.id = eb.event_id ");
+            }
+            sql.append("LEFT JOIN authors a ON b.author_id = a.id ");
+            sql.append("WHERE b.is_sell = 1 ");
+
+            if (keyword != null && !keyword.isBlank()) {
+                sql.append("AND (b.title LIKE :keyword OR a.name LIKE :keyword) ");
+            }
+
+            if (type == 1) sql.append("AND b.price_discounted > 0 ");
+            if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
+            if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
+            if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
+            if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
+            }
+
+            sql.append("ORDER BY b.add_date DESC ");
+            sql.append("LIMIT :limit OFFSET :offset ");
+
+            var query = handle.createQuery(sql.toString());
+            if (keyword != null && !keyword.isBlank()) query.bind("keyword", "%" + keyword + "%");
+            if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
+            if (category != null && !category.isBlank()) query.bind("category", category);
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                query.bind("ageFrom", Integer.parseInt(parts[0]));
+                query.bind("ageTo", Integer.parseInt(parts[1]));
+            }
+            query.bind("limit", pageSize);
+            query.bind("offset", offset);
+
+            return query.mapToBean(Book.class).list();
+        });
     }
 }
