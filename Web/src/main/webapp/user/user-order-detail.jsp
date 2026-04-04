@@ -176,7 +176,6 @@
                                                 Xem đánh giá
                                             </button>
                                         </c:if>
-
                                     </c:if>
                             </div>
                         </div>
@@ -196,7 +195,6 @@
 
     <c:import url="/user/footerUser.jsp"></c:import>
     <div id="overlay" class="overlay"></div>
-
     <div id="reviewPopup" class="popup" style="display: none;">
 
         <form id="reviewForm" action="${pageContext.request.contextPath}/comment" method="post" enctype="multipart/form-data">
@@ -219,6 +217,27 @@
             </div>
         </form>
     </div>
+
+    <div id="reviewModal" class="modal">
+        <h2>Đánh giá sản phẩm</h2>
+
+        <c:forEach var="item" items="${dto.items}">
+            <c:if test="${item.reviewed && item.commentView != null}">
+                <p class="comment-rating" style="color: #FFD700">
+                    <c:forEach begin="1" end="${item.commentView.rating}">
+                        ★
+                    </c:forEach>
+                </p>
+                <p class="content">${item.commentView.content}</p>
+                <div class="images-comment">
+                    <c:if test="${not empty item.commentView.imgComment}">
+                        <img src="${item.commentView.imgComment}">
+                    </c:if>
+                </div>
+                <hr>
+            </c:if>
+        </c:forEach>
+    </div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const menuItems = document.querySelectorAll(".menu-item");
@@ -233,11 +252,20 @@
 </script>
 <script>
     const overlay = document.getElementById("overlay");
-    const popup = document.getElementById("reviewPopup");
-    const closeBtn = document.querySelector(".close-popup");
+    const reviewModal = document.getElementById("reviewModal");
+    const reviewPopup = document.getElementById("reviewPopup");
+    const closeBtn = document.querySelectorAll(".close-popup");
     const orderIdInput = document.getElementById("orderIdInput");
-    const bookIdInput = document.getElementById("bookIdInput")
+    const bookIdInput = document.getElementById("bookIdInput");
     const reviewForm = document.getElementById("reviewForm");
+
+
+    document.querySelectorAll(".viewReview").forEach(btn => {
+        btn.addEventListener("click", () => {
+            overlay.style.display = "block";
+            reviewModal.style.display = "block";
+        });
+    });
 
     document.querySelectorAll(".writeReviewBtn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -247,20 +275,21 @@
             bookIdInput.value = bookId;
 
             overlay.style.display = "block";
-            popup.style.display = "block";
+            reviewPopup.style.display = "block";
         });
     });
 
     function closePopup() {
         overlay.style.display = "none";
-        popup.style.display = "none";
-        reviewForm.reset();
-        orderIdInput.value = "";
+        reviewModal.style.display = "none";
+        reviewPopup.style.display = "none";
+
+        if (reviewForm) reviewForm.reset();
+        if (orderIdInput) orderIdInput.value = "";
     }
 
     overlay.addEventListener("click", closePopup);
-    closeBtn.addEventListener("click", closePopup);
-
+    closeBtn.forEach(btn => btn.addEventListener("click", closePopup));
     reviewForm.addEventListener("submit", function (e) {
         e.preventDefault();
 

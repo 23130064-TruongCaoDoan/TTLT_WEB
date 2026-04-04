@@ -8,6 +8,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.Book;
+import model.CommentView;
 import model.User;
 
 import java.io.IOException;
@@ -36,14 +37,15 @@ public class OrderDetailServlet extends HttpServlet {
         OrderDetailDTO dto = orderService.getOrderDetail(orderId);
 
         CommentService commentService = new CommentService();
+
         Set<Integer> bookReviewList = commentService.getReviewedBookIds(user.getId(), orderId);
         for (OrderItemDTO orderItemDTO : dto.getItems()){
             boolean isReviewed = bookReviewList.contains(orderItemDTO.getBookId());
             orderItemDTO.setReviewed(isReviewed);
+            orderItemDTO.setCommentView(commentService.getCommentByOrder(orderItemDTO.getBookId(),orderId,user.getId()));
         }
 
         LocalDate orderDate = LocalDateTime.parse(dto.getOrder().getOrderDate(), formatter).toLocalDate();
-
         LocalDate dateCreateFunc = LocalDate.of(2026, 3, 31);
         boolean isNewOrder = !orderDate.isBefore(dateCreateFunc);
         request.setAttribute("isNewOrder", isNewOrder);
