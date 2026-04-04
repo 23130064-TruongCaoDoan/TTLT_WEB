@@ -113,7 +113,7 @@ public class DanhMucServlet extends HttpServlet {
         request.setAttribute("title", title);
         request.setAttribute("type", type);
         request.setAttribute("color", color);
-        request.setAttribute("search", search);
+        request.setAttribute("ssearch", search);
         request.setAttribute("icon", icon);
 
         request.setAttribute("bookList", bookList);

@@ -58,9 +58,10 @@ public class FilterSanPhamServlet extends HttpServlet {
         String icon = "";
         String color = "";
         String mode="";
+        String search="";
 
         if (keyword != null && !keyword.isBlank()) {
-            searchTitle = "Kết quả tìm kiếm: " + keyword;
+            search =keyword;
             mode="search";
             request.setAttribute("mode", "search");
         } else {
@@ -83,7 +84,6 @@ public class FilterSanPhamServlet extends HttpServlet {
                     searchTitle = "Sách theo sự kiện";
                     break;
                 default:
-                    searchTitle = "Sản phẩm";
             }
             request.setAttribute("mode", "filter");
         }
@@ -97,7 +97,8 @@ public class FilterSanPhamServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-        request.setAttribute("search", searchTitle);
+        request.setAttribute("ssearch", searchTitle);
+        request.setAttribute("search", search);
         request.setAttribute("icon", icon);
         request.setAttribute("color", color);
 

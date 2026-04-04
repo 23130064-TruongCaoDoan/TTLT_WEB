@@ -419,12 +419,12 @@ public class BookService {
     public static void main(String[] args) {
         BookService bookService = new BookService();
         List<Book> books = bookService.getBooksUniversal(
-                "", 0, 0,
+                "doraemon", 0, 0,
                 null, // category
                 null, // author
-                "Fujiko F Fujio", // publisher
+                null, // publisher
                 null, // age
-                "10", // maxPrice
+                "100000", // maxPrice
                 "",   // year
                 1, 28
         );

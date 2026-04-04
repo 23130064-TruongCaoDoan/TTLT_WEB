@@ -49,7 +49,7 @@
                 </div>
                 <form action="search" method="get" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" class="search-input" name="bSearch" autocomplete="off" placeholder="Tìm kiếm sách"/>
+                    <input type="search" class="search-input" name="bSearch" value="${bSearch != null ? bSearch : ''}" autocomplete="off" placeholder="Tìm kiếm sách"/>
                     <div class="suggest-box"></div>
                     <button type="submit">Tìm Kiếm</button>
                 </form>

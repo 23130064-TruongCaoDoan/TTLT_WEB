@@ -26,12 +26,17 @@
 <div class="page-wrapper">
     <c:import url="/user/headerUser.jsp"></c:import>
     <div class="banner" style="background-color: ${color}">
-        <h1><c:if test="${not empty search}">
-            ${search}
-        </c:if>
+        <h1>
+            <c:if test="${not empty search}">
+            Kết quả tìm kiếm: ${search}
+            </c:if>
+            <c:if test="${not empty ssearch}">
+                ${ssearch}
+            </c:if>
             <c:if test="${empty search}">
                 Sản Phẩm
-            </c:if></h1>
+            </c:if>
+        </h1>
         <c:if test="${not empty icon}">
             <img src="${icon}" alt="">
         </c:if>

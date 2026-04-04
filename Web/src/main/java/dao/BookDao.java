@@ -718,7 +718,7 @@ public class BookDao extends BaseDao {
                 sql.append("AND b.price_discounted <= :maxPrice ");
             }
             if (year != null && !year.isBlank()) {
-                sql.append("AND YEAR(b.published_date) = :year ");
+                sql.append("AND b.published_date= :year ");
             }
 
             sql.append("ORDER BY b.add_date DESC ");
