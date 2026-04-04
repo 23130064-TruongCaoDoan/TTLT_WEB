@@ -4,6 +4,7 @@ public class OrderItemDTO {
 
     private int bookId;
     private String title;
+    private String type;
     private String coverImgUrl;
     private int priceDiscounted;
     private int quantity;
@@ -63,6 +64,12 @@ public class OrderItemDTO {
     }
     public void setReviewed(boolean reviewed) {
         isReviewed = reviewed;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

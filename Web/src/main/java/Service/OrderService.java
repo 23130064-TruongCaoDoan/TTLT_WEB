@@ -39,8 +39,8 @@ public class OrderService {
 
         return order_id != -1;
     }
-    public List<MyOrderDTO> getMyOrders(int userId) {
-        return orderDao.findOrdersByUserId(userId);
+    public List<MyOrderDTO> getMyOrders(int userId, String status) {
+        return orderDao.findOrdersByUserId(userId,status);
     }
 
     public OrderDetailDTO getOrderDetail(int orderId) {

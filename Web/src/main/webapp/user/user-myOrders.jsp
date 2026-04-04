@@ -1,7 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %><!DOCTYPE html>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <fmt:setLocale value="vi_VN"/>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,20 +26,29 @@
         </div>
         <div class="manage-order">
             <div class="menu-bar">
-                <div class="menu-item all active">
+                <div class="menu-item active" data-status="ALL">
                     <p>Tất cả</p>
                 </div>
-                <div class="menu-item">
+                <div class="menu-item" data-status="PENDING">
+                    <p>Chờ xác nhận</p>
+                </div>
+                <div class="menu-item" data-status="PROCESSING">
                     <p>Đang xử lí</p>
                 </div>
-                <div class="menu-item">
+                <div class="menu-item" data-status="SHIPPING">
+                    <p>Đang giao</p>
+                </div>
+                <div class="menu-item" data-status="COMPLETED">
                     <p>Hoàn thành</p>
                 </div>
-                <div class="menu-item">
+                <div class="menu-item" data-status="CANCELLED">
                     <p>Đã hủy</p>
                 </div>
+                <div class="menu-item" data-status="Refund">
+                    <p>Hoàn trả</p>
+                </div>
             </div>
-            <div class="order-content">
+            <div class="order-content" id="myOrderList">
 
                 <c:if test="${empty orders}">
                     <p>Chưa có đơn hàng nào.</p>
@@ -47,7 +57,6 @@
                 <c:forEach var="o" items="${orders}">
                     <div class="card-order">
 
-                        <!-- TOP -->
                         <div class="top">
                             <p class="order-id">Mã đơn hàng: #${o.orderId}</p>
 
@@ -83,7 +92,6 @@
                             </div>
                         </div>
 
-                        <!-- BOTTOM -->
                         <div class="bottom">
                             <div class="quantity">
                                 Số lượng sản phẩm ${o.totalQuantity}
@@ -121,6 +129,12 @@
             item.addEventListener("click", function() {
                 menuItems.forEach(i => i.classList.remove("active"));
                 this.classList.add("active");
+                const status = this.dataset.status;
+                fetch("${pageContext.request.contextPath}/my-orders?status=" + encodeURIComponent(status)+ "&sort=true")                    .then(request => request.text())
+                    .then(html =>{
+                        document.getElementById("myOrderList").innerHTML = html
+                    })
+                    .catch(err => console.error(err));
             });
         });
 </script>

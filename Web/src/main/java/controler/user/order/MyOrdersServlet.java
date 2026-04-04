@@ -15,21 +15,28 @@ public class MyOrdersServlet extends HttpServlet {
     private final OrderService service = new OrderService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        User user = (User) req.getSession().getAttribute("user");
-
+        User user = (User) request.getSession().getAttribute("user");
+        String status = request.getParameter("status");
+        if (status == null) {
+            status = "ALL";
+        }
         if (user == null) {
-            resp.sendRedirect("login");
+            response.sendRedirect("login");
             return;
         }
+        String sort = request.getParameter("sort");
 
-        List<MyOrderDTO> orders = service.getMyOrders(user.getId());
-        req.setAttribute("orders", orders);
 
-        req.getRequestDispatcher("/user/user-myOrders.jsp")
-                .forward(req, resp);
+        List<MyOrderDTO> orders = service.getMyOrders(user.getId(),status);
+        request.setAttribute("orders", orders);
+        if (sort == null) {
+            request.getRequestDispatcher("/user/user-myOrders.jsp").forward(request, response);
+        }else{
+            request.getRequestDispatcher("/user/orderList.jsp").forward(request, response);
+        }
+
     }
 
     @Override
