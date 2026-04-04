@@ -640,4 +640,39 @@ public class BookDao extends BaseDao {
                 handle.createQuery("SELECT DISTINCT type FROM BOOKS")
                         .mapTo(String.class).list());
     }
+
+    public int countBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT b.id) FROM books b ");
+            if (type == 4 || idEvent > 0) {
+                sql.append("INNER JOIN event_books eb ON eb.book_id = b.id ");
+                sql.append("INNER JOIN events e ON e.id = eb.event_id ");
+            }
+            sql.append("WHERE b.is_sell = 1 ");
+
+            if (type == 1) sql.append("AND b.price_discounted > 0 ");
+            if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
+            if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
+            if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
+            if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
+            }
+
+            var query = handle.createQuery(sql.toString());
+            if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
+            if (category != null && !category.isBlank()) query.bind("category", category);
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                query.bind("ageFrom", Integer.parseInt(parts[0]));
+                query.bind("ageTo", Integer.parseInt(parts[1]));
+            }
+
+            return query.mapTo(int.class).one();
+        });
+    }
+
+    public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
+    }
 }

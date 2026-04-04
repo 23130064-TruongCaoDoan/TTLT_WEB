@@ -40,11 +40,7 @@ public class FilterSanPhamServlet extends HttpServlet {
         if (page <= 0) page = 1;
 
 
-        int totalBooks = bookService.countBooksUniversal(
-                keyword, type, idEvent,
-                category, author, publisher,
-                age, maxPrice, year
-        );
+        int totalBooks = bookService.countBooksUniversal(keyword, type, idEvent,category, author, publisher,age, maxPrice, year);
 
         int totalPages = (int) Math.ceil((double) totalBooks / PAGE_SIZE);
         if (totalPages == 0) totalPages = 1;
@@ -52,14 +48,7 @@ public class FilterSanPhamServlet extends HttpServlet {
 
         int offset = (page - 1) * PAGE_SIZE;
 
-
-        List<Book> bookList = bookService.getBooksUniversal(
-                keyword, type, idEvent,
-                category, author, publisher,
-                age, maxPrice, year,
-                PAGE_SIZE, offset
-        );
-
+        List<Book> bookList = bookService.getBooksUniversal(keyword, type, idEvent,category, author, publisher,age, maxPrice, year,PAGE_SIZE, offset);
 
         String searchTitle = "";
         String icon = "";
@@ -114,5 +103,5 @@ public class FilterSanPhamServlet extends HttpServlet {
         String value = request.getParameter(name);
         return (value == null || value.isBlank()) ? 0 : Integer.parseInt(value);
     }
-}
+
 }

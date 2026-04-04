@@ -410,8 +410,10 @@ public class BookService {
     
 
     public int countBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year) {
+        return hd.countBooksUniversal(keyword,type,idEvent,category,author,publisher,age,maxPrice,year);
     }
 
     public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
+        return hd.getBooksUniversal(keyword,type,idEvent,category,author,publisher,age,maxPrice,year,pageSize,offset);
     }
 }
