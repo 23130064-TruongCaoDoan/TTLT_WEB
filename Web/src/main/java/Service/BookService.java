@@ -407,4 +407,11 @@ public class BookService {
     public List<String> getType(){
         return hd.getCategory();
     }
+    
+
+    public int countBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year) {
+    }
+
+    public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
+    }
 }

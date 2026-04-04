@@ -1,6 +1,7 @@
 package controler.user.danh_muc;
 
 import Service.BookService;
+import Service.EventService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -12,58 +13,96 @@ import java.util.List;
 @WebServlet(name = "FilterSanPhamServlet", value = "/filter")
 public class FilterSanPhamServlet extends HttpServlet {
     private final BookService bookService = new BookService();
+    private final int PAGE_SIZE = 28;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int page = 1;
-        int pageSize = 28;
-        String p = request.getParameter("page");
-        if (p != null && !p.isBlank()) page = Integer.parseInt(p);
+        EventService eventService = new EventService();
+        eventService.updatBookPriceForEvent();
 
-        int ageFrom = 0;
-        int ageTo = 100;
-        String af = request.getParameter("ageFrom");
-        String at = request.getParameter("ageTo");
-        if (af != null && !af.isBlank()) ageFrom = Integer.parseInt(af);
-        if (at != null && !at.isBlank()) ageTo = Integer.parseInt(at);
+        BookService bookService = new BookService();
+
+
+        String keyword = request.getParameter("bSearch");
+        int type = getInt(request, "type");
+        int idEvent = getInt(request, "idEvent");
 
         String category = request.getParameter("category");
-        if (category != null && category.isBlank()) category = null;
+        String author = request.getParameter("author");
+        String publisher = request.getParameter("publisher");
+        String age = request.getParameter("age");
+        String maxPrice = request.getParameter("maxPrice");
+        String year = request.getParameter("year");
 
-        int totalBooks = bookService.countBooksByCategoryAndAge(
-                category, ageFrom, ageTo
+        int page = getInt(request, "page");
+        if (page <= 0) page = 1;
+
+
+        int totalBooks = bookService.countBooksUniversal(
+                keyword, type, idEvent,
+                category, author, publisher,
+                age, maxPrice, year
         );
 
-        int totalPages = (int) Math.ceil((double) totalBooks / pageSize);
-        if (page < 1) page = 1;
-        if (page > totalPages && totalPages > 0) page = totalPages;
+        int totalPages = (int) Math.ceil((double) totalBooks / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+        if (page > totalPages) page = totalPages;
 
-        int offset = (page - 1) * pageSize;
+        int offset = (page - 1) * PAGE_SIZE;
 
-        List<Book> bookList = bookService.getBooksByCategoryAndAge(
-                category, ageFrom, ageTo, pageSize, offset
+
+        List<Book> bookList = bookService.getBooksUniversal(
+                keyword, type, idEvent,
+                category, author, publisher,
+                age, maxPrice, year,
+                PAGE_SIZE, offset
         );
 
-        String qs = request.getQueryString();
-        if (qs != null) {
-            qs = qs.replaceAll("(^|&)page=\\d+", "");
-            qs = qs.replaceAll("^&+", "");
-            qs = qs.replaceAll("&+$", "");
+
+        String searchTitle = "";
+        String icon = "";
+        String color = "";
+
+        if (keyword != null && !keyword.isBlank()) {
+            searchTitle = "Kết quả tìm kiếm: " + keyword;
+            request.setAttribute("mode", "search");
+        } else {
+            switch (type) {
+                case 1:
+                    searchTitle = "Sách Đang Giảm Giá";
+                    icon = "assets/img/icon/sale.png";
+                    color = "#FF4C4C";
+                    break;
+                case 2:
+                    searchTitle = "Góc Sách Mới";
+                    break;
+                case 3:
+                    searchTitle = "Sách được yêu thích nhất";
+                    break;
+                case 4:
+                    searchTitle = "Sách theo sự kiện";
+                    break;
+                default:
+                    searchTitle = "Sản phẩm";
+            }
+            request.setAttribute("mode", "filter");
         }
 
         request.setAttribute("bookList", bookList);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("qs", qs);
 
-        request.setAttribute("category", category);
-        request.setAttribute("ageFrom", ageFrom);
-        request.setAttribute("ageTo", ageTo);
-        request.setAttribute("mode", "filter");
+        request.setAttribute("search", searchTitle);
+        request.setAttribute("icon", icon);
+        request.setAttribute("color", color);
 
-        request.getRequestDispatcher("/user/dsSanPham.jsp")
+        request.setAttribute("type", type);
+        request.setAttribute("idEvent", idEvent);
+        request.setAttribute("bSearch", keyword);
+
+        request.getRequestDispatcher("user/dsSanPham.jsp")
                 .forward(request, response);
     }
 
@@ -71,4 +110,9 @@ public class FilterSanPhamServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
+    private int getInt(HttpServletRequest request, String name) {
+        String value = request.getParameter(name);
+        return (value == null || value.isBlank()) ? 0 : Integer.parseInt(value);
+    }
+}
 }
