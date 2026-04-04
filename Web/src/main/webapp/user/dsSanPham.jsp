@@ -41,6 +41,7 @@
 
             <div class="filter-title"><h2>Bộ lọc</h2></div>
             <hr>
+            <form id="filterForm" action="filter" method="get">
             <div class="filter-group">
                 <div class="filter-header" onclick="toggle(this,'categoryBox')">
                     Thể loại
@@ -48,7 +49,7 @@
                 </div>
                 <div class="filter-options" id="categoryBox">
                     <c:forEach var="c" items="${categories}">
-                        <label><input type="checkbox" value="${c}"> ${c}</label>
+                        <label><input type="checkbox" name="category" value="${c}"> ${c}</label>
                     </c:forEach>
                 </div>
             </div>
@@ -60,7 +61,7 @@
                 </div>
                 <div class="filter-options" id="publisherBox">
                     <c:forEach var="p" items="${publishers}">
-                        <label><input type="checkbox" value="${p}"> ${p}</label>
+                        <label><input type="checkbox" name="publisher" value="${p}"> ${p}</label>
                     </c:forEach>
                 </div>
             </div>
@@ -72,7 +73,7 @@
                 </div>
                 <div class="filter-options" id="authorBox">
                     <c:forEach var="a" items="${authors}">
-                        <label><input type="checkbox" value="${a}"> ${a}</label>
+                        <label><input type="checkbox" name="author" value="${a}"> ${a}</label>
                     </c:forEach>
                 </div>
             </div>
@@ -86,14 +87,14 @@
                     <label><input type="radio" name="age" value="0-1"> 0-1 tuổi</label>
                     <label><input type="radio" name="age" value="1-3"> 1-3 tuổi</label>
                     <label><input type="radio" name="age" value="4-10"> 4-10 tuổi</label>
-                    <label><input type="radio" name="age" value="10+"> >10 tuổi</label>
+                    <label><input type="radio" name="age" value="10-100"> >10 tuổi</label>
                 </div>
             </div>
 
             <div class="filter-group">
                 <div class="filter-header">Khoảng giá</div>
                 <div class="price-slider">
-                    <input type="range" id="priceRange" min="0" max="500000" step="10000">
+                    <input type="range" id="priceRange" name="maxPrice" min="0" max="500000" step="10000">
                     <div class="price-value">
                         Tối đa: <span id="priceValue">0</span> đ
                     </div>
@@ -102,7 +103,7 @@
 
             <div class="filter-group">
                 <div class="filter-header">Năm xuất bản</div>
-                <select id="yearSelect">
+                <select id="yearSelect" name="year">
                     <option value="">-- Chọn năm --</option>
                     <c:forEach var="y" items="${years}">
                         <option value="${y}">${y}</option>
@@ -110,9 +111,15 @@
                 </select>
             </div>
 
-            <button id="applyFilter" class="apply-filter">Lọc</button>
-            <button class="clear-filter">Xoá bộ lọc</button>
+                <input type="hidden" name="type" value="${type}" />
+                <input type="hidden" name="idEvent" value="${idEvent}" />
+                <input type="hidden" name="color" value="${color}" />
+                <input type="hidden" name="icon" value="${icon}" />
+                <input type="hidden" name="bSearch" value="${bSearch}" />
 
+            <button type="submit" id="applyFilter" class="apply-filter">Lọc</button>
+            <button type="button" class="clear-filter">Xoá bộ lọc</button>
+            </form>
         </div>
         <c:if test="${empty bookList}"><span STYLE="text-align: center; font-size: 20px; color: gray; margin: auto">KHÔNG CÓ SẢN PHẨM</span></c:if>
         <div class="listProducts">
@@ -251,59 +258,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-
-        const BASE_URL = "${pageContext.request.contextPath}/dsSanPham";
-        const params = new URLSearchParams(window.location.search);
-
-
-        document.querySelectorAll("#categoryBox input").forEach(cb => {
-            cb.onchange = () => {
-                const selected = Array.from(
-                    document.querySelectorAll("#categoryBox input:checked")
-                ).map(i => i.value);
-
-                if (selected.length > 0) {
-                    params.set("category", selected.join(","));
-                } else {
-                    params.delete("category");
-                }
-            };
-        });
-
-        document.querySelectorAll("#publisherBox input").forEach(cb => {
-            cb.onchange = () => {
-                const selected = Array.from(
-                    document.querySelectorAll("#publisherBox input:checked")
-                ).map(i => i.value);
-
-                if (selected.length > 0) {
-                    params.set("publisher", selected.join(","));
-                } else {
-                    params.delete("publisher");
-                }
-            };
-        });
-
-        document.querySelectorAll("#authorBox input").forEach(cb => {
-            cb.onchange = () => {
-                const selected = Array.from(
-                    document.querySelectorAll("#authorBox input:checked")
-                ).map(i => i.value);
-
-                if (selected.length > 0) {
-                    params.set("author", selected.join(","));
-                } else {
-                    params.delete("author");
-                }
-            };
-        });
-
-        document.querySelectorAll("input[name='age']").forEach(r => {
-            r.onchange = () => {
-                params.set("age", r.value);
-            };
-        });
-
         const priceRange = document.getElementById("priceRange");
         const priceValue = document.getElementById("priceValue");
 
@@ -313,33 +267,10 @@
             priceRange.oninput = function () {
                 priceValue.innerText = Number(this.value).toLocaleString();
             };
-
-            priceRange.onchange = function () {
-                params.set("maxPrice", this.value);
-            };
         }
-
-        const yearSelect = document.getElementById("yearSelect");
-        if (yearSelect) {
-            yearSelect.onchange = function () {
-                if (this.value) {
-                    params.set("year", this.value);
-                } else {
-                    params.delete("year");
-                }
-            };
-        }
-
-        document.getElementById("applyFilter").onclick = () => {
-            params.delete("page");
-            window.location.href = BASE_URL + "?" + params.toString();
-        };
-
-        document.querySelector(".clear-filter").onclick = () => {
-            window.location.href = BASE_URL;
-        };
-
     });
+
+
 </script>
 
 </html>

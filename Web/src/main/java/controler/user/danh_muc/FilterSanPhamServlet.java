@@ -10,7 +10,7 @@ import model.Book;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "FilterSanPhamServlet", value = "/filter")
+@WebServlet(name = "filter", value = "/filter")
 public class FilterSanPhamServlet extends HttpServlet {
     private final BookService bookService = new BookService();
     private final int PAGE_SIZE = 28;
@@ -29,9 +29,13 @@ public class FilterSanPhamServlet extends HttpServlet {
         int type = getInt(request, "type");
         int idEvent = getInt(request, "idEvent");
 
-        String category = request.getParameter("category");
-        String author = request.getParameter("author");
-        String publisher = request.getParameter("publisher");
+        String[] categories = request.getParameterValues("category");
+        String[] authors = request.getParameterValues("author");
+        String[] publishers = request.getParameterValues("publisher");
+
+        String category = categories != null ? String.join(",", categories) : null;
+        String author = authors != null ? String.join(",", authors) : null;
+        String publisher = publishers != null ? String.join(",", publishers) : null;
         String age = request.getParameter("age");
         String maxPrice = request.getParameter("maxPrice");
         String year = request.getParameter("year");
@@ -69,9 +73,11 @@ public class FilterSanPhamServlet extends HttpServlet {
                     break;
                 case 2:
                     searchTitle = "Góc Sách Mới";
+                    icon="assets/img/icon/iconNew.png";
                     break;
                 case 3:
                     searchTitle = "Sách được yêu thích nhất";
+
                     break;
                 case 4:
                     searchTitle = "Sách theo sự kiện";
@@ -86,6 +92,7 @@ public class FilterSanPhamServlet extends HttpServlet {
         request.setAttribute("publishers", bookService.getAllPublishers());
         request.setAttribute("years", bookService.getAllYears());
 
+
         request.setAttribute("bookList", bookList);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
@@ -98,9 +105,9 @@ public class FilterSanPhamServlet extends HttpServlet {
         request.setAttribute("idEvent", idEvent);
         request.setAttribute("bSearch", keyword);
         request.setAttribute("mode", mode);
+        request.setAttribute("qs", request.getQueryString());
 
-        request.getRequestDispatcher("user/dsSanPham.jsp")
-                .forward(request, response);
+        request.getRequestDispatcher("user/dsSanPham.jsp").forward(request, response);
     }
 
     @Override

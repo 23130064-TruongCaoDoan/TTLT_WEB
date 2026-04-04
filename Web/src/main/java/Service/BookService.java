@@ -6,7 +6,6 @@ import dao.AuthorDao;
 import dao.BookDao;
 import jakarta.servlet.http.Part;
 import model.Book;
-import Service.UploadService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -415,5 +414,23 @@ public class BookService {
 
     public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
         return hd.getBooksUniversal(keyword,type,idEvent,category,author,publisher,age,maxPrice,year,pageSize,offset);
+    }
+
+    public static void main(String[] args) {
+        BookService bookService = new BookService();
+        List<Book> books = bookService.getBooksUniversal(
+                "", 0, 0,
+                null, // category
+                null, // author
+                "Fujiko F Fujio", // publisher
+                null, // age
+                "10", // maxPrice
+                "",   // year
+                1, 28
+        );
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
+        System.out.println(books.size());
     }
 }
