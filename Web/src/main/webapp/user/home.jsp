@@ -39,7 +39,7 @@
                             <c:choose>
 
                                 <c:when test="${eventHasBooks[event.id]}">
-                                    <a href="${pageContext.request.contextPath}/dsSanPham?type=4&title=${event.title}&idEvent=${event.id}">
+                                    <a href="${pageContext.request.contextPath}/dsSanPham?type=4&ssearch=${event.title}&idEvent=${event.id}">
                                         <img src="${event.imgUrl}" alt="event-img">
                                     </a>
                                 </c:when>

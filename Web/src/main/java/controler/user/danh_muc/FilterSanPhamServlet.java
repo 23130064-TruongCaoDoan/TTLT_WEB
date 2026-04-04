@@ -79,7 +79,7 @@ public class FilterSanPhamServlet extends HttpServlet {
 
                     break;
                 case 4:
-                    searchTitle = "Sách theo sự kiện";
+                    searchTitle = eventService.getEventById(idEvent).getTitle().toUpperCase();
                     break;
                 default:
             }
@@ -103,7 +103,6 @@ public class FilterSanPhamServlet extends HttpServlet {
         request.setAttribute("type", type);
         request.setAttribute("idEvent", idEvent);
         request.setAttribute("bSearch", keyword);
-        request.setAttribute("mode", "filter");
         request.setAttribute("qs", request.getQueryString());
 
         request.getRequestDispatcher("user/dsSanPham.jsp").forward(request, response);

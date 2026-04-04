@@ -28,15 +28,21 @@
     <c:import url="/user/headerUser.jsp"></c:import>
     <div class="banner" style="background-color: ${color}">
         <h1>
-            <c:if test="${not empty search}">
-            Kết quả tìm kiếm: ${search}
-            </c:if>
-            <c:if test="${not empty ssearch}">
-                ${ssearch}
-            </c:if>
-            <c:if test="${empty search}">
-                Sản Phẩm
-            </c:if>
+            <c:choose>
+
+                <c:when test="${not empty search}">
+                    Kết quả tìm kiếm: ${search}
+                </c:when>
+
+                <c:when test="${not empty ssearch}">
+                    ${ssearch}
+                </c:when>
+
+                <c:otherwise>
+                    Sản Phẩm
+                </c:otherwise>
+
+            </c:choose>
         </h1>
         <c:if test="${not empty icon}">
             <img src="${icon}" alt="">
@@ -171,7 +177,7 @@
                     <input type="range"
                            id="priceRange"
                            name="maxPrice"
-                           value="${param.maxPrice != null ? param.maxPrice : 0}"
+                           value="${param.maxPrice != null ? param.maxPrice : 200000}"
                            min="0" max="500000" step="10000">
                     <div class="price-value">
                         Tối đa: <span id="priceValue">0</span> đ
@@ -197,9 +203,8 @@
                 <input type="hidden" name="color" value="${color}" />
                 <input type="hidden" name="icon" value="${icon}" />
                 <input type="hidden" name="bSearch" value="${bSearch}" />
-
-            <button type="submit" id="applyFilter" class="apply-filter">Lọc</button>
-            <button type="button" class="clear-filter">Xoá bộ lọc</button>
+                <button type="submit" id="applyFilter" class="apply-filter">Lọc</button>
+                <button type="button" class="clear-filter" onclick="clearFilter()">Xoá bộ lọc</button>
             </form>
         </div>
         <c:if test="${empty bookList}"><span STYLE="text-align: center; font-size: 20px; color: gray; margin: auto">KHÔNG CÓ SẢN PHẨM</span></c:if>
@@ -277,19 +282,19 @@
                         <c:otherwise>
                             <c:if test="${currentPage > 1}">
                                 <a class="page-btn prev"
-                                   href="dsSanPham?page=${currentPage - 1}&type=${type}&idEvent=${idEvent}&title=${title}">«</a>
+                                   href="dsSanPham?page=${currentPage - 1}&type=${type}&idEvent=${idEvent}&ssearch=${ssearch}">«</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
                                 <a class="page-btn ${i == currentPage ? 'active' : ''}"
-                                   href="dsSanPham?page=${i}&type=${type}&idEvent=${idEvent}&title=${title}">
+                                   href="dsSanPham?page=${i}&type=${type}&idEvent=${idEvent}&ssearch=${ssearch}">
                                         ${i}
                                 </a>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
                                 <a class="page-btn next"
-                                   href="dsSanPham?page=${currentPage + 1}&type=${type}&idEvent=${idEvent}&title=${title}">»</a>
+                                   href="dsSanPham?page=${currentPage + 1}&type=${type}&idEvent=${idEvent}&ssearch=${ssearch}">»</a>
                             </c:if>
                         </c:otherwise>
 
@@ -350,6 +355,15 @@
             };
         }
     });
+    function clearFilter() {
+        const mode = "${mode}";
+
+        if (mode === "search") {
+            window.location.href = "<c:url value='search'><c:param name='bSearch' value='${search}'/></c:url>"
+        } else {
+            window.location.href = "<c:url value='dsSanPham'><c:param name='type' value='${type}'/><c:param name='idEvent' value='${idEvent}'/><c:param name='ssearch' value='${ssearch}'/></c:url>"
+        }
+    }
 
 
 </script>
