@@ -3,6 +3,7 @@ package dao;
 import DTO.BookWithSoldDTO;
 import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
+import model.Book;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -319,6 +320,70 @@ public class ThongKeDao extends BaseDao {
                         .list()
         );
     }
+
+    public int getTotalSoldProducts(LocalDate from, LocalDate to) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(oi.quantity)
+                        FROM order_items oi
+                        JOIN orders o ON  o.id = oi.order_id
+                        WHERE o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+                        """)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public int getTotalSoldProducts(String year) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(oi.quantity)
+                        FROM order_items oi
+                        JOIN orders o ON o.id = oi.order_id
+                        WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                        """)
+                        .bind("year", year)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public int getTotalStock() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT SUM(stock)
+                        FROM books
+                        """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public int getOutOfStockCount() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*)
+                        FROM books
+                        WHERE stock = 0
+                        """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public  List<Book> getOutOfStockBooks() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                            SELECT *
+                            FROM books
+                            WHERE stock = 0
+                            """)
+                        .mapToBean(Book.class)
+                        .list());
+    }
+
     public List<String> listYears() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )

@@ -40,11 +40,12 @@ public class SendOTP extends HttpServlet {
                 out.print("{\"successSend\":\"error\",\"message\":\"Email không đúng định dạng\"}");
                 return;
             }
+            session.setAttribute("email",email);
             Token8 token = new Token8();
             EmailSender emailSender = new EmailSender();
             String verifyCode = token.generateToken8();
-            session.setAttribute("verifyCode", verifyCode);
-            session.setAttribute("otpTime", System.currentTimeMillis());
+            session.setAttribute("verifyOTP", verifyCode);
+            session.setAttribute("otpT", System.currentTimeMillis());
             emailSender.sendVerificationEmail(email, "Mã xác thực tài khoản", user.getName(), verifyCode,"Mã xác thực:","Cảm ơn bạn đã đăng ký");
             out.print("{\"successSend\":\"success\",\"message\":\"Gửi thành công\"}");
         }else{

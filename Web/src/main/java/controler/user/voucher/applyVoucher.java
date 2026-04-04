@@ -21,6 +21,9 @@ public class applyVoucher extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
 
@@ -30,26 +33,34 @@ public class applyVoucher extends HttpServlet {
 
         boolean valid = voucherService.isVoucherValid(cart, voucher);
 
-        int page = Integer.parseInt(request.getParameter("page") == null ? "0" : request.getParameter("page"));
-        Integer numApplyVoucher= (Integer) session.getAttribute("numApplyVoucher");
+        Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
         if (numApplyVoucher == null) numApplyVoucher = 0;
+
+        boolean success = false;
+        String message = "";
+
         if (valid) {
-            if (voucher.getType().equals("discount")&& session.getAttribute("appliedDiscountVoucher") == null) {
+            if ("discount".equals(voucher.getType())&& session.getAttribute("appliedDiscountVoucher") == null) {
                 session.setAttribute("appliedDiscountVoucher", voucher);
                 numApplyVoucher++;
+                success = true;
+                message = "Áp dụng voucher giảm giá thành công!";
             }
-            if (voucher.getType().equals("ship")&& session.getAttribute("appliedShipVoucher") == null) {
+
+            if ("ship".equals(voucher.getType())&& session.getAttribute("appliedShipVoucher") == null) {
                 session.setAttribute("appliedShipVoucher", voucher);
                 numApplyVoucher++;
+                success = true;
+                message = "Áp dụng voucher vận chuyển thành công!";
             }
+        } else {
+            message = "Voucher không hợp lệ!";
         }
+
         session.setAttribute("numApplyVoucher", numApplyVoucher);
-        if (page == 1) {
-            response.sendRedirect("ShoppingCart");
-        }
-        if (page == 2) {
-            response.sendRedirect("ThanhToan");
-        }
+        response.getWriter().write(
+                "{ \"success\": " + success +", \"message\": \"" + message +"\", \"num\": " + numApplyVoucher + " }"
+        );
     }
 
 }
