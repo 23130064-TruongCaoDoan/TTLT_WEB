@@ -62,10 +62,8 @@ public class FilterSanPhamServlet extends HttpServlet {
 
         if (keyword != null && !keyword.isBlank()) {
             search =keyword;
-            mode="search";
             request.setAttribute("mode", "search");
         } else {
-            mode="category";
             switch (type) {
                 case 1:
                     searchTitle = "Sách Đang Giảm Giá";
@@ -105,7 +103,7 @@ public class FilterSanPhamServlet extends HttpServlet {
         request.setAttribute("type", type);
         request.setAttribute("idEvent", idEvent);
         request.setAttribute("bSearch", keyword);
-        request.setAttribute("mode", mode);
+        request.setAttribute("mode", "filter");
         request.setAttribute("qs", request.getQueryString());
 
         request.getRequestDispatcher("user/dsSanPham.jsp").forward(request, response);

@@ -181,19 +181,19 @@
 
                             <c:if test="${currentPage > 1}">
                                 <a class="page-btn prev"
-                                   href="dsSanPham/filter?page=${currentPage - 1}&${qs}">«</a>
+                                   href="filter?page=${currentPage - 1}&${qs}">«</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
                                 <a class="page-btn ${i == currentPage ? 'active' : ''}"
-                                   href="dsSanPham/filter?page=${i}&${qs}">
+                                   href="filter?page=${i}&${qs}">
                                         ${i}
                                 </a>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
                                 <a class="page-btn next"
-                                   href="dsSanPham/filter?page=${currentPage + 1}&${qs}">»</a>
+                                   href="filter?page=${currentPage + 1}&${qs}">»</a>
                             </c:if>
 
                         </c:when>
