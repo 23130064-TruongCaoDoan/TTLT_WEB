@@ -10,8 +10,7 @@ import java.util.Properties;
 
 public class GHNApiUtil {
 
-    private static final String BASE_URL =
-            "https://online-gateway.ghn.vn/shiip/public-api";
+    private static final String BASE_URL ="https://online-gateway.ghn.vn/shiip/public-api";
 
     private static String TOKEN;
     private static int SHOP_ID;
@@ -19,10 +18,7 @@ public class GHNApiUtil {
     static {
         try {
             Properties prop = new Properties();
-            InputStream input = GHNApiUtil.class
-                    .getClassLoader()
-                    .getResourceAsStream("GHN.properties");
-
+            InputStream input = GHNApiUtil.class.getClassLoader().getResourceAsStream("GHN.properties");
             prop.load(input);
 
             TOKEN = prop.getProperty("ghn.token");
@@ -135,8 +131,7 @@ public class GHNApiUtil {
         body.put("width", 20);
         body.put("weight", weight);
 
-        JSONObject response =
-                sendPostRequest("/v2/shipping-order/fee", body);
+        JSONObject response =sendPostRequest("/v2/shipping-order/fee", body);
 
         return response.getJSONObject("data").getInt("total");
     }
