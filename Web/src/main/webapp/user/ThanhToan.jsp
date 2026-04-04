@@ -56,16 +56,14 @@
                 <div class="checkout-section">
                     <div class="section-title">PHƯƠNG THỨC VẬN CHUYỂN</div>
                     <div class="shipping-item">
-                        <input type="radio" name="ship" value="fast"
-                        ${shipType=='fast'?'checked':''}>
+                        <input type="radio" name="ship" value="fast">
                         <div>
                             <strong>Giao hàng nhanh: 60.000 đ</strong><br>
                             Dự kiến giao: <span id="fastDate"></span>
                         </div>
                     </div>
                     <div class="shipping-item">
-                        <input type="radio" name="ship" value="standard"
-                        ${shipType=='standard'?'checked':''}>
+                        <input type="radio" name="ship" value="standard">
                         <div>
                             <strong>Giao hàng tiêu chuẩn: 30.000 đ</strong><br>
                             Dự kiến giao: <span id="slowDate"></span>
