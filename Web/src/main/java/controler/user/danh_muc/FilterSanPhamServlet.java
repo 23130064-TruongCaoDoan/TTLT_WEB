@@ -53,11 +53,14 @@ public class FilterSanPhamServlet extends HttpServlet {
         String searchTitle = "";
         String icon = "";
         String color = "";
+        String mode="";
 
         if (keyword != null && !keyword.isBlank()) {
             searchTitle = "Kết quả tìm kiếm: " + keyword;
+            mode="search";
             request.setAttribute("mode", "search");
         } else {
+            mode="category";
             switch (type) {
                 case 1:
                     searchTitle = "Sách Đang Giảm Giá";
@@ -78,6 +81,10 @@ public class FilterSanPhamServlet extends HttpServlet {
             }
             request.setAttribute("mode", "filter");
         }
+        request.setAttribute("categories", bookService.getAllCategories());
+        request.setAttribute("authors", bookService.getAllAuthors());
+        request.setAttribute("publishers", bookService.getAllPublishers());
+        request.setAttribute("years", bookService.getAllYears());
 
         request.setAttribute("bookList", bookList);
         request.setAttribute("currentPage", page);
@@ -90,6 +97,7 @@ public class FilterSanPhamServlet extends HttpServlet {
         request.setAttribute("type", type);
         request.setAttribute("idEvent", idEvent);
         request.setAttribute("bSearch", keyword);
+        request.setAttribute("mode", mode);
 
         request.getRequestDispatcher("user/dsSanPham.jsp")
                 .forward(request, response);

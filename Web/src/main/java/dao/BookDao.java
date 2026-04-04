@@ -648,7 +648,12 @@ public class BookDao extends BaseDao {
                 sql.append("INNER JOIN event_books eb ON eb.book_id = b.id ");
                 sql.append("INNER JOIN events e ON e.id = eb.event_id ");
             }
+            sql.append("LEFT JOIN authors a ON b.author_id = a.id ");
             sql.append("WHERE b.is_sell = 1 ");
+
+            if (keyword != null && !keyword.isBlank()) {
+                sql.append("AND (b.title LIKE :keyword OR a.name LIKE :keyword) ");
+            }
 
             if (type == 1) sql.append("AND b.price_discounted > 0 ");
             if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
@@ -661,6 +666,7 @@ public class BookDao extends BaseDao {
             }
 
             var query = handle.createQuery(sql.toString());
+            if (keyword != null && !keyword.isBlank()) query.bind("keyword", "%" + keyword + "%");
             if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
             if (category != null && !category.isBlank()) query.bind("category", category);
             if (age != null && !age.isBlank()) {
