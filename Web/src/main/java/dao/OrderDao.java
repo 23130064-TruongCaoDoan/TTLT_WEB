@@ -19,7 +19,7 @@ public class OrderDao extends BaseDao {
                             .bind("user_id", userId)
                             .bind("total_amount", totalAmount)
                             .bind("note", note)
-                            .bind("status", "Completed")
+                            .bind("status", "PENDING")
                             .bind("payment_method", paymentMethod)
                             .bind("dis_voucher_id", dis)
                             .bind("ship_voucher_id", ship)
@@ -33,9 +33,7 @@ public class OrderDao extends BaseDao {
         }
     }
 
-    public List<MyOrderDTO> findOrdersByUserId(int userId) {
-
-
+    public List<MyOrderDTO> findOrdersByUserId(int userId, String status) {
         String sql = """
                     SELECT
                         o.id            AS orderId,
@@ -49,14 +47,14 @@ public class OrderDao extends BaseDao {
                     FROM orders o
                     JOIN order_items oi ON o.id = oi.order_id
                     JOIN books b ON oi.book_id = b.id
-                    WHERE o.user_id = :userId
-                    GROUP BY o.id, o.order_date, o.status, o.total_amount
+                    WHERE o.user_id = :userId AND (:status = 'ALL' OR o.status = :status)
+                    GROUP BY o.id, o.order_date, o.status, o.total_amount,o.payment_method
                     ORDER BY o.order_date DESC
                 """;
-
         return getJdbi().withHandle(handle ->
                 handle.createQuery(sql)
                         .bind("userId", userId)
+                        .bind("status", status)
                         .mapToBean(MyOrderDTO.class)
                         .list()
         );
