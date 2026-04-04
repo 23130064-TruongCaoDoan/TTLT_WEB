@@ -654,26 +654,37 @@ public class BookDao extends BaseDao {
             if (keyword != null && !keyword.isBlank()) {
                 sql.append("AND (b.title LIKE :keyword OR a.name LIKE :keyword) ");
             }
-
             if (type == 1) sql.append("AND b.price_discounted > 0 ");
             if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
             if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
             if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
             if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
+            if (author != null && !author.isBlank()) sql.append("AND a.name = :author ");
+            if (publisher != null && !publisher.isBlank()) sql.append("AND b.publisher = :publisher ");
             if (age != null && !age.isBlank()) {
                 String[] parts = age.split("-");
                 sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
+            }
+            if (maxPrice != null && !maxPrice.isBlank()) {
+                sql.append("AND b.price_discounted <= :maxPrice ");
+            }
+            if (year != null && !year.isBlank()) {
+                sql.append("AND YEAR(b.published_date) = :year ");
             }
 
             var query = handle.createQuery(sql.toString());
             if (keyword != null && !keyword.isBlank()) query.bind("keyword", "%" + keyword + "%");
             if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
             if (category != null && !category.isBlank()) query.bind("category", category);
+            if (author != null && !author.isBlank()) query.bind("author", author);
+            if (publisher != null && !publisher.isBlank()) query.bind("publisher", publisher);
             if (age != null && !age.isBlank()) {
                 String[] parts = age.split("-");
                 query.bind("ageFrom", Integer.parseInt(parts[0]));
                 query.bind("ageTo", Integer.parseInt(parts[1]));
             }
+            if (maxPrice != null && !maxPrice.isBlank()) query.bind("maxPrice", Integer.parseInt(maxPrice));
+            if (year != null && !year.isBlank()) query.bind("year", Integer.parseInt(year));
 
             return query.mapTo(int.class).one();
         });
@@ -692,15 +703,22 @@ public class BookDao extends BaseDao {
             if (keyword != null && !keyword.isBlank()) {
                 sql.append("AND (b.title LIKE :keyword OR a.name LIKE :keyword) ");
             }
-
             if (type == 1) sql.append("AND b.price_discounted > 0 ");
             if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
             if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
             if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
             if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
+            if (author != null && !author.isBlank()) sql.append("AND a.name = :author ");
+            if (publisher != null && !publisher.isBlank()) sql.append("AND b.publisher = :publisher ");
             if (age != null && !age.isBlank()) {
                 String[] parts = age.split("-");
                 sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
+            }
+            if (maxPrice != null && !maxPrice.isBlank()) {
+                sql.append("AND b.price_discounted <= :maxPrice ");
+            }
+            if (year != null && !year.isBlank()) {
+                sql.append("AND YEAR(b.published_date) = :year ");
             }
 
             sql.append("ORDER BY b.add_date DESC ");
@@ -710,11 +728,16 @@ public class BookDao extends BaseDao {
             if (keyword != null && !keyword.isBlank()) query.bind("keyword", "%" + keyword + "%");
             if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
             if (category != null && !category.isBlank()) query.bind("category", category);
+            if (author != null && !author.isBlank()) query.bind("author", author);
+            if (publisher != null && !publisher.isBlank()) query.bind("publisher", publisher);
             if (age != null && !age.isBlank()) {
                 String[] parts = age.split("-");
                 query.bind("ageFrom", Integer.parseInt(parts[0]));
                 query.bind("ageTo", Integer.parseInt(parts[1]));
             }
+            if (maxPrice != null && !maxPrice.isBlank()) query.bind("maxPrice", Integer.parseInt(maxPrice));
+            if (year != null && !year.isBlank()) query.bind("year", Integer.parseInt(year));
+
             query.bind("limit", pageSize);
             query.bind("offset", offset);
 
