@@ -71,7 +71,7 @@ public class DanhMucServlet extends HttpServlet {
         }
         int offset = (page - 1) * pageSize;
         List<Book> bookList;
-        String search="";
+        String search=request.getParameter("ssearch");
         String icon="";
         String color="";
         switch (type) {
@@ -94,7 +94,7 @@ public class DanhMucServlet extends HttpServlet {
             }
             case 4:{
                 bookList=bookService.getBookByEvent(pageSize, offset, idEvent);
-                search="Sách " + title;
+                search=search.toUpperCase();
                 break;
             }
             default:{
@@ -113,7 +113,7 @@ public class DanhMucServlet extends HttpServlet {
         request.setAttribute("title", title);
         request.setAttribute("type", type);
         request.setAttribute("color", color);
-        request.setAttribute("search", search);
+        request.setAttribute("ssearch", search);
         request.setAttribute("icon", icon);
 
         request.setAttribute("bookList", bookList);

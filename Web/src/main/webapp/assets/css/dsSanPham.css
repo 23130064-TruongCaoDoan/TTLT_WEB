@@ -294,3 +294,19 @@ a {
 .arrow.rotate {
     transform: rotate(180deg);
 }
+
+.active-filters {
+    margin: 10px 20px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.active-filters span {
+    background: #e0e0e0;
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+    display: inline-block;
+}

@@ -68,6 +68,8 @@ public class Search extends HttpServlet {
             List<Book> bookList = bookService.findListBook(search, pageSize, offset);
             request.setAttribute("bookList", bookList);
             request.setAttribute("search", search);
+            request.setAttribute("bSearch", search);
+
 
             request.setAttribute("mode", "search");
             request.getRequestDispatcher("user/dsSanPham.jsp").forward(request, response);

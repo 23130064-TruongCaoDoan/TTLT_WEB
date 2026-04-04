@@ -9,7 +9,7 @@ import java.util.List;
 public class BookDao extends BaseDao {
     public List<String> getAllCategories() {
         return getJdbi().withHandle(handle ->
-            handle.createQuery("select distinct type from BOOKS")
+            handle.createQuery("select distinct type from BOOKS ORDER BY type ASC")
                     .mapTo(String.class).list()
         );
     }
@@ -608,14 +608,14 @@ public class BookDao extends BaseDao {
 
     public List<String> getAllPublishers() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT distinct publisher FROM BOOKS")
+                handle.createQuery("SELECT distinct publisher FROM BOOKS ORDER BY publisher ASC")
                         .mapTo(String.class).list()
                 );
     }
 
     public List<Integer> getAllYears() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT distinct published_date FROM BOOKS")
+                handle.createQuery("SELECT distinct published_date FROM BOOKS ORDER BY published_date DESC ")
                         .mapTo(Integer.class).list()
         );
     }
@@ -639,5 +639,109 @@ public class BookDao extends BaseDao {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT DISTINCT type FROM BOOKS")
                         .mapTo(String.class).list());
+    }
+
+    public int countBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT b.id) FROM books b ");
+            if (type == 4 || idEvent > 0) {
+                sql.append("INNER JOIN event_books eb ON eb.book_id = b.id ");
+                sql.append("INNER JOIN events e ON e.id = eb.event_id ");
+            }
+            sql.append("LEFT JOIN authors a ON b.author_id = a.id ");
+            sql.append("WHERE b.is_sell = 1 ");
+
+            if (keyword != null && !keyword.isBlank()) {
+                sql.append("AND (b.title LIKE :keyword OR a.name LIKE :keyword) ");
+            }
+            if (type == 1) sql.append("AND b.price_discounted > 0 ");
+            if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
+            if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
+            if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
+            if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
+            if (author != null && !author.isBlank()) sql.append("AND a.name = :author ");
+            if (publisher != null && !publisher.isBlank()) sql.append("AND b.publisher = :publisher ");
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
+            }
+            if (maxPrice != null && !maxPrice.isBlank()) {
+                sql.append("AND b.price_discounted <= :maxPrice ");
+            }
+            if (year != null && !year.isBlank()) {
+                sql.append("AND YEAR(b.published_date) = :year ");
+            }
+
+            var query = handle.createQuery(sql.toString());
+            if (keyword != null && !keyword.isBlank()) query.bind("keyword", "%" + keyword + "%");
+            if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
+            if (category != null && !category.isBlank()) query.bind("category", category);
+            if (author != null && !author.isBlank()) query.bind("author", author);
+            if (publisher != null && !publisher.isBlank()) query.bind("publisher", publisher);
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                query.bind("ageFrom", Integer.parseInt(parts[0]));
+                query.bind("ageTo", Integer.parseInt(parts[1]));
+            }
+            if (maxPrice != null && !maxPrice.isBlank()) query.bind("maxPrice", Integer.parseInt(maxPrice));
+            if (year != null && !year.isBlank()) query.bind("year", Integer.parseInt(year));
+
+            return query.mapTo(int.class).one();
+        });
+    }
+
+    public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT b.* FROM books b ");
+            if (type == 4 || idEvent > 0) {
+                sql.append("INNER JOIN event_books eb ON eb.book_id = b.id ");
+                sql.append("INNER JOIN events e ON e.id = eb.event_id ");
+            }
+            sql.append("LEFT JOIN authors a ON b.author_id = a.id ");
+            sql.append("WHERE b.is_sell = 1 ");
+
+            if (keyword != null && !keyword.isBlank()) {
+                sql.append("AND (b.title LIKE :keyword OR a.name LIKE :keyword) ");
+            }
+            if (type == 1) sql.append("AND b.price_discounted > 0 ");
+            if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
+            if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
+            if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
+            if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
+            if (author != null && !author.isBlank()) sql.append("AND a.name = :author ");
+            if (publisher != null && !publisher.isBlank()) sql.append("AND b.publisher = :publisher ");
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
+            }
+            if (maxPrice != null && !maxPrice.isBlank()) {
+                sql.append("AND b.price_discounted <= :maxPrice ");
+            }
+            if (year != null && !year.isBlank()) {
+                sql.append("AND b.published_date= :year ");
+            }
+
+            sql.append("ORDER BY b.add_date DESC ");
+            sql.append("LIMIT :limit OFFSET :offset ");
+
+            var query = handle.createQuery(sql.toString());
+            if (keyword != null && !keyword.isBlank()) query.bind("keyword", "%" + keyword + "%");
+            if (type == 4 && idEvent > 0) query.bind("idEvent", idEvent);
+            if (category != null && !category.isBlank()) query.bind("category", category);
+            if (author != null && !author.isBlank()) query.bind("author", author);
+            if (publisher != null && !publisher.isBlank()) query.bind("publisher", publisher);
+            if (age != null && !age.isBlank()) {
+                String[] parts = age.split("-");
+                query.bind("ageFrom", Integer.parseInt(parts[0]));
+                query.bind("ageTo", Integer.parseInt(parts[1]));
+            }
+            if (maxPrice != null && !maxPrice.isBlank()) query.bind("maxPrice", Integer.parseInt(maxPrice));
+            if (year != null && !year.isBlank()) query.bind("year", Integer.parseInt(year));
+
+            query.bind("limit", pageSize);
+            query.bind("offset", offset);
+
+            return query.mapToBean(Book.class).list();
+        });
     }
 }

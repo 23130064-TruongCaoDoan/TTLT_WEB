@@ -30,7 +30,7 @@
                     <a href="<c:url value="/dsSanPham" />" class="button bt danhmuc">
                         <i class="fa-solid fa-list"></i><span>Danh mục</span></a
                     >
-                    <div class="danhMuc sach">
+                    <div class="danhMuc sach" style="display: none">
                         <div class="item truyenTranh">
                             <a href="search?bSearch=Truyện tranh" class="it truyen-tranh"
                             ><span>Truyện tranh</span></a
@@ -49,7 +49,7 @@
                 </div>
                 <form action="search" method="get" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" class="search-input" name="bSearch" autocomplete="off" placeholder="Tìm kiếm sách"/>
+                    <input type="search" class="search-input" name="bSearch" value="${bSearch != null ? bSearch : ''}" autocomplete="off" placeholder="Tìm kiếm sách"/>
                     <div class="suggest-box"></div>
                     <button type="submit">Tìm Kiếm</button>
                 </form>
