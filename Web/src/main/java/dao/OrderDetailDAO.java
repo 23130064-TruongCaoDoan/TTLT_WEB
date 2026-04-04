@@ -2,6 +2,7 @@ package dao;
 
 import DTO.OrderDetailDTO;
 import DTO.OrderItemDTO;
+import Service.AddressService;
 import model.Address;
 import model.Order;
 import model.Shipping;
@@ -27,12 +28,12 @@ public class OrderDetailDAO extends BaseDao{
                     .mapToBean(Order.class)
                     .one();
 
-            // 2. Shipping + Address (JOIN)
+            // Shipping + Address (JOIN)
             Map<String, Object> shipAddr = handle.createQuery("""
                 SELECT s.order_id, s.shipping_type, s.shipping_cost,
                        s.shipping_date, s.delivered_date, s.status,
                        a.id, a.name, a.phone, a.city, a.ward,
-                       a.specificAddress
+                       a.specificAddress, a.id AS address_id
                 FROM shipping s
                 JOIN address a ON s.address_id = a.id
                 WHERE s.order_id = :orderId
@@ -50,14 +51,10 @@ public class OrderDetailDAO extends BaseDao{
             shipping.setDeliveredDate((String) shipAddr.get("delivered_date"));
             shipping.setStatus((String) shipAddr.get("status"));
 
-            Address address = new Address();
-            address.setName((String) shipAddr.get("name"));
-            address.setPhone((String) shipAddr.get("phone"));
-            address.setCity((String) shipAddr.get("city"));
-            address.setWard((String) shipAddr.get("ward"));
-            address.setSpecificAddress((String) shipAddr.get("specificAddress"));
 
-            // 3. Order items + Book (JOIN)
+            AddressService  addressService = new AddressService();
+            Address address = addressService.getAddressById((Integer) shipAddr.get("address_id"));
+            // Order items + Book (JOIN)
             List<OrderItemDTO> items = handle.createQuery("""
                 SELECT oi.book_id,
                        b.title,
@@ -74,7 +71,7 @@ public class OrderDetailDAO extends BaseDao{
                     .mapToBean(OrderItemDTO.class)
                     .list();
 
-            // 4. Gộp DTO
+            // Gộp DTO
             OrderDetailDTO dto = new OrderDetailDTO();
             dto.setOrder(order);
             dto.setShipping(shipping);

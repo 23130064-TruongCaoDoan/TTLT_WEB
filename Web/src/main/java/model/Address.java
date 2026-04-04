@@ -6,7 +6,6 @@ public class Address {
     private String name;
     private String phone;
     private String city;
-
     private String ward;
     private String specificAddress;
     private boolean isDefault;

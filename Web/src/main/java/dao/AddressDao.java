@@ -95,7 +95,7 @@ public class AddressDao extends BaseDao{
     public static void main(String[] args) {
         AddressDao dao = new AddressDao();
         Address  address = new Address();
-        System.out.println(dao.isDefaultAddress(8));
+        System.out.println(dao.getAddress(1));
 
     }
 }

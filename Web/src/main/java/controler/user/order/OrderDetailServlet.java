@@ -45,7 +45,6 @@ public class OrderDetailServlet extends HttpServlet {
         LocalDate orderDate = LocalDateTime.parse(dto.getOrder().getOrderDate(), formatter).toLocalDate();
 
         LocalDate dateCreateFunc = LocalDate.of(2026, 3, 31);
-
         boolean isNewOrder = !orderDate.isBefore(dateCreateFunc);
         request.setAttribute("isNewOrder", isNewOrder);
         request.setAttribute("dto", dto);
