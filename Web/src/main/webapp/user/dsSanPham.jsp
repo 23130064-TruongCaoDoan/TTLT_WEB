@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <fmt:setLocale value="vi_VN"/>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,6 +42,43 @@
             <img src="${icon}" alt="">
         </c:if>
     </div>
+    <c:if test="${not empty param.bSearch
+          or not empty param.year
+          or not empty param.maxPrice
+          or not empty param.age
+          or not empty paramValues.category
+          or not empty paramValues.author
+          or not empty paramValues.publisher}">
+
+        <div class="active-filters">
+            <b>Đã lọc:</b>
+
+            <c:if test="${not empty param.year}">
+                <span>Năm ${param.year}</span>
+            </c:if>
+
+            <c:if test="${not empty param.maxPrice}">
+                <span>Giá ≤ <fmt:formatNumber value="${param.maxPrice}" type="number" groupingUsed="true"/> đ</span>
+            </c:if>
+
+            <c:if test="${not empty param.age}">
+                <span>Độ tuổi ${param.age}</span>
+            </c:if>
+
+            <c:forEach var="c" items="${paramValues.category}">
+                <span>${c}</span>
+            </c:forEach>
+
+            <c:forEach var="a" items="${paramValues.author}">
+                <span>${a}</span>
+            </c:forEach>
+
+            <c:forEach var="p" items="${paramValues.publisher}">
+                <span>${p}</span>
+            </c:forEach>
+
+        </div>
+    </c:if>
     <div class="content">
         <div class="filter">
 
@@ -66,7 +104,13 @@
                 </div>
                 <div class="filter-options" id="publisherBox">
                     <c:forEach var="p" items="${publishers}">
-                        <label><input type="checkbox" name="publisher" value="${p}"> ${p}</label>
+                        <label>
+                            <input type="checkbox" name="publisher" value="${p}"
+                            <c:if test="${fn:contains(fn:join(paramValues.publisher, ','), p)}">
+                                   checked
+                            </c:if>>
+                                ${p}
+                        </label>
                     </c:forEach>
                 </div>
             </div>
@@ -78,7 +122,13 @@
                 </div>
                 <div class="filter-options" id="authorBox">
                     <c:forEach var="a" items="${authors}">
-                        <label><input type="checkbox" name="author" value="${a}"> ${a}</label>
+                        <label>
+                            <input type="checkbox" name="author" value="${a}"
+                            <c:if test="${fn:contains(fn:join(paramValues.author, ','), a)}">
+                                   checked
+                            </c:if>>
+                                ${a}
+                        </label>
                     </c:forEach>
                 </div>
             </div>
@@ -89,17 +139,40 @@
                     <i class="fa-solid fa-chevron-down arrow"></i>
                 </div>
                 <div class="filter-options" id="ageBox">
-                    <label><input type="radio" name="age" value="0-1"> 0-1 tuổi</label>
-                    <label><input type="radio" name="age" value="1-3"> 1-3 tuổi</label>
-                    <label><input type="radio" name="age" value="4-10"> 4-10 tuổi</label>
-                    <label><input type="radio" name="age" value="10-100"> >10 tuổi</label>
+                    <label>
+                        <input type="radio" name="age" value="0-1"
+                               <c:if test="${param.age == '0-1'}">checked</c:if>>
+                        0-1 tuổi
+                    </label>
+
+                    <label>
+                        <input type="radio" name="age" value="1-3"
+                               <c:if test="${param.age == '1-3'}">checked</c:if>>
+                        1-3 tuổi
+                    </label>
+
+                    <label>
+                        <input type="radio" name="age" value="4-10"
+                               <c:if test="${param.age == '4-10'}">checked</c:if>>
+                        4-10 tuổi
+                    </label>
+
+                    <label>
+                        <input type="radio" name="age" value="10-100"
+                               <c:if test="${param.age == '10-100'}">checked</c:if>>
+                        >10 tuổi
+                    </label>
                 </div>
             </div>
 
             <div class="filter-group">
                 <div class="filter-header">Khoảng giá</div>
                 <div class="price-slider">
-                    <input type="range" id="priceRange" name="maxPrice" min="0" max="500000" step="10000">
+                    <input type="range"
+                           id="priceRange"
+                           name="maxPrice"
+                           value="${param.maxPrice != null ? param.maxPrice : 0}"
+                           min="0" max="500000" step="10000">
                     <div class="price-value">
                         Tối đa: <span id="priceValue">0</span> đ
                     </div>
@@ -111,7 +184,10 @@
                 <select id="yearSelect" name="year">
                     <option value="">-- Chọn năm --</option>
                     <c:forEach var="y" items="${years}">
-                        <option value="${y}">${y}</option>
+                        <option value="${y}"
+                                <c:if test="${param.year == y}">selected</c:if>>
+                                ${y}
+                        </option>
                     </c:forEach>
                 </select>
             </div>

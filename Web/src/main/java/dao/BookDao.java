@@ -9,7 +9,7 @@ import java.util.List;
 public class BookDao extends BaseDao {
     public List<String> getAllCategories() {
         return getJdbi().withHandle(handle ->
-            handle.createQuery("select distinct type from BOOKS")
+            handle.createQuery("select distinct type from BOOKS ORDER BY type ASC")
                     .mapTo(String.class).list()
         );
     }
@@ -608,14 +608,14 @@ public class BookDao extends BaseDao {
 
     public List<String> getAllPublishers() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT distinct publisher FROM BOOKS")
+                handle.createQuery("SELECT distinct publisher FROM BOOKS ORDER BY publisher ASC")
                         .mapTo(String.class).list()
                 );
     }
 
     public List<Integer> getAllYears() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT distinct published_date FROM BOOKS")
+                handle.createQuery("SELECT distinct published_date FROM BOOKS ORDER BY published_date DESC ")
                         .mapTo(Integer.class).list()
         );
     }
