@@ -541,6 +541,18 @@ public class BookDao extends BaseDao {
                         .execute()
         ));
     }
+    public void updateQuantityOrderCancelled(int bookId, int quantity) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("""
+                                UPDATE BOOKS
+                                SET stock = stock + :quantity , quantity_sold = quantity_sold - :quantity
+                                WHERE id=:id
+                        """)
+                        .bind("quantity", quantity)
+                        .bind("id", bookId)
+                        .execute()
+        );
+    }
 
     public int getStockByBookId(int bookId) {
         return getJdbi().withHandle(handle ->

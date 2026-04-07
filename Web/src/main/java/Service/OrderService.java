@@ -27,8 +27,8 @@ public class OrderService {
         this.orderItemDao = new OrderItemDao();
     }
 
-    public boolean addOrder(int userId, double totalAmount, String note, String paymentMethod,Integer dis, Integer ship, Integer address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
-        int order_id = orderDao.addOrder(userId, totalAmount, note, dis, ship,paymentMethod);
+    public boolean addOrder(int userId, double totalAmount, String note, String paymentMethod, String paymentStatus,Integer dis, Integer ship, Integer address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
+        int order_id = orderDao.addOrder(userId, totalAmount, note, dis, ship,paymentMethod,paymentStatus);
         if (order_id != -1) {
             bookService.updateQuantity(cart);
             bookService.updateStock(cart);
@@ -47,10 +47,6 @@ public class OrderService {
         return dao.findOrderDetailByOrderId(orderId);
     }
 
-        public static void main(String[] args) {
-        OrderService orderService = new OrderService();
-        System.out.println(orderService.getOrderItemsByOrderId(48).size());
-    }
     public List<OrderView> getAllOrders() {
         return orderDao.getAllOrder();
     }
@@ -72,4 +68,11 @@ public class OrderService {
     public List<OrderItemsView> getOrderItemsByOrderId(int orderId){
         return orderDao.getOrderItemsByOrderId(orderId);
     }
+    public void  updateOrderStatus(int orderId, String status) {
+        orderDao.updateOrderStatus(orderId,status);
+    }
+    public void  updatePaymentStatus(int orderId, String paymentStatus) {
+        orderDao.updateOrderStatus(orderId,paymentStatus);
+    }
+
 }

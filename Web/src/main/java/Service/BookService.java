@@ -407,4 +407,8 @@ public class BookService {
     public List<String> getType(){
         return hd.getCategory();
     }
+
+    public void updateQuantityOrderCancelled(int bookId, int stockRefunded) {
+        hd.updateQuantityOrderCancelled(bookId,stockRefunded);
+    }
 }

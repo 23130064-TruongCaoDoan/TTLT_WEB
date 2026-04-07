@@ -44,7 +44,7 @@
                 <div class="menu-item" data-status="CANCELLED">
                     <p>Đã hủy</p>
                 </div>
-                <div class="menu-item" data-status="Refund">
+                <div class="menu-item" data-status="REFUNDED">
                     <p>Hoàn trả</p>
                 </div>
             </div>
@@ -104,7 +104,13 @@
                             <fmt:formatNumber value="${ o.totalAmount}" type="currency"/>
                         </span>
                                 </div>
-
+                                <c:if test="${ o.status.toLowerCase() == 'pending' || o.status.toLowerCase() == 'processing'}">
+                                    <div class="button">
+                                        <button onclick="window.location='cancell-order?id=${o.orderId}'">
+                                            Hủy đơn hàng
+                                        </button>
+                                    </div>
+                                </c:if>
                                 <div class="button">
                                     <button onclick="window.location='my-order?id=${o.orderId}'">
                                         Xem chi tiết
@@ -122,6 +128,7 @@
         </div>
     </div>
 <c:import url="/user/footerUser.jsp"></c:import>
+
 
 <script>
         const menuItems = document.querySelectorAll(".menu-item");

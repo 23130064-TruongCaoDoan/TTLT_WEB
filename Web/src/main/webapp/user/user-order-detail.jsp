@@ -79,7 +79,7 @@
                     </div>
                     <div class="payment-method">
                         <h3>Phương thức thanh toán</h3>
-                        <p>${dto.order.paymentMethod}</p>
+                        <p>${dto.order.paymentMethodTransfer}</p>
                     </div>
                     <div class="order-price">                   
                         <h3>Tổng tiền</h3>

@@ -11,6 +11,7 @@ public class Order {
     private double totalAmount;
     private String note;
     private String paymentMethod;
+    private String paymentStatus;
     private String disVoucherId;
     private String shipVoucherId;
 
@@ -96,7 +97,28 @@ public class Order {
     public String getPaymentMethod() {
         return paymentMethod;
     }
+    public String getPaymentMethodTransfer() {
+        if (paymentMethod == null) return "";
+
+        switch (paymentMethod.toUpperCase()) {
+            case "COD":
+                return "Thanh toán khi nhận hàng";
+            case "VNPAY":
+                return "Thanh toán qua VNPay";
+            case "MOMO":
+                return "Thanh toán qua MOMO";
+            default:
+                return "Chưa cập nhật";
+        }
+    }
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 }

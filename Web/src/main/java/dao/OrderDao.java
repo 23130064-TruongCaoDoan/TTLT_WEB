@@ -8,7 +8,7 @@ import java.util.List;
 
 public class OrderDao extends BaseDao {
 
-    public int addOrder(int userId, double totalAmount, String note, Integer dis, Integer ship, String paymentMethod) {
+    public int addOrder(int userId, double totalAmount, String note, Integer dis, Integer ship, String paymentMethod, String paymentStatus) {
         try {
             return getJdbi().withHandle(handle ->
                     handle.createUpdate("""
@@ -201,5 +201,22 @@ public class OrderDao extends BaseDao {
                         .list()
         );
     }
+    public void updateOrderStatus(int orderId, String orderStatus) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE orders SET status = :orderStatus WHERE id = :orderId")
+                        .bind("orderId", orderId)
+                        .bind("orderStatus", orderStatus)
+                        .execute()
+        );
+    }
+    public void updatePaymentStatus(int orderId, String paymentStatus) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE orders SET payment_status = :paymentStatus WHERE id = :orderId")
+                        .bind("orderId", orderId)
+                        .bind("paymentStatus", paymentStatus)
+                        .execute()
+        );
+    }
+
 
 }
