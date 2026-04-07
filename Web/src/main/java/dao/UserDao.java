@@ -86,15 +86,16 @@ public class UserDao extends BaseDao {
                         .isPresent()
         );
     }
-    public void updateProfile(int id, String name, String phone, String email, boolean sex, LocalDate birthday) {
+    public void updateProfile(int id, String name, String phone, String email, boolean sex, LocalDate birthday, String avatar) {
         getJdbi().withHandle(handle ->
-                handle.createUpdate("UPDATE user SET name = :name, phone=:phone, email=:email,sex=:sex, birthday=:birthday WHERE id = :id")
+                handle.createUpdate("UPDATE user SET name = :name, phone=:phone, email=:email,sex=:sex, birthday=:birthday, avatar=:avatar WHERE id = :id")
                 .bind("id", id)
                 .bind("name", name)
                 .bind("phone", phone)
                 .bind("email", email)
                 .bind("sex", sex)
                 .bind("birthday", birthday)
+                .bind("avatar", avatar)
                 .execute()
                 );
     }
