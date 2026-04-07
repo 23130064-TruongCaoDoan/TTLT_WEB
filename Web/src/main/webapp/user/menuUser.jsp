@@ -3,7 +3,16 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <div class="nameUser">
-    <div class="anh"><i class="fa-solid fa-user"></i></div>
+    <div class="anh" style="display: flex; justify-content: center; margin-bottom: 10px;">
+        <c:choose>
+            <c:when test="${not empty sessionScope.user.avatar}">
+                <img src="${sessionScope.user.avatar}" alt="Avatar" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="assets/images/default-avatar.png" alt="Avatar" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+                    </c:otherwise>
+        </c:choose>
+    </div>
     <div class="name">
         ${sessionScope.user.name}
     </div>
