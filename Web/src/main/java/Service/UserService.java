@@ -78,8 +78,8 @@ public class UserService {
     public List<Integer> getUserPoint(int minPoint) {
         return userDao.getUserIdsByMinPoint(minPoint);
     }
-    public void updateProfile(int id, String name, String phone, String email,boolean sex, LocalDate birthday) {
-        userDao.updateProfile(id, name, phone, email, sex, birthday);
+    public void updateProfile(int id, String name, String phone, String email,boolean sex, LocalDate birthday, String avatar) {
+        userDao.updateProfile(id, name, phone, email, sex, birthday, avatar);
     }
     public void updateEmail(int id, String email) {
         userDao.updateEmail(id, email);
