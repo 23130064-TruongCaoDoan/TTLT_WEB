@@ -106,7 +106,7 @@
                                 </div>
                                 <c:if test="${ o.status.toLowerCase() == 'pending' || o.status.toLowerCase() == 'processing'}">
                                     <div class="button">
-                                        <button onclick="window.location='cancell-order?id=${o.orderId}'">
+                                        <button id="BtnCancelled" data-order-id="${o.orderId}">
                                             Hủy đơn hàng
                                         </button>
                                     </div>
@@ -144,6 +144,36 @@
                     .catch(err => console.error(err));
             });
         });
+</script>
+<script>
+    const BtnCancelled = document.getElementById("BtnCancelled");
+    BtnCancelled.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        const orderId = this.getAttribute("data-order-id");
+
+        if (!confirm("Bạn có chắc chắn muốn hủy đơn này?")) return;
+
+        fetch("cancel-order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "id=" + orderId
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert("Đơn hàng hủy thành công");
+                    location.reload();
+                } else {
+                    alert("Đơn hàng không thể hủy!");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Có lỗi xảy ra!");
+            });
+    });
 </script>
 </body>
 </html>

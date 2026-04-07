@@ -16,7 +16,7 @@ import model.User;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "cancell-order", value = "/cancell-order")
+@WebServlet(name = "cancel-order", value = "/cancel-order")
 public class OrderCancelled extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -46,7 +46,7 @@ public class OrderCancelled extends HttpServlet {
             for (OrderItemsView item : listItem){
                 bookService.updateQuantityOrderCancelled(item.getBookId(), item.getQuantity());
             }
-
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 }
