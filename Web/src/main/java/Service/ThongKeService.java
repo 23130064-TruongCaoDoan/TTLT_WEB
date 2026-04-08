@@ -66,17 +66,18 @@ public class ThongKeService {
     public int getTotalSoldProducts(LocalDate from, LocalDate to) {
         return  dao.getTotalSoldProducts(from, to);
     }
+    public int getTotalSoldProductsAllTime() {
+        return dao.getTotalSoldProductsAllTime();
+    }
     public int getTotalSoldProducts(String year) {
         return dao.getTotalSoldProducts(year);
     }
     public int getTotalStock() {
         return dao.getTotalStock();
     }
-
     public  int getOutOfStockCount() {
         return dao.getOutOfStockCount();
     }
-
     public List<Book> getOutOfStockBooks() {
         return dao.getOutOfStockBooks();
     }
