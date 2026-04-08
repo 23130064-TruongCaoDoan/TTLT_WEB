@@ -103,6 +103,8 @@ public class UserService {
     public void updateStatus(int userId, boolean status) {
         userDao.updateStatus(userId, status);
     }
-
+    public void addUserByAdmin(String fullname, String email, String password, int role, int status) {
+        userDao.addUserByAdmin(fullname, email, password, role, status);
+    }
 
 }

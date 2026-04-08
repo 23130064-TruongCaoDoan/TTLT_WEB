@@ -111,7 +111,7 @@
     display: none;
 }
 
-#tangVoucherForm, #taoThongBao {
+#tangVoucherForm, #taoThongBao, #taoTaiKhoanForm {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -127,7 +127,7 @@
     max-height: 80vh;
     overflow-y: auto;
 }
-#tangVoucherForm h3,#taoThongBao h3 {
+#tangVoucherForm h3,#taoThongBao h3, #taoTaiKhoanForm h3 {
     margin-top: 0;
     color: #0d3164;
 }
@@ -204,5 +204,35 @@
 tbody tr:hover{
     background: #0d3164;
     color: white;
+}
+
+#custom-toast {
+    visibility: hidden;
+    min-width: 300px;
+    margin-left: -150px; /* Căn giữa */
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 15px;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.4s, top 0.4s;
+}
+#custom-toast.show {
+    visibility: visible;
+    opacity: 1;
+    top: 30px;
+}
+#custom-toast.error {
+    background-color: #dc3545;
+}
+#custom-toast.success {
+    background-color: #28a745;
 }
 
