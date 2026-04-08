@@ -38,6 +38,11 @@
                             <h3>Sản phẩm đã hết</h3>
                                 <p>${outOfStockCount} sản phẩm</p>
                     </div>
+                    <div class="card unsold-card" title="Bấm để xem danh sách" style="cursor: pointer;">
+                        <i class="fa-solid fa-box-archive" style="color: #f39c12;"></i>
+                            <h3>Sản phẩm không bán được</h3>
+                                <p>${unsoldBooksCount} sản phẩm</p>
+                    </div>
                 </div>
             </div>
             <form method="get" action="${pageContext.request.contextPath}/product-manage">
@@ -264,7 +269,39 @@
                     </table>
                 </div>
             </div>
+    </div>
+    <div id="unsold-panel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 9999;">
+        <div id="unsold-container" style="background: #fff; padding: 25px; height: 80%; border-radius: 12px; width: 80%; overflow-y: auto;">
+            <h2 style="color: #0d3164; text-align: center; margin-bottom: 20px;">Danh sách sản phẩm không bán được</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Mã sách</th>
+                            <th>Tên sách</th>
+                            <th>Giá</th>
+                            <th>Tồn kho</th>
+                            <th>Loại sách</th>
+                            <th>Độ tuổi</th>
+                            <th>Hình ảnh</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${unsoldBooks}" var="b">
+                            <tr>
+                                <td>${b.bookCode}</td>
+                                <td>${b.title}</td>
+                                <td><fmt:formatNumber value="${b.price}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
+                                <td>${b.stock}</td> <td>${b.type}</td>
+                                <td>${b.age}+</td>
+                                <td><img src="${b.coverImgUrl}" width="60"></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
         </div>
+    </div>
 <script>
 
     const overlay = document.getElementById("overlay");
@@ -318,6 +355,12 @@
                 document.getElementById("out-of-stock-panel").style.display = "flex";
             }
             if (e.target.id === "out-of-stock-panel") {
+                e.target.style.display = "none";
+            }
+            if (e.target.closest(".unsold-card")) {
+                document.getElementById("unsold-panel").style.display = "flex";
+            }
+            if (e.target.id === "unsold-panel") {
                 e.target.style.display = "none";
             }
         });

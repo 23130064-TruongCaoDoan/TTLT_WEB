@@ -78,6 +78,12 @@ public class ThongKeService {
     public  int getOutOfStockCount() {
         return dao.getOutOfStockCount();
     }
+    public int getUnsoldBooksCount() {
+        return dao.getUnsoldBooksCount();
+    }
+    public List<Book> getUnsoldBooks() {
+        return dao.getUnsoldBooks();
+    }
     public List<Book> getOutOfStockBooks() {
         return dao.getOutOfStockBooks();
     }
