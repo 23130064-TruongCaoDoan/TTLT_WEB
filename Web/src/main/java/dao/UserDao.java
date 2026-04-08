@@ -167,4 +167,18 @@ public class UserDao extends BaseDao {
                         .execute()
         );
     }
+
+    public void addUserByAdmin(String fullname, String email, String password, int role, int status) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("insert into USER(name, email, password_hash, role, status, point) values(:username, :email, :password, :role, :status, :point)")
+                        .bind("username", fullname)
+                        .bind("email", email)
+                        .bind("password", password)
+                        .bind("role", role)
+                        .bind("status", status)
+                        .bind("point", 0)
+                        .execute()
+        );
+    }
+
 }
