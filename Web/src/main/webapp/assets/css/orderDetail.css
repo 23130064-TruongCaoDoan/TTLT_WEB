@@ -13,19 +13,26 @@
     background-color: #507abd;
     color: rgb(255, 255, 255);
     padding-top: 1vh;
-    width: 5vw;
+    width: fit-content;
     border-radius: 15px;
 }
 .manage-order .order-detail .order-date {
     display: flex;
 }
+p.order-state{
+    padding: 5px 5px;
+}
 .order-progess {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     background-color: #b7c9e6;
     border-radius: 15px;
     height: 10vh;
+    gap: 100px;
     color: black;
+}
+.order-end {
+    margin-right: 50px;
 }
 .order-progess div {
     margin-top: 2.5vh;
@@ -310,4 +317,7 @@ p.total{
     margin: 15px 0;
     border: none;
     border-top: 1px solid #eee;
+}
+.step.active i {
+    background: #81C784;
 }

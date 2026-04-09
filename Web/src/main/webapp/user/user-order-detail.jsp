@@ -32,7 +32,16 @@
                 <div style="display: flex;justify-content: space-between;">
                     <div class="state">
                         <h2>Mã Đơn Hàng #${dto.order.id}</h2>
-                        <p class="order-state">${dto.order.status}</p>
+                        <p class="order-state">
+                            <c:choose>
+                                <c:when test="${dto.order.status.toLowerCase() == 'completed'}">Đã giao</c:when>
+                                <c:when test="${dto.order.status.toLowerCase() == 'pending'}">Chờ xác nhận</c:when>
+                                <c:when test="${dto.order.status.toLowerCase() == 'processing'}">Đang xử lý</c:when>
+                                <c:when test="${dto.order.status.toLowerCase() == 'cancelled'}">Đã huỷ</c:when>
+                                <c:when test="${dto.order.status.toLowerCase() == 'shipping'}">Đang vận chuyển</c:when>
+                                <c:otherwise>${dto.order.status.toLowerCase()}</c:otherwise>
+                            </c:choose>
+                        </p>
 
                     </div>
                     <p class="order-date">
@@ -41,28 +50,29 @@
                 </div>
                 
                 <div class="order-progess">
-                    <div class="new-order">
+                    <div class="step ${dto.order.status.toLowerCase() == 'pending' ? 'active' : ''}">
                         <i class="fa-solid fa-clipboard-list"></i>
                         <span style="position: relative;top:-7px">
                             <span style="font-weight: bold;">Đơn hàng mới</span>
                             <br>
                             <span style="position: absolute;left: 0.4px;width: 10vw;top: 22px;font-size: small;">${dto.order.orderDate}</span>
-
                         </span>
-                        
                     </div>
-                    <div class="order-pending">
+                    <div class="step ${dto.order.status.toLowerCase() == 'processing' ? 'active' : ''}">
                         <i class="fa-solid fa-box"></i>
                         <span style="font-weight: bold;">Đang xử lý</span>
                     </div>
-                    <div class="order-end">
+                    <div class="step ${dto.order.status.toLowerCase() == 'shipping' ? 'active' : ''}">
+                        <i class="fa-solid fa-truck"></i>
+                        <span class="text">Đang vận chuyển</span>
+                    </div>
+                    <div class="step ${dto.order.status.toLowerCase() == 'completed' ? 'active' : ''}">
                         <i class="fa-solid fa-check"></i>
                         <span style="position: relative;top:-7px">
                             <span style="font-weight: bold;">Đã giao</span>
                         <br>
                         <span style="position: absolute;left: 0.4px;width: 10vw;top: 22px;font-size: small;">${dto.order.orderDate}</span>
                         </span>
-                        
                     </div>
                 </div>
                 <div class="order-info">
@@ -106,11 +116,12 @@
                 <div style="display: flex;justify-content: space-between;margin-top: 20px;">
                     <p class="order-note">*Trạng thái đơn hàng:
                         <c:choose>
-                        <c:when test="${dto.order.status == 'Completed'}">Đã giao</c:when>
-                        <c:when test="${dto.order.status == 'PENDING'}">Đang xử lý</c:when>
-                        <c:when test="${dto.order.status == 'NOPAID'}">Đang xử lý</c:when>
-                        <c:when test="${dto.order.status == 'CANCELLED'}">Đã huỷ</c:when>
-                        <c:otherwise>${dto.order.status}</c:otherwise>
+                            <c:when test="${dto.order.status.toLowerCase() == 'completed'}">Đã giao</c:when>
+                            <c:when test="${dto.order.status.toLowerCase() == 'pending'}">Chờ xác nhận</c:when>
+                            <c:when test="${dto.order.status.toLowerCase() == 'processing'}">Đang xử lý</c:when>
+                            <c:when test="${dto.order.status.toLowerCase() == 'cancelled'}">Đã huỷ</c:when>
+                            <c:when test="${dto.order.status.toLowerCase() == 'shipping'}">Đang vận chuyển</c:when>
+                            <c:otherwise>${dto.order.status.toLowerCase()}</c:otherwise>
                         </c:choose>
                     </p>
                 </div>
