@@ -96,7 +96,7 @@
                 <div class="checkout-section">
                     <div class="section-title">THÀNH VIÊN</div>
                     <div class="member-info">
-                        <div>Số Point hiện có: <span class="highlight">${user.getPoint()}</span></div>
+                        <div>Số Point hiện có: <span class="highlight"><fmt:formatNumber value="${user.getPoint()}"/></span></div>
                         <label>
                             <input type="checkbox" id="usePoint" name="usePoint" value="1"
                                    onchange="document.getElementById('checkoutForm').submit()"
@@ -146,17 +146,16 @@
                                 </div>
                                 <div class="order-prices">
                                     <div class="order-price-current"><p class="cost"><fmt:formatNumber
-                                            value="${item.price}"
-                                            pattern="#,###"/>
+                                            value="${item.price}"/>
                                         đ</p></div>
                                     <c:if test="${item.book.getPriceDiscounted() >0}">
                                         <div class="order-price-old"><p class="cost"><fmt:formatNumber
-                                                value="${item.book.getPrice()}" pattern="#.###"/> đ</p></div>
+                                                value="${item.book.getPrice()}" /> đ</p></div>
                                     </c:if>
                                 </div>
                                 <div class="order-qty">${item.quantity}</div>
                                 <div class="order-total"><p class="cost"><fmt:formatNumber
-                                        value="${item.price*item.quantity}" pattern="#.###"/> đ</p></div>
+                                        value="${item.price*item.quantity}" /> đ</p></div>
                             </div>
                         </c:forEach>
                     </div>
@@ -169,14 +168,14 @@
                     <div class="total-row">
                         <span>Thành tiền</span>
                         <span>
-                         <fmt:formatNumber value="${totalBill}" pattern="#,###"/> đ
+                         <fmt:formatNumber value="${totalBill}" /> đ
                         </span>
                     </div>
 
                     <div class="total-row">
                         <span>Phí vận chuyển</span>
                         <span>
-                            <fmt:formatNumber value="${shipFee}" pattern="#,###"/> đ
+                            <fmt:formatNumber value="${shipFee}" /> đ
                         </span>
                     </div>
 
@@ -193,7 +192,7 @@
                         <div class="total-row">
                             <span>Giảm bằng point</span>
                             <span class="highlight">
-                                -<fmt:formatNumber value="${pointUsed}" pattern="#,###"/> đ
+                                -<fmt:formatNumber value="${pointUsed}"/> đ
                             </span>
                         </div>
                     </c:if>
@@ -201,7 +200,7 @@
                     <div class="total-row total-final">
                         <strong>Tổng thanh toán</strong>
                         <strong class="total-price">
-                            <fmt:formatNumber value="${finalTotal}" pattern="#,###"/> đ
+                            <fmt:formatNumber value="${finalTotal}"/> đ
                         </strong>
                     </div>
 
