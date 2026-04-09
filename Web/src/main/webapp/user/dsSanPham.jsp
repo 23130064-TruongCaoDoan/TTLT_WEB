@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <fmt:setLocale value="vi_VN"/>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,21 +27,70 @@
 <div class="page-wrapper">
     <c:import url="/user/headerUser.jsp"></c:import>
     <div class="banner" style="background-color: ${color}">
-        <h1><c:if test="${not empty search}">
-            ${search}
-        </c:if>
-            <c:if test="${empty search}">
-                Sản Phẩm
-            </c:if></h1>
+        <h1>
+            <c:choose>
+
+                <c:when test="${not empty search}">
+                    Kết quả tìm kiếm: ${search}
+                </c:when>
+
+                <c:when test="${not empty ssearch}">
+                    ${ssearch}
+                </c:when>
+
+                <c:otherwise>
+                    Sản Phẩm
+                </c:otherwise>
+
+            </c:choose>
+        </h1>
         <c:if test="${not empty icon}">
             <img src="${icon}" alt="">
         </c:if>
     </div>
+    <c:if test="${not empty param.bSearch
+          or not empty param.year
+          or not empty param.maxPrice
+          or not empty param.age
+          or not empty paramValues.category
+          or not empty paramValues.author
+          or not empty paramValues.publisher}">
+
+        <div class="active-filters">
+            <b>Đã lọc:</b>
+
+            <c:if test="${not empty param.year}">
+                <span>Năm ${param.year}</span>
+            </c:if>
+
+            <c:if test="${not empty param.maxPrice}">
+                <span>Giá ≤ <fmt:formatNumber value="${param.maxPrice}" type="number" groupingUsed="true"/> đ</span>
+            </c:if>
+
+            <c:if test="${not empty param.age}">
+                <span>Độ tuổi ${param.age}</span>
+            </c:if>
+
+            <c:forEach var="c" items="${paramValues.category}">
+                <span>${c}</span>
+            </c:forEach>
+
+            <c:forEach var="a" items="${paramValues.author}">
+                <span>${a}</span>
+            </c:forEach>
+
+            <c:forEach var="p" items="${paramValues.publisher}">
+                <span>${p}</span>
+            </c:forEach>
+
+        </div>
+    </c:if>
     <div class="content">
         <div class="filter">
 
             <div class="filter-title"><h2>Bộ lọc</h2></div>
             <hr>
+            <form id="filterForm" action="filter" method="get">
             <div class="filter-group">
                 <div class="filter-header" onclick="toggle(this,'categoryBox')">
                     Thể loại
@@ -48,7 +98,7 @@
                 </div>
                 <div class="filter-options" id="categoryBox">
                     <c:forEach var="c" items="${categories}">
-                        <label><input type="checkbox" value="${c}"> ${c}</label>
+                        <label><input type="checkbox" name="category" value="${c}"> ${c}</label>
                     </c:forEach>
                 </div>
             </div>
@@ -60,7 +110,13 @@
                 </div>
                 <div class="filter-options" id="publisherBox">
                     <c:forEach var="p" items="${publishers}">
-                        <label><input type="checkbox" value="${p}"> ${p}</label>
+                        <label>
+                            <input type="checkbox" name="publisher" value="${p}"
+                            <c:if test="${fn:contains(fn:join(paramValues.publisher, ','), p)}">
+                                   checked
+                            </c:if>>
+                                ${p}
+                        </label>
                     </c:forEach>
                 </div>
             </div>
@@ -72,7 +128,13 @@
                 </div>
                 <div class="filter-options" id="authorBox">
                     <c:forEach var="a" items="${authors}">
-                        <label><input type="checkbox" value="${a}"> ${a}</label>
+                        <label>
+                            <input type="checkbox" name="author" value="${a}"
+                            <c:if test="${fn:contains(fn:join(paramValues.author, ','), a)}">
+                                   checked
+                            </c:if>>
+                                ${a}
+                        </label>
                     </c:forEach>
                 </div>
             </div>
@@ -83,17 +145,40 @@
                     <i class="fa-solid fa-chevron-down arrow"></i>
                 </div>
                 <div class="filter-options" id="ageBox">
-                    <label><input type="radio" name="age" value="0-1"> 0-1 tuổi</label>
-                    <label><input type="radio" name="age" value="1-3"> 1-3 tuổi</label>
-                    <label><input type="radio" name="age" value="4-10"> 4-10 tuổi</label>
-                    <label><input type="radio" name="age" value="10+"> >10 tuổi</label>
+                    <label>
+                        <input type="radio" name="age" value="0-1"
+                               <c:if test="${param.age == '0-1'}">checked</c:if>>
+                        0-1 tuổi
+                    </label>
+
+                    <label>
+                        <input type="radio" name="age" value="1-3"
+                               <c:if test="${param.age == '1-3'}">checked</c:if>>
+                        1-3 tuổi
+                    </label>
+
+                    <label>
+                        <input type="radio" name="age" value="4-10"
+                               <c:if test="${param.age == '4-10'}">checked</c:if>>
+                        4-10 tuổi
+                    </label>
+
+                    <label>
+                        <input type="radio" name="age" value="10-100"
+                               <c:if test="${param.age == '10-100'}">checked</c:if>>
+                        >10 tuổi
+                    </label>
                 </div>
             </div>
 
             <div class="filter-group">
                 <div class="filter-header">Khoảng giá</div>
                 <div class="price-slider">
-                    <input type="range" id="priceRange" min="0" max="500000" step="10000">
+                    <input type="range"
+                           id="priceRange"
+                           name="maxPrice"
+                           value="${param.maxPrice != null ? param.maxPrice : 200000}"
+                           min="0" max="500000" step="10000">
                     <div class="price-value">
                         Tối đa: <span id="priceValue">0</span> đ
                     </div>
@@ -102,17 +187,25 @@
 
             <div class="filter-group">
                 <div class="filter-header">Năm xuất bản</div>
-                <select id="yearSelect">
+                <select id="yearSelect" name="year">
                     <option value="">-- Chọn năm --</option>
                     <c:forEach var="y" items="${years}">
-                        <option value="${y}">${y}</option>
+                        <option value="${y}"
+                                <c:if test="${param.year == y}">selected</c:if>>
+                                ${y}
+                        </option>
                     </c:forEach>
                 </select>
             </div>
 
-            <button id="applyFilter" class="apply-filter">Lọc</button>
-            <button class="clear-filter">Xoá bộ lọc</button>
-
+                <input type="hidden" name="type" value="${type}" />
+                <input type="hidden" name="idEvent" value="${idEvent}" />
+                <input type="hidden" name="color" value="${color}" />
+                <input type="hidden" name="icon" value="${icon}" />
+                <input type="hidden" name="bSearch" value="${bSearch}" />
+                <button type="submit" id="applyFilter" class="apply-filter">Lọc</button>
+                <button type="button" class="clear-filter" onclick="clearFilter()">Xoá bộ lọc</button>
+            </form>
         </div>
         <c:if test="${empty bookList}"><span STYLE="text-align: center; font-size: 20px; color: gray; margin: auto">KHÔNG CÓ SẢN PHẨM</span></c:if>
         <div class="listProducts">
@@ -169,19 +262,19 @@
 
                             <c:if test="${currentPage > 1}">
                                 <a class="page-btn prev"
-                                   href="dsSanPham/filter?page=${currentPage - 1}&${qs}">«</a>
+                                   href="filter?page=${currentPage - 1}&${qs}">«</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
                                 <a class="page-btn ${i == currentPage ? 'active' : ''}"
-                                   href="dsSanPham/filter?page=${i}&${qs}">
+                                   href="filter?page=${i}&${qs}">
                                         ${i}
                                 </a>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
                                 <a class="page-btn next"
-                                   href="dsSanPham/filter?page=${currentPage + 1}&${qs}">»</a>
+                                   href="filter?page=${currentPage + 1}&${qs}">»</a>
                             </c:if>
 
                         </c:when>
@@ -189,19 +282,19 @@
                         <c:otherwise>
                             <c:if test="${currentPage > 1}">
                                 <a class="page-btn prev"
-                                   href="dsSanPham?page=${currentPage - 1}&type=${type}&idEvent=${idEvent}&title=${title}">«</a>
+                                   href="dsSanPham?page=${currentPage - 1}&type=${type}&idEvent=${idEvent}&ssearch=${ssearch}">«</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
                                 <a class="page-btn ${i == currentPage ? 'active' : ''}"
-                                   href="dsSanPham?page=${i}&type=${type}&idEvent=${idEvent}&title=${title}">
+                                   href="dsSanPham?page=${i}&type=${type}&idEvent=${idEvent}&ssearch=${ssearch}">
                                         ${i}
                                 </a>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
                                 <a class="page-btn next"
-                                   href="dsSanPham?page=${currentPage + 1}&type=${type}&idEvent=${idEvent}&title=${title}">»</a>
+                                   href="dsSanPham?page=${currentPage + 1}&type=${type}&idEvent=${idEvent}&ssearch=${ssearch}">»</a>
                             </c:if>
                         </c:otherwise>
 
@@ -251,59 +344,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-
-        const BASE_URL = "${pageContext.request.contextPath}/dsSanPham";
-        const params = new URLSearchParams(window.location.search);
-
-
-        document.querySelectorAll("#categoryBox input").forEach(cb => {
-            cb.onchange = () => {
-                const selected = Array.from(
-                    document.querySelectorAll("#categoryBox input:checked")
-                ).map(i => i.value);
-
-                if (selected.length > 0) {
-                    params.set("category", selected.join(","));
-                } else {
-                    params.delete("category");
-                }
-            };
-        });
-
-        document.querySelectorAll("#publisherBox input").forEach(cb => {
-            cb.onchange = () => {
-                const selected = Array.from(
-                    document.querySelectorAll("#publisherBox input:checked")
-                ).map(i => i.value);
-
-                if (selected.length > 0) {
-                    params.set("publisher", selected.join(","));
-                } else {
-                    params.delete("publisher");
-                }
-            };
-        });
-
-        document.querySelectorAll("#authorBox input").forEach(cb => {
-            cb.onchange = () => {
-                const selected = Array.from(
-                    document.querySelectorAll("#authorBox input:checked")
-                ).map(i => i.value);
-
-                if (selected.length > 0) {
-                    params.set("author", selected.join(","));
-                } else {
-                    params.delete("author");
-                }
-            };
-        });
-
-        document.querySelectorAll("input[name='age']").forEach(r => {
-            r.onchange = () => {
-                params.set("age", r.value);
-            };
-        });
-
         const priceRange = document.getElementById("priceRange");
         const priceValue = document.getElementById("priceValue");
 
@@ -313,33 +353,19 @@
             priceRange.oninput = function () {
                 priceValue.innerText = Number(this.value).toLocaleString();
             };
-
-            priceRange.onchange = function () {
-                params.set("maxPrice", this.value);
-            };
         }
-
-        const yearSelect = document.getElementById("yearSelect");
-        if (yearSelect) {
-            yearSelect.onchange = function () {
-                if (this.value) {
-                    params.set("year", this.value);
-                } else {
-                    params.delete("year");
-                }
-            };
-        }
-
-        document.getElementById("applyFilter").onclick = () => {
-            params.delete("page");
-            window.location.href = BASE_URL + "?" + params.toString();
-        };
-
-        document.querySelector(".clear-filter").onclick = () => {
-            window.location.href = BASE_URL;
-        };
-
     });
+    function clearFilter() {
+        const mode = "${mode}";
+
+        if (mode === "search") {
+            window.location.href = "<c:url value='search'><c:param name='bSearch' value='${search}'/></c:url>"
+        } else {
+            window.location.href = "<c:url value='dsSanPham'><c:param name='type' value='${type}'/><c:param name='idEvent' value='${idEvent}'/><c:param name='ssearch' value='${ssearch}'/></c:url>"
+        }
+    }
+
+
 </script>
 
 </html>

@@ -8,7 +8,7 @@ public class AuthorDao extends BaseDao {
 
     public List<Author> getAll() {
         return getJdbi().withHandle(h ->
-                h.createQuery("SELECT id, name FROM authors")
+                h.createQuery("SELECT id, name FROM authors ORDER BY name ASC")
                         .mapToBean(Author.class)
                         .list()
         );

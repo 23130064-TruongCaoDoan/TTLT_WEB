@@ -411,4 +411,31 @@ public class BookService {
     public void updateQuantityOrderCancelled(int bookId, int stockRefunded) {
         hd.updateQuantityOrderCancelled(bookId,stockRefunded);
     }
+
+
+    public int countBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year) {
+        return hd.countBooksUniversal(keyword,type,idEvent,category,author,publisher,age,maxPrice,year);
+    }
+
+    public List<Book> getBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year, int pageSize, int offset) {
+        return hd.getBooksUniversal(keyword,type,idEvent,category,author,publisher,age,maxPrice,year,pageSize,offset);
+    }
+
+    public static void main(String[] args) {
+        BookService bookService = new BookService();
+        List<Book> books = bookService.getBooksUniversal(
+                "doraemon", 0, 0,
+                null, // category
+                null, // author
+                null, // publisher
+                null, // age
+                "100000", // maxPrice
+                "",   // year
+                1, 28
+        );
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
+        System.out.println(books.size());
+    }
 }
