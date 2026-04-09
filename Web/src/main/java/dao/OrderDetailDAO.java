@@ -3,9 +3,8 @@ package dao;
 import DTO.OrderDetailDTO;
 import DTO.OrderItemDTO;
 import Service.AddressService;
-import model.Address;
-import model.Order;
-import model.Shipping;
+import Service.CommentService;
+import model.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -70,7 +69,6 @@ public class OrderDetailDAO extends BaseDao{
                     .bind("orderId", orderId)
                     .mapToBean(OrderItemDTO.class)
                     .list();
-
             // Gộp DTO
             OrderDetailDTO dto = new OrderDetailDTO();
             dto.setOrder(order);

@@ -12,6 +12,9 @@ public class CommentService {
     public List<CommentView> getCommentView(int bookId){
         return hd.getAllComment(bookId);
     }
+    public CommentView getCommentByOrder(int bookId, int orderId, int userId) {
+        return hd.getCommentByOrder(bookId, orderId, userId);
+    }
     public void insertComment(int userId, int bookId, int orderId, int rating, String content, String imgURL) {
         hd.insertComment(userId, bookId, orderId,rating, content, imgURL);
     }

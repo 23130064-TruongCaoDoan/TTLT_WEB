@@ -8,13 +8,13 @@ import java.util.List;
 
 public class OrderDao extends BaseDao {
 
-    public int addOrder(int userId, double totalAmount, String note, Integer dis, Integer ship, String paymentMethod) {
+    public int addOrder(int userId, double totalAmount, String note, Integer dis, Integer ship, String paymentMethod, String paymentStatus) {
         try {
             return getJdbi().withHandle(handle ->
                     handle.createUpdate("""
                                         INSERT INTO `ORDERS`
-                                        (user_id, total_amount, note, status, payment_method, dis_voucher_id, ship_voucher_id)
-                                        VALUES (:user_id, :total_amount, :note, :status,:payment_method, :dis_voucher_id, :ship_voucher_id)
+                                        (user_id, total_amount, note, status, payment_method, payment_status, dis_voucher_id, ship_voucher_id)
+                                        VALUES (:user_id, :total_amount, :note, :status,:payment_method,:payment_status, :dis_voucher_id, :ship_voucher_id)
                                     """)
                             .bind("user_id", userId)
                             .bind("total_amount", totalAmount)
@@ -23,6 +23,7 @@ public class OrderDao extends BaseDao {
                             .bind("payment_method", paymentMethod)
                             .bind("dis_voucher_id", dis)
                             .bind("ship_voucher_id", ship)
+                            .bind("payment_status", paymentStatus)
                             .executeAndReturnGeneratedKeys("id")
                             .mapTo(int.class)
                             .one()
@@ -201,5 +202,22 @@ public class OrderDao extends BaseDao {
                         .list()
         );
     }
+    public void updateOrderStatus(int orderId, String orderStatus) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE orders SET status = :orderStatus WHERE id = :orderId")
+                        .bind("orderId", orderId)
+                        .bind("orderStatus", orderStatus)
+                        .execute()
+        );
+    }
+    public void updatePaymentStatus(int orderId, String paymentStatus) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE orders SET payment_status = :paymentStatus WHERE id = :orderId")
+                        .bind("orderId", orderId)
+                        .bind("paymentStatus", paymentStatus)
+                        .execute()
+        );
+    }
+
 
 }

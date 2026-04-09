@@ -6,6 +6,7 @@ import dao.AuthorDao;
 import dao.BookDao;
 import jakarta.servlet.http.Part;
 import model.Book;
+import Service.UploadService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -406,7 +407,11 @@ public class BookService {
     public List<String> getType(){
         return hd.getCategory();
     }
-    
+
+    public void updateQuantityOrderCancelled(int bookId, int stockRefunded) {
+        hd.updateQuantityOrderCancelled(bookId,stockRefunded);
+    }
+
 
     public int countBooksUniversal(String keyword, int type, int idEvent, String category, String author, String publisher, String age, String maxPrice, String year) {
         return hd.countBooksUniversal(keyword,type,idEvent,category,author,publisher,age,maxPrice,year);

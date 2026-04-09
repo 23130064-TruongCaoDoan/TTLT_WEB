@@ -24,6 +24,23 @@ public class CommentDao extends BaseDao{
                         .list()
         );
     }
+    public CommentView getCommentByOrder(int bookId, int orderId, int userId) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT  u.name AS name , c.rating AS rating, c.content  AS content, DATE_FORMAT(c.create_at, '%d/%m/%Y') AS createAt, c.img_comment AS imgComment
+                                    FROM comments c
+                                    INNER JOIN USER u ON u.id = c.user_id
+                                    WHERE c.book_id =:book_id  AND c.order_id=:order_id AND u.id=:user_id  AND c.is_active=1
+                                    ORDER BY c.create_at DESC
+                                    """)
+                        .bind("book_id", bookId)
+                        .bind("order_id", orderId)
+                        .bind("user_id", userId)
+                        .mapToBean(CommentView.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
     public void insertComment(int userId, int bookId, int orderId, int rating, String content, String imgURL) {
         getJdbi().useHandle(handle ->
                 handle.createUpdate(

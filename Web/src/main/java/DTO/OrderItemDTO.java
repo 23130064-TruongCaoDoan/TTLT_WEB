@@ -1,5 +1,7 @@
 package DTO;
 
+import model.CommentView;
+
 public class OrderItemDTO {
 
     private int bookId;
@@ -10,6 +12,7 @@ public class OrderItemDTO {
     private int quantity;
     private double subtotal;
     private boolean isReviewed;
+    private CommentView commentView;
 
     public int getBookId() {
         return bookId;
@@ -70,6 +73,12 @@ public class OrderItemDTO {
     }
     public void setType(String type) {
         this.type = type;
+    }
+    public CommentView getCommentView() {
+        return commentView;
+    }
+    public void setCommentView(CommentView commentView) {
+        this.commentView = commentView;
     }
 
     @Override
