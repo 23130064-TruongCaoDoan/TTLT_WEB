@@ -2,6 +2,7 @@ package controler.admin.ProductManage;
 
 import Service.AuthorService;
 import Service.BookService;
+import Service.ThongKeService;
 import Service.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -39,6 +40,23 @@ public class ProductManageServlet extends HttpServlet {
         request.setAttribute("types", bookService.getAllBookTypes());
         List<Book> lsBook = bookService.searchAndFilter(q, type, stock);
         request.setAttribute("lsbook", lsBook);
+
+        ThongKeService thongKeService = new ThongKeService();
+
+        int totalSoldProducts = thongKeService.getTotalSoldProductsAllTime();
+        int totalStock = thongKeService.getTotalStock();
+        int outOfStockCount = thongKeService.getOutOfStockCount();
+        List<Book> outOfStockBooks = thongKeService.getOutOfStockBooks();
+        int unsoldBooksCount = thongKeService.getUnsoldBooksCount();
+        List<Book> unsoldBooks = thongKeService.getUnsoldBooks();
+
+        request.setAttribute("totalSoldProducts", totalSoldProducts);
+        request.setAttribute("totalStock", totalStock);
+        request.setAttribute("outOfStockCount", outOfStockCount);
+        request.setAttribute("outOfStockBooks", outOfStockBooks);
+        request.setAttribute("unsoldBooksCount", unsoldBooksCount);
+        request.setAttribute("unsoldBooks", unsoldBooks);
+
         request.getRequestDispatcher("admin/ManageProduct.jsp").forward(request, response);
     }
 

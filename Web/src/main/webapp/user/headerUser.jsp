@@ -54,7 +54,14 @@
                     <button type="submit">Tìm Kiếm</button>
                 </form>
                 <a href="<c:url value='${empty user ? "/login" : "/SetUpAccount"}' />" class="button bt taikhoan">
-                    <i class="fa-solid fa-user"></i>
+                    <c:choose>
+                        <c:when test="${not empty user and not empty user.avatar}">
+                            <img src="${user.avatar}" alt="Avatar" style="width: 25px; height: 25px; border-radius: 50%; object-fit: cover; margin-right: 5px;">
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="fa-solid fa-user"></i>
+                                </c:otherwise>
+                    </c:choose>
                     <span>
                             <c:if test="${not empty user}">
                                 ${user.getDisplayName()}

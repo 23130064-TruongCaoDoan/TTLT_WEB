@@ -384,6 +384,51 @@ public class ThongKeDao extends BaseDao {
                         .list());
     }
 
+    public int getTotalSoldProductsAllTime() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT SUM(oi.quantity)
+                    FROM order_items oi
+                    JOIN orders o ON o.id = oi.order_id
+                    WHERE o.status = 'COMPLETED'
+                    """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public int getUnsoldBooksCount() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*) 
+                        FROM books 
+                        WHERE id NOT IN (
+                            SELECT oi.book_id 
+                            FROM order_items oi 
+                            JOIN orders o ON o.id = oi.order_id 
+                            WHERE o.status = 'COMPLETED'
+                        )
+                        """)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+
+    public List<Book> getUnsoldBooks() {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT * FROM books 
+                        WHERE id NOT IN (
+                            SELECT oi.book_id 
+                            FROM order_items oi 
+                            JOIN orders o ON o.id = oi.order_id 
+                            WHERE o.status = 'COMPLETED'
+                        )
+                        """)
+                        .mapToBean(Book.class)
+                        .list());
+    }
+
     public List<String> listYears() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )
