@@ -66,15 +66,16 @@
                                 <p class="
                                         ${o.status.toLowerCase() == 'completed' ? 'status-delivered' :
                                           o.status.toLowerCase() == 'pending'   ? 'status-waiting'   :
-                                          o.status.toLowerCase() == 'nopaid'   ? 'status-waiting'   :
+                                          o.status.toLowerCase() == 'processing'   ? 'status-waiting'   :
                                           o.status.toLowerCase() == 'shipping'  ? 'status-shipping'  :
                                           o.status.toLowerCase() == 'cancelled' ? 'status-cancel'    : ''}">
 
                                     <c:choose>
                                         <c:when test="${o.status.toLowerCase() == 'completed'}">Đã giao</c:when>
-                                        <c:when test="${o.status.toLowerCase() == 'pending'}">Đang xử lý</c:when>
-                                        <c:when test="${o.status.toLowerCase() == 'nopaid'}">Đang xử lý</c:when>
+                                        <c:when test="${o.status.toLowerCase() == 'pending'}">Chờ xác nhận</c:when>
+                                        <c:when test="${o.status.toLowerCase() == 'processing'}">Đang xử lý</c:when>
                                         <c:when test="${o.status.toLowerCase() == 'cancelled'}">Đã huỷ</c:when>
+                                        <c:when test="${o.status.toLowerCase() == 'shipping'}">Đang vận chuyển</c:when>
                                         <c:otherwise>${o.status.toLowerCase()}</c:otherwise>
                                     </c:choose>
                                 </p>
@@ -100,21 +101,21 @@
                             <div class="price-cart">
                                 <div class="total-price">
                                     <span class="total">Tổng tiền:</span>
-                                    <span class="price">
-                            <fmt:formatNumber value="${ o.totalAmount}" type="currency"/>
-                        </span>
+                                    <span class="price"><fmt:formatNumber value="${ o.totalAmount}" type="currency"/></span>
                                 </div>
-                                <c:if test="${ o.status.toLowerCase() == 'pending' || o.status.toLowerCase() == 'processing'}">
+                                <div id="groupButtonOrder">
+                                    <c:if test="${ o.status.toLowerCase() == 'pending' || o.status.toLowerCase() == 'processing'}">
+                                        <div class="button">
+                                            <button id="BtnCancelled" data-order-id="${o.orderId}">
+                                                Hủy đơn hàng
+                                            </button>
+                                        </div>
+                                    </c:if>
                                     <div class="button">
-                                        <button id="BtnCancelled" data-order-id="${o.orderId}">
-                                            Hủy đơn hàng
+                                        <button onclick="window.location='my-order?id=${o.orderId}'">
+                                            Xem chi tiết
                                         </button>
                                     </div>
-                                </c:if>
-                                <div class="button">
-                                    <button onclick="window.location='my-order?id=${o.orderId}'">
-                                        Xem chi tiết
-                                    </button>
                                 </div>
                             </div>
                         </div>
