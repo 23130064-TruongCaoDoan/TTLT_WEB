@@ -9,13 +9,14 @@ public class AddressDao extends BaseDao{
     public void insertAddress(Address address) {
         getJdbi().useHandle(handle -> {
             handle.createUpdate(
-                            "INSERT INTO address (user_id, name, phone, city, ward, specificAddress, is_default) " +
-                                    "VALUES (:userId, :name, :phone, :city, :ward, :specificAddress, :isDefault)"
+                            "INSERT INTO ADDRESS (user_id, name, phone, city, districts, ward, specificAddress, is_default) " +
+                                    "VALUES (:userId, :name, :phone, :city,:districts,:ward, :specificAddress, :isDefault)"
                     )
                     .bind("userId", address.getUserId())
                     .bind("name", address.getName())
                     .bind("phone", address.getPhone())
                     .bind("city", address.getCity())
+                    .bind("districts", address.getDistricts())
                     .bind("ward", address.getWard())
                     .bind("specificAddress", address.getSpecificAddress())
                     .bind("isDefault", address.getIsDefault() ? 1 : 0)
@@ -50,11 +51,12 @@ public class AddressDao extends BaseDao{
     }
     public void updateAddress(Address address) {
         getJdbi().useHandle(handle -> {
-           handle.createUpdate(" UPDATE address SET name= :name, phone= :phone, city= :city, ward= :ward, specificAddress= :specificAddress, is_default= :isDefault WHERE id = :id")
+           handle.createUpdate(" UPDATE address SET name= :name, phone= :phone, city= :city,districts=:districts, ward= :ward, specificAddress= :specificAddress, is_default= :isDefault WHERE id = :id")
                    .bind("id", address.getId())
                    .bind("name", address.getName())
                    .bind("phone", address.getPhone())
                    .bind("city", address.getCity())
+                   .bind("districts", address.getDistricts())
                    .bind("ward", address.getWard())
                    .bind("specificAddress", address.getSpecificAddress())
                    .bind("isDefault", address.getIsDefault() ? 1 : 0)

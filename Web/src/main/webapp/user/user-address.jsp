@@ -45,7 +45,7 @@
                                 </div>
                                 <p>
                                         ${addr.specificAddress}<br>
-                                        ${addr.ward}, ${addr.city}
+                                        ${addr.ward},${addr.districts},${addr.city}
                                 </p>
                             </div>
                             <div class="address-actions">
