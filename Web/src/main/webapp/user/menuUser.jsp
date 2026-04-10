@@ -9,7 +9,7 @@
                 <img src="${sessionScope.user.avatar}" alt="Avatar" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
                     </c:when>
                     <c:otherwise>
-                        <img src="assets/images/default-avatar.png" alt="Avatar" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFCzxivJXCZk0Kk8HsHujTO3Olx0ngytPrWw&s" alt="Avatar" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
                     </c:otherwise>
         </c:choose>
     </div>
