@@ -20,7 +20,10 @@ public class User {
     private int point;
 
     private boolean status;
+
     private String email;
+
+    private String avatar;
 
     public int getId() {
         return id;
@@ -100,6 +103,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
 

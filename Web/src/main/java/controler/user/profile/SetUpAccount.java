@@ -1,6 +1,7 @@
 package controler.user.profile;
 
 import Service.UserService;
+import Service.UploadService;
 import Util.EmailSender;
 import Util.Token8;
 import jakarta.servlet.*;
@@ -13,6 +14,11 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 @WebServlet(name = "SetUpAccount", value = "/SetUpAccount")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 5 * 1024 * 1024,
+        maxRequestSize = 10 * 1024 * 1024
+)
 public class SetUpAccount extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,6 +31,17 @@ public class SetUpAccount extends HttpServlet {
         LocalDate today = LocalDate.now();
         request.setAttribute("today", today);
         request.setAttribute("user", user);
+
+        String message = (String) session.getAttribute("message");
+        String error = (String) session.getAttribute("error");
+        if (message != null) {
+            request.setAttribute("message", message);
+            session.removeAttribute("message");
+        }
+        if (error != null) {
+            request.setAttribute("error", error);
+            session.removeAttribute("error");
+        }
         request.getRequestDispatcher("user/user-hoSoCaNhan.jsp").forward(request, response);
     }
 
@@ -51,21 +68,39 @@ public class SetUpAccount extends HttpServlet {
         if(!(birthdayStr==null||birthdayStr.equals(""))) {
              birthday = LocalDate.parse(birthdayStr);
         }
+
+        String avatar = user.getAvatar();
+        try {
+            Part filePart = request.getPart("avatar");
+            if (filePart != null && filePart.getSize() > 0) {
+                UploadService uploadService = new UploadService();
+                String uploadedUrl = uploadService.upload(filePart, "avatars");
+
+                if (uploadedUrl != null) {
+                    avatar = uploadedUrl;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi upload avatar: " + e.getMessage());
+        }
+
         int id = user.getId();
         UserService userService = new UserService();
         try {
-            userService.updateProfile(id,name,phone, email, gender,birthday);
+            userService.updateProfile(id,name,phone, email, gender,birthday, avatar);
             user.setName(name);
             user.setPhone(phone);
             user.setEmail(email);
             user.setSex(gender);
             user.setBirthday(birthday);
+            user.setAvatar(avatar);
             session.setAttribute("user", user);
             request.setAttribute("error", "Cập nhật thành công!");
             response.sendRedirect("SetUpAccount");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi cập nhật profile!");
+            response.sendRedirect("SetUpAccount");
         }
     }
 

@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>Quản lý user</title>
     <link rel="stylesheet" href="assets/css_admin/admin.css">
-    <link rel="stylesheet" href="assets/css_admin/user.css">
+    <link rel="stylesheet" href="assets/css_admin/user.css?v=2">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
 </head>
@@ -25,6 +25,9 @@
 
                 <div class="function">
                     <div>
+                        <button id="addAcc" type="button" style="background-color: #28a745; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px;">
+                            <i class="fas fa-plus"></i> Tạo tài khoản
+                        </button>
                         <button id="add" type="button">Tặng voucher</button>
                         <button id="notify" type="button">Tạo thông báo</button>
                     </div>
@@ -145,6 +148,7 @@
         </div>
     </div>
     <div id="overlay"></div>
+    <div id="custom-toast"></div>
     <form id="tangVoucherForm" method="post" action="${pageContext.request.contextPath}/gift-voucher">
         <h3>TẶNG VOUCHER</h3>
         <div class="form-group">
@@ -198,6 +202,43 @@
         <button type="submit" class="confirm">Xác nhận</button>
     </form>
 
+    <form id="taoTaiKhoanForm" method="post" action="${pageContext.request.contextPath}/admin-add-user">
+        <h3>TẠO TÀI KHOẢN MỚI</h3>
+        <div class="errorAdd" style="color: red; text-align: center; margin-bottom: 15px; font-weight: bold;"></div>
+        <div class="form-group">
+            <label>Họ và Tên</label>
+            <input type="text" name="name" placeholder="Nhập họ và tên" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Nhập email" required>
+        </div>
+
+        <div class="form-group">
+            <label>Mật khẩu</label>
+            <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+        </div>
+
+        <div class="form-group-inline">
+            <div style="flex: 1;">
+                <label>Phân quyền</label>
+                <select name="role">
+                    <option value="0">USER</option>
+                    <option value="1">ADMIN</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label>Trạng thái</label>
+                <select name="status">
+                    <option value="1">Mở</option>
+                    <option value="0">Khóa</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="confirm">Tạo Tài Khoản</button>
+    </form>
 
 </main>
 <c:if test="${param.error == 'invalid_code'}">
@@ -217,18 +258,25 @@
         alert(" Tặng voucher thành công");
     </script>
 </c:if>
-
+<c:if test="${param.success == 'notify'}">
+    <script>
+        alert(" Tạo thông báo thành công");
+    </script>
+</c:if>
 <script>
     const overlay = document.getElementById("overlay");
     const add = document.getElementById("add");
     const notify = document.getElementById("notify");
+    const addAcc = document.getElementById("addAcc");
     const popupVoucher = document.getElementById("tangVoucherForm");
     const popupNotify = document.getElementById("taoThongBao");
+    const popupAddAcc = document.getElementById("taoTaiKhoanForm");
 
     overlay.addEventListener("click", () => {
         overlay.style.display = "none";
         popupVoucher.style.display = "none";
         popupNotify.style.display = "none";
+        popupAddAcc.style.display = "none";
     });
 
     add.addEventListener("click", () => {
@@ -239,6 +287,68 @@
     notify.addEventListener("click", () => {
         overlay.style.display = "block";
         popupNotify.style.display = "block";
+    });
+
+    addAcc.addEventListener("click", () => {
+        overlay.style.display = "block";
+        popupAddAcc.style.display = "block";
+    });
+
+    function showToast(message, type) {
+            const toast = document.getElementById("custom-toast");
+            toast.innerText = message;
+            toast.className = "";
+            toast.classList.add("show", type);
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        const formTaoTaiKhoan = document.getElementById("taoTaiKhoanForm");
+        const errorAddDiv = document.querySelector(".errorAdd");
+        function checkPassword(password) {
+                const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+                return regex.test(password);
+            }
+
+        formTaoTaiKhoan.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            errorAddDiv.innerText = "";
+            errorAddDiv.style.color = "red";
+
+            const passwordValue = this.password.value.trim();
+
+            if (!checkPassword(passwordValue)) {
+                errorAddDiv.innerText = "Mật khẩu phải có ít nhất 8 ký tự, có số và kí tự đặc biệt";
+                    return; // Dừng lại không gửi dữ liệu
+            }
+
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData);
+
+            fetch(this.action, {
+                method: this.method,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params.toString()
+            })
+            .then(response => {
+                if (response.url.includes("error=email_exists")) {
+                    errorAddDiv.innerText = "Thất bại: Email này đã tồn tại trong hệ thống!";
+                } else if (response.url.includes("error=invalid_password")) {
+                    errorAddDiv.innerText = "Mật khẩu phải có ít nhất 8 ký tự, có số và kí tự đặc biệt";
+                } else if (response.url.includes("success=add_user")) {
+                    errorAddDiv.style.color = "green";
+                    errorAddDiv.innerText = "Tạo tài khoản mới thành công!";
+                    setTimeout(() => { window.location.reload(); }, 1500);
+                }
+            })
+            .catch(error => {
+                errorAddDiv.innerText = "Có lỗi xảy ra phía máy chủ, vui lòng thử lại!";
+            });
     });
 </script>
 

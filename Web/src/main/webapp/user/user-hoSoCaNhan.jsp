@@ -22,7 +22,25 @@
             </div>
                 <div class="profile-container">
                     <h2>Hồ sơ cá nhân</h2>
-                    <form id="setUpForm" action="SetUpAccount" method="post">
+                    <form id="setUpForm" action="SetUpAccount" method="post" enctype="multipart/form-data">
+                    <div class="avatar-upload-container" style="text-align: center; margin-bottom: 20px;">
+                        <div class="avatar-preview">
+                            <c:choose>
+                                <c:when test="${not empty user.avatar}">
+                                    <img id="avatarPreview" src="${user.avatar}" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+                                </c:when>
+                                <c:otherwise>
+                                    <img id="avatarPreview" src="assets/images/default-avatar.png" alt="Default Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <label for="avatarInput" class="btn-upload">
+                                <i class="fa-solid fa-camera" style="margin-right: 5px;"></i> Chọn ảnh mới
+                            </label>
+                            <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="name">Họ và tên</label>
                         <input type="text" id="hoten" placeholder="Nhập họ và tên" name="name" value="${user.name}" aria-describedby="hotenError"/>
@@ -217,6 +235,19 @@
         });
     </script>
 </c:if>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+        }
+        if(event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+</script>
 
 </body>
 </html>
