@@ -6,6 +6,7 @@ public class Address {
     private String name;
     private String phone;
     private String city;
+    private String districts;
     private String ward;
     private String specificAddress;
     private boolean isDefault;
@@ -75,6 +76,12 @@ public class Address {
 
     public void setSpecificAddress(String specificAddress) {
         this.specificAddress = specificAddress;
+    }
+    public String getDistricts() {
+        return districts;
+    }
+    public void setDistricts(String districts) {
+        this.districts = districts;
     }
 
     public boolean getIsDefault() {

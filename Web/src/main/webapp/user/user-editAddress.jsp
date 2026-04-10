@@ -35,7 +35,6 @@
                 <form id="addressForm" class="address-form" action="editAddress" method="post" novalidate>
                     <input type="hidden" name="id" value="${address.id}">
 
-
                     <div class="form-group">
                         <label for="hoten">Họ và tên</label>
                         <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên" value="${address.name}">
@@ -56,7 +55,13 @@
                         <small class="error-msg"></small>
                     </div>
 
-
+                    <div class="form-group">
+                        <label for="huyen">Quận/Huyện</label>
+                        <select id="huyen" name="huyen">
+                            <option value="">${address.districts}</option>
+                        </select>
+                        <small class="error-msg"></small>
+                    </div>
 
                     <div class="form-group">
                         <label for="xa">Xã/Phường</label>
@@ -72,8 +77,8 @@
                         <small class="error-msg"></small>
                     </div>
 
-                    <!-- hidden inputs để gửi textContent lên server -->
                     <input type="hidden" id="tinhInput" name="tinhName">
+                    <input type="hidden" id="huyenInput" name="huyenName">
                     <input type="hidden" id="xaInput" name="xaName">
 
                     <button type="submit" class="save-btn">Lưu địa chỉ</button>
@@ -96,10 +101,10 @@
 </script>
 <script>
     const tinh = document.getElementById("tinh");
+    const huyen = document.getElementById("huyen");
     const xa = document.getElementById("xa");
-
-    // Load danh sách Tỉnh
-    fetch("https://provinces.open-api.vn/api/v2/p/")
+    const apiAddress = "https://provinces.open-api.vn/api/"
+    fetch(apiAddress+"p/")
         .then(res => res.json())
         .then(data => {
             data.forEach(p => {
@@ -110,12 +115,25 @@
             });
         });
 
-    // Khi đổi Tỉnh => load thẳng Xã/Phường
     tinh.addEventListener("change", function () {
-        xa.innerHTML = `<option value="">-- Chọn xã/phường --</option>`;
+        huyen.innerHTML = `<option value="">-- Chọn Quận/Huyện --</option>`;
         if (!this.value) return;
-
-        fetch("https://provinces.open-api.vn/api/v2/p/" + this.value + "?depth=2")
+        fetch(apiAddress+"p/" + this.value + "?depth=2")
+            .then(res => res.json())
+            .then(data => {
+                if (!data.districts) return;
+                data.districts.forEach(d => {
+                    const opt = document.createElement("option");
+                    opt.value = d.code;
+                    opt.textContent = d.name;
+                    huyen.appendChild(opt);
+                });
+            });
+    });
+    huyen.addEventListener("change", function () {
+        xa.innerHTML = `<option value="">-- Chọn Xã/Phường --</option>`;
+        if (!this.value) return;
+        fetch(apiAddress+"d/" + this.value + "?depth=2")
             .then(res => res.json())
             .then(data => {
                 if (!data.wards) return;
@@ -132,6 +150,8 @@
     document.getElementById("addressForm").addEventListener("submit", function (e) {
         document.getElementById("tinhInput").value =
             tinh.options[tinh.selectedIndex]?.textContent || "";
+        document.getElementById("huyenInput").value =
+            huyen.options[huyen.selectedIndex]?.textContent || "";
         document.getElementById("xaInput").value =
             xa.options[xa.selectedIndex]?.textContent || "";
 
@@ -139,6 +159,7 @@
             { id: "hoten", name: "Họ và tên" },
             { id: "sdt", name: "Điện thoại" },
             { id: "tinh", name: "Tỉnh/Thành phố" },
+            { id: "huyen", name: "Quận/Huyện" },
             { id: "xa", name: "Xã/Phường" },
             { id: "diachi", name: "Địa chỉ" },
         ];
