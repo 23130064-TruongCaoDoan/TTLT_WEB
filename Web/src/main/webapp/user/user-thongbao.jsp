@@ -31,6 +31,10 @@
             <div class="profile-container " >
                 <div class="nav-inform">
                     <p class="tab-inform active">THÔNG BÁO</p>
+
+                    <button id="markAllRead" >
+                        Đánh dấu tất cả đã đọc
+                    </button>
                 </div>
                 <hr/>
                 <div style="overflow: scroll;height: 47vh">
@@ -133,6 +137,31 @@
         document.getElementById("closeNoti").onclick = closePopup;
         overlay.onclick = closePopup;
     });
+
+
+
+    const markAllBtn = document.getElementById("markAllRead");
+
+    if (markAllBtn) {
+        markAllBtn.addEventListener("click", () => {
+
+            fetch("${pageContext.request.contextPath}/read-all-notifications")
+                .then(() => {
+                    document.querySelectorAll(".noti-item").forEach(item => {
+                        item.classList.remove("noti-new");
+                        item.classList.add("noti-old");
+                    });
+
+                    const badge = document.getElementById("noti-badge");
+                    if (badge) {
+                        badge.innerText = "0";
+                        badge.style.display = "none";
+                    }
+
+                })
+                .catch(err => console.log(err));
+        });
+    }
 </script>
 
 </html>

@@ -14,6 +14,8 @@
     display: flex;
     padding-bottom: 2vh;
     gap:2vw;
+    justify-content:space-between;
+    align-items:center;
 }
 
 .container hr {
@@ -64,4 +66,13 @@
 
 .noti-old{
     background:white;
+}
+
+#markAllRead{
+    padding:6px 12px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
 }

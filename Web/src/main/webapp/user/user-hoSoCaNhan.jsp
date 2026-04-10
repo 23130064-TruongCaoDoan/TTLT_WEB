@@ -30,7 +30,7 @@
                                     <img id="avatarPreview" src="${user.avatar}" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
                                 </c:when>
                                 <c:otherwise>
-                                    <img id="avatarPreview" src="assets/images/default-avatar.png" alt="Default Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+                                    <img id="avatarPreview" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFCzxivJXCZk0Kk8HsHujTO3Olx0ngytPrWw&s" alt="Default Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
                                 </c:otherwise>
                             </c:choose>
                         </div>
