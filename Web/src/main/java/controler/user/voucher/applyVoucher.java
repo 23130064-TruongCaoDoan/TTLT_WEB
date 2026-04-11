@@ -25,7 +25,13 @@ public class applyVoucher extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
+        String mode = request.getParameter("mode");
+        Cart cart;
+        if ("buynow".equals(mode)) {
+            cart = (Cart) session.getAttribute("buyNowCart");
+        } else {
+            cart = (Cart) session.getAttribute("cart");
+        }
 
         int voucherId = Integer.parseInt(request.getParameter("voucherId"));
         VoucherService voucherService = new VoucherService();

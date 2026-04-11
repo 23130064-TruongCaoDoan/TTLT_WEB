@@ -35,9 +35,7 @@ public class CreateOrder extends HttpServlet {
         double finalTotal = 0;
         String note = null;
         String deliveryRange = null;
-        String pointUsedStr = null;
         boolean usePoint = false;
-        int pointUsed = 0;
 
         User user = (User) session.getAttribute("user");
         String mode = request.getParameter("mode");
@@ -72,11 +70,6 @@ public class CreateOrder extends HttpServlet {
              shipType = request.getParameter("shipType");
              usePoint = "1".equals(request.getParameter("usePoint"));
              note = request.getParameter("orderNote");
-
-             shipFee = Double.parseDouble(request.getParameter("shipFee"));
-             pointUsedStr = request.getParameter("pointUsed");
-             pointUsed = (int) Double.parseDouble(pointUsedStr);
-             finalTotal = Double.parseDouble(request.getParameter("finalTotal"));
              deliveryRange = request.getParameter("deliveryRange");
         }
 
@@ -90,9 +83,10 @@ public class CreateOrder extends HttpServlet {
         int shipid = ship == null ? 0 : ship.getId();
 
         int userId = user.getId();
+        int pointUsed =user.getPoint();
 
 
-        if (usePoint && pointUsed > 0) {
+        if (usePoint && pointUsed >=100) {
             user.setPoint(user.getPoint() - pointUsed);
             userService.updateDiem(userId, pointUsed);
         }

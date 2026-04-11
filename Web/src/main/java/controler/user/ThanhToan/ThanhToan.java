@@ -40,13 +40,7 @@ public class ThanhToan extends HttpServlet {
             return;
         }
 
-        // ship
-        String shipType = request.getParameter("ship");
-        if (shipType == null) shipType = "fast";
 
-        boolean usePoint = request.getParameter("usePoint") != null;
-
-        // dia chi
         AddressService addressService = new AddressService();
         List<Address> listAddress = addressService.getAddress(user.getId());
 
@@ -64,19 +58,11 @@ public class ThanhToan extends HttpServlet {
             }
         }
 
-
-        //ghi chu
-        String orderNote = request.getParameter("orderNote");
-        if (orderNote == null) orderNote = "";
-
-        // tinh tien
         double totalBill = cart.getTotalBill();
-        double shipFee = "fast".equals(shipType) ? 60000 : 30000;
 
         Voucher voucherDis = (Voucher) session.getAttribute("appliedDiscountVoucher");
         Voucher voucherShip = (Voucher) session.getAttribute("appliedShipVoucher");
 
-        // kiểm tra lại voucher có hợp lệ không
         if (voucherDis != null) {
             boolean valid = voucherService.isVoucherValid(cart, voucherDis);
             if (!valid) {
@@ -107,37 +93,18 @@ public class ThanhToan extends HttpServlet {
             else discountMoney = value;
         }
 
-        if (voucherShip != null && "ship".equals(voucherShip.getType())) {
-            double value = voucherShip.getValuee();
-            if (value < 1) shipFee -= shipFee * value;
-            else shipFee -= value;
-            if (shipFee < 0) shipFee = 0;
-        }
 
-        double pointUsed = 0;
-        if (usePoint) {
-            pointUsed = Math.min(user.getPoint(), totalBill - discountMoney);
-            if (pointUsed < 0) pointUsed = 0;
-        }
 
-        double finalTotal = totalBill + shipFee - discountMoney - pointUsed;
+        double finalTotal = totalBill  - discountMoney;
         if (finalTotal < 0) finalTotal = 0;
 
 
         request.setAttribute("cart", cart);
         request.setAttribute("totalBill", totalBill);
-        request.setAttribute("shipFee", shipFee);
         request.setAttribute("discountMoney", discountMoney);
-        request.setAttribute("pointUsed", pointUsed);
         request.setAttribute("finalTotal", finalTotal);
-        request.setAttribute("shipType", shipType);
-        request.setAttribute("usePoint", usePoint);
-
-
         request.setAttribute("listAddress", listAddress);
         request.setAttribute("selectedAddressId", selectedAddressId);
-        request.setAttribute("orderNote", orderNote);
-
 
         int userId = user.getId();
 

@@ -55,19 +55,8 @@
                 <!-- ship  -->
                 <div class="checkout-section">
                     <div class="section-title">PHƯƠNG THỨC VẬN CHUYỂN</div>
-                    <div class="shipping-item">
-                        <input type="radio" name="ship" value="fast">
-                        <div>
-                            <strong>Giao hàng nhanh: 60.000 đ</strong><br>
-                            Dự kiến giao: <span id="fastDate"></span>
-                        </div>
-                    </div>
-                    <div class="shipping-item">
-                        <input type="radio" name="ship" value="standard">
-                        <div>
-                            <strong>Giao hàng tiêu chuẩn: 30.000 đ</strong><br>
-                            Dự kiến giao: <span id="slowDate"></span>
-                        </div>
+                    <div id="shippingContainer">
+                        <!-- Render động ở đây -->
                     </div>
                 </div>
                 <!-- pay  -->
@@ -98,15 +87,12 @@
                     <div class="member-info">
                         <div>Số Point hiện có: <span class="highlight"><fmt:formatNumber value="${user.getPoint()}"/></span></div>
                         <label>
-                            <input type="checkbox" id="usePoint" name="usePoint" value="1"
-                                   onchange="document.getElementById('checkoutForm').submit()"
-                            ${usePoint?'checked':''}>
+                            <input type="checkbox" id="usePoint" name="usePoint" value="1">
                             Dùng point để thanh toán
                         </label></br>
                     </div>
                 </div>
 
-                <!-- gift  -->
                 <div class="checkout-section">
                     <div class="section-title">VOUCHER</div>
                     <div class="gift-infor">
@@ -123,7 +109,6 @@
                     </div>
                 </div>
 
-                <!-- ghi chu  -->
                 <div class="checkout-section">
                     <div class="section-title">THÔNG TIN KHÁC</div>
                     <div class="other-content">
@@ -175,7 +160,7 @@
                     <div class="total-row">
                         <span>Phí vận chuyển</span>
                         <span>
-                            <fmt:formatNumber value="${shipFee}" /> đ
+                            <span class="shipping-fee">0 đ</span>
                         </span>
                     </div>
 
@@ -187,15 +172,11 @@
                             </span>
                         </div>
                     </c:if>
+                    <div class="total-row" id="pointRow" style="display:none;">
+                        <span>Giảm bằng point</span>
+                        <span class="highlight" id="pointDiscountText"></span>
+                    </div>
 
-                    <c:if test="${pointUsed > 0}">
-                        <div class="total-row">
-                            <span>Giảm bằng point</span>
-                            <span class="highlight">
-                                -<fmt:formatNumber value="${pointUsed}"/> đ
-                            </span>
-                        </div>
-                    </c:if>
 
                     <div class="total-row total-final">
                         <strong>Tổng thanh toán</strong>
@@ -213,10 +194,7 @@
                         <input type="hidden" name="shipType" id="finalShipType">
                         <input type="hidden" name="usePoint" id="finalUsePoint">
                         <input type="hidden" name="orderNote" id="finalNote">
-                            <input type="hidden" name="payment" id="finalPayment">
-                        <input type="hidden" name="shipFee" value="${shipFee}">
-                        <input type="hidden" name="pointUsed" value="${pointUsed}">
-                        <input type="hidden" name="finalTotal" value="${finalTotal}">
+                        <input type="hidden" name="payment" id="finalPayment">
                         <input type="hidden" name="deliveryRange" id="deliveryRange">
 
                         <div class="terms">
@@ -390,53 +368,6 @@
     </div>
 </div>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        function formatDate(date) {
-            return String(date.getDate()).padStart(2, "0") + "/" +
-                String(date.getMonth() + 1).padStart(2, "0") + "/" +
-                date.getFullYear();
-        }
-
-        function calcRange(minDay, maxDay) {
-            const today = new Date();
-            const PREPARE_DAY = 1;
-
-            const from = new Date(today);
-            from.setDate(today.getDate() + PREPARE_DAY + minDay);
-
-            const to = new Date(today);
-            to.setDate(today.getDate() + PREPARE_DAY + maxDay);
-
-            return formatDate(from) + " – " + formatDate(to);
-        }
-
-
-        const fastRange = calcRange(1, 2);
-        const slowRange = calcRange(1, 5);
-
-
-        document.getElementById("fastDate").textContent = fastRange;
-        document.getElementById("slowDate").textContent = slowRange;
-
-
-        function updateHidden() {
-            const checked = document.querySelector('input[name="ship"]:checked');
-            document.getElementById("deliveryRange").value =
-                checked.value === "fast" ? fastRange : slowRange;
-        }
-
-        updateHidden();
-
-        document.querySelectorAll('input[name="ship"]').forEach(radio => {
-            radio.addEventListener("change", updateHidden);
-        });
-    });
-
-
-
-
-
     const openPopup = document.querySelector(".more-voucher");
     const overlay = document.getElementById("overlay");
     const popup = document.querySelector(".popup");
@@ -452,9 +383,6 @@
         popup.style.display = "none";
         voucherPopup.style.display = "none";
     });
-
-
-
     const detailBtns = document.querySelectorAll(".voucher-detail");
     const voucherPopup = document.getElementById("voucherPopup");
     const cancelBtn = document.querySelector("#voucherPopup .cancel");
@@ -553,45 +481,6 @@
             document.getElementById('voucherListPopup').style.display = 'none';
         });
     });
-
-
-
-    const vnpay = document.querySelector(".vnpay");
-    const momo = document.querySelector(".momo");
-    const money = document.querySelector(".money");
-
-
-    const usePointCheckbox = document.getElementById("usePoint");
-    const pointDiscountRow = document.getElementById("pointDiscountRow");
-    const pointDiscountEl = document.getElementById("pointDiscount");
-
-    const userPoint = ${user.getPoint()};
-
-    function formatMoney(n) {
-        return n.toLocaleString("vi-VN");
-    }
-
-    const pointWarning = document.getElementById("pointWarning");
-
-
-    if (userPoint < 100) {
-        usePointCheckbox.disabled = true;
-        if (pointWarning) {
-            pointWarning.style.display = "block";
-        }
-    }
-
-    usePointCheckbox.addEventListener("change", function () {
-        if (this.checked) {
-            pointDiscountEl.innerText = formatMoney(userPoint);
-            pointDiscountRow.style.display = "flex";
-        } else {
-            pointDiscountRow.style.display = "none";
-        }
-    });
-
-
-
     const agree = document.getElementById("agree");
     const confirmBtn = document.querySelector(".confirm-payment-btn");
 
@@ -622,7 +511,7 @@
         document.getElementById("finalAddressId").value = addressChecked?.value || "";
 
 
-        const shipChecked = document.querySelector('input[name="ship"]:checked');
+        const shipChecked = document.querySelector('input[name="shipService"]:checked');
         document.getElementById("finalShipType").value = shipChecked?.value || "";
 
 
@@ -636,27 +525,39 @@
         document.getElementById("finalPayment").value = document.querySelector("input[name='payment']:checked").value;
 
     });
-
-
-
-
-
     document.addEventListener("DOMContentLoaded", function () {
-        const addressRadios = document.querySelectorAll('input[name="addressId"]');
+        const usePointCheckbox = document.getElementById("usePoint");
+        const totalPriceEl = document.querySelector(".total-price");
+        const pointRow = document.getElementById("pointRow");
+        const pointDiscountText = document.getElementById("pointDiscountText");
 
+        const originalTotal = Number("${finalTotal}");
+        const userPoint = Number("${user.point}");
 
-        if (addressRadios.length > 0) {
-            const checked = document.querySelector('input[name="addressId"]:checked');
-            if (!checked) {
-                addressRadios[0].checked = true;
+        usePointCheckbox.addEventListener("change", function () {
+
+            if (this.checked && userPoint >= 100) {
+
+                const pointUsed = Math.min(userPoint, originalTotal);
+
+                pointDiscountText.innerText =
+                    "-" + pointUsed.toLocaleString("vi-VN") + " đ";
+
+                totalPriceEl.innerText =
+                    (originalTotal - pointUsed).toLocaleString("vi-VN") + " đ";
+
+                pointRow.style.display = "flex";
+
+            } else {
+
+                totalPriceEl.innerText =
+                    originalTotal.toLocaleString("vi-VN") + " đ";
+
+                pointRow.style.display = "none";
             }
-        }
-    });
 
+        });
 
-
-
-    document.addEventListener("DOMContentLoaded", function () {
         const toast = document.getElementById("toast-error");
         if (toast) {
             setTimeout(() => {
@@ -668,18 +569,31 @@
                 toast.remove();
             }, 3400);
         }
+
+        const addressRadios = document.querySelectorAll('input[name="addressId"]');
+
+        addressRadios.forEach(radio => {
+            radio.addEventListener("change", function () {
+                loadShipping(this.value);
+            });
+        });
+
+        const firstChecked = document.querySelector('input[name="addressId"]:checked');
+        if (firstChecked) {
+            loadShipping(firstChecked.value);
+        }
     });
 
 
 
     function applyVoucher(voucherId) {
-
+        const mode = new URLSearchParams(window.location.search).get("mode");
         fetch("applyVoucher", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: "voucherId=" + voucherId
+            body: "voucherId=" + voucherId + "&mode=" + mode
         })
             .then(res => res.json())
             .then(data => {
@@ -711,6 +625,87 @@
             })
             .catch(err => console.log(err));
     }
+
+
+
+    function loadShipping(addressId) {
+
+        fetch("calculateShipping", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "addressId=" + addressId
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Shipping response:", data);
+
+                const container = document.getElementById("shippingContainer");
+                container.innerHTML = "";
+
+                if (!data.services || data.services.length === 0) {
+                    container.innerHTML = "<p>Không có phương thức vận chuyển</p>";
+                    return;
+                }
+
+                data.services.forEach((service, index) => {
+
+                    const div = document.createElement("div");
+                    div.className = "shipping-item";
+
+                    const checkedAttr = index == 0 ? "checked" : "";
+
+                    div.innerHTML =
+                        '<input type="radio" ' +
+                        'name="shipService" ' +
+                        'value="' + service.service_id + '" ' +
+                        'data-fee="' + service.fee + '" ' +
+                        checkedAttr + '>' +
+
+                        '<div>' +
+                        '<strong>' + service.service_name + ': ' +
+                        Number(service.fee).toLocaleString("vi-VN") + ' đ</strong><br>' +
+                        'Dự kiến giao: ' +
+                        new Date(service.leadtime * 1000).toLocaleDateString("vi-VN") +
+                        '</div>';
+
+                    container.appendChild(div);
+                });
+
+                updateShippingFee();
+            })
+            .catch(err => console.log(err));
+    }
+
+    function updateShippingFee() {
+
+        const selected = document.querySelector('input[name="shipService"]:checked');
+        if (!selected) return;
+
+        const fee = Number(selected.dataset.fee);
+
+        document.querySelector(".shipping-fee").innerText =
+            fee.toLocaleString("vi-VN") + " đ";
+
+        const baseTotal = Number("${totalBill}");
+        const discount = Number("${discountMoney}");
+
+        const final = baseTotal + fee - discount;
+
+        document.querySelector(".total-price").innerText =
+            final.toLocaleString("vi-VN") + " đ";
+
+        document.getElementById("finalShipType").value = selected.value;
+    }
+
+
+    document.addEventListener("change", function (e) {
+        if (e.target.name === "shipService") {
+            updateShippingFee();
+        }
+    });
+
 </script>
 </body>
 </html>
