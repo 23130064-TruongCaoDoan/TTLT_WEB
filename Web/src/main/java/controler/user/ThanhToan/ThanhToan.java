@@ -21,6 +21,8 @@ public class ThanhToan extends HttpServlet {
         User user = (User) session.getAttribute("user");
         String mode = request.getParameter("mode");
 
+
+
         Cart cart;
         if ("buynow".equals(mode)) {
             cart = (Cart) session.getAttribute("buyNowCart");
@@ -50,11 +52,17 @@ public class ThanhToan extends HttpServlet {
         if (addressIdStr != null && !addressIdStr.trim().isEmpty()) {
             selectedAddressId = Integer.parseInt(addressIdStr);
         } else {
+            boolean foundDefault = false;
+
             for (Address a : listAddress) {
                 if (a.getIsDefault()) {
                     selectedAddressId = a.getId();
+                    foundDefault = true;
                     break;
                 }
+            }
+            if (!foundDefault && !listAddress.isEmpty()) {
+                selectedAddressId = listAddress.get(0).getId();
             }
         }
 
@@ -97,6 +105,9 @@ public class ThanhToan extends HttpServlet {
 
         double finalTotal = totalBill  - discountMoney;
         if (finalTotal < 0) finalTotal = 0;
+
+
+
 
 
         request.setAttribute("cart", cart);
