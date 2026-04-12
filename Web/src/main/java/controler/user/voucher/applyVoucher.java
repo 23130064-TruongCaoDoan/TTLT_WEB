@@ -55,6 +55,7 @@ public class applyVoucher extends HttpServlet {
 
             if ("ship".equals(voucher.getType())&& session.getAttribute("appliedShipVoucher") == null) {
                 session.setAttribute("appliedShipVoucher", voucher);
+                session.setAttribute("shipDiscount", voucher.getValuee());
                 numApplyVoucher++;
                 success = true;
                 message = "Áp dụng voucher vận chuyển thành công!";

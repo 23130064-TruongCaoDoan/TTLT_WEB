@@ -99,4 +99,12 @@ public class Cart implements Serializable {
                 ? data.get(bookId).getQuantity()
                 : 0;
     }
+
+    public int getTotalWeight() {
+        int total = 0;
+        for (CartItem item : data.values()) {
+            total += item.getBook().getWeight() * item.getQuantity();
+        }
+        return total;
+    }
 }

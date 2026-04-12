@@ -2,191 +2,270 @@ package controler.user.ThanhToan;
 
 import Cart.Cart;
 import Cart.CartItem;
+import Service.AddressService;
 import Service.BookService;
 import Service.OrderService;
 import Service.UserService;
+import Util.GHNApiUtil;
 import Util.Token8;
 import Util.VNPayUtils;
 import jakarta.servlet.*;
-        import jakarta.servlet.http.*;
-        import jakarta.servlet.annotation.*;
-        import model.Book;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import model.Address;
 import model.User;
 import model.Voucher;
+import org.cloudinary.json.JSONArray;
+import org.cloudinary.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 @WebServlet(name = "CreateOrder", value = "/CreateOrder")
 public class CreateOrder extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+
+    private String getShipName(int serviceId, int toDistrictId) {
+        try {
+            JSONArray services = GHNApiUtil.getAvailableServices(toDistrictId);
+
+            for (int i = 0; i < services.length(); i++) {
+                JSONObject s = services.getJSONObject(i);
+
+                if (s.getInt("service_id") == serviceId) {
+
+                    int type = s.optInt("service_type_id");
+
+                    if (type == 1) return "STANDARD";
+                    if (type == 2) return "EXPRESS";
+
+                    return s.optString("short_name", "UNKNOWN");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "UNKNOWN";
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        UserService userService = new UserService();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        int addressId = 0;
-        String shipType = null;
-        double shipFee = 0;
-        double finalTotal = 0;
-        String note = null;
-        String deliveryRange = null;
-        boolean usePoint = false;
+        HttpSession session = request.getSession();
+
 
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
         String mode = request.getParameter("mode");
         String paymentMethod = request.getParameter("payment");
-        String flagVNPay = request.getParameter("fromVNPay");
+        String fromVNPay = request.getParameter("fromVNPay");
+
+
+        Cart cart = "buynow".equals(mode)
+                ? (Cart) session.getAttribute("buyNowCart")
+                : (Cart) session.getAttribute("cart");
+
+        if (cart == null || cart.getItems().isEmpty()) {
+            request.setAttribute("error", "Giỏ hàng trống");
+            request.getRequestDispatcher("ThanhToan").forward(request, response);
+            return;
+        }
+
+
         String addressIdStr = request.getParameter("addressId");
 
-
-        if (flagVNPay != null) {
-            mode = (String) session.getAttribute("pendingMode");
-            paymentMethod = (String) session.getAttribute("pendingPayment");
-        }
-        Cart cart;
-        if ("buynow".equals(mode)) {
-            cart = (Cart) session.getAttribute("buyNowCart");
-        } else {
-            cart = (Cart) session.getAttribute("cart");
+        if (addressIdStr == null || addressIdStr.trim().isEmpty()) {
+            request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
+            request.getRequestDispatcher("ThanhToan").forward(request, response);
+            return;
         }
 
-        if (flagVNPay == null) {
-            if (user == null || cart == null || cart.getItems().isEmpty()) {
-                response.sendRedirect("cart.jsp");
-                return;
-            }
+        int addressId = Integer.parseInt(addressIdStr);
 
-            if (addressIdStr == null || addressIdStr.trim().isEmpty()) {
-                request.setAttribute("error", "Vui lòng chọn địa chỉ giao hàng");
+        AddressService addressService = new AddressService();
+        Address address = addressService.getAddressById(addressId);
+
+
+        String shipTypeStr = request.getParameter("shipType");
+
+        if (shipTypeStr == null || shipTypeStr.isEmpty()) {
+            request.setAttribute("error", "Vui lòng chọn phương thức vận chuyển");
+            request.getRequestDispatcher("ThanhToan").forward(request, response);
+            return;
+        }
+
+        int serviceId = Integer.parseInt(shipTypeStr);
+
+        double shipFee = 0;
+        String deliveryRange = null;
+
+        int toProvinceId=-1;
+        int toDistrictId=-1;
+        String toWardCode="";
+        try {
+             toProvinceId = GHNApiUtil.getProvinceIdByName(address.getCity());
+             toDistrictId = GHNApiUtil.getDistrictIdByName(address.getDistricts(), toProvinceId);
+             toWardCode = GHNApiUtil.getWardCodeByName(address.getWard(), toDistrictId);
+
+            shipFee = GHNApiUtil.calculateShippingFee(
+                    toDistrictId,
+                    toWardCode,
+                    500,
+                    serviceId
+            );
+
+            long leadTime = GHNApiUtil.getLeadTime(toDistrictId, toWardCode, serviceId);
+
+            java.util.Date date = new java.util.Date(leadTime * 1000);
+
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+
+            deliveryRange = sdf.format(date);
+
+        } catch (Exception e) {
+            request.setAttribute("error", "Không thể tính phí vận chuyển");
+            request.getRequestDispatcher("ThanhToan").forward(request, response);
+            return;
+        }
+
+        String shipName = getShipName(serviceId, toDistrictId);
+
+        boolean usePoint = "1".equals(request.getParameter("usePoint"));
+        int pointUsed = 0;
+
+        if (usePoint) {
+            if (user.getPoint() < 100) {
+                request.setAttribute("error", "Bạn cần tối thiểu 100 point");
                 request.getRequestDispatcher("ThanhToan").forward(request, response);
                 return;
             }
-             addressId = Integer.parseInt(addressIdStr);
-             shipType = request.getParameter("shipType");
-             usePoint = "1".equals(request.getParameter("usePoint"));
-             note = request.getParameter("orderNote");
-             deliveryRange = request.getParameter("deliveryRange");
+
+            pointUsed = Math.min(user.getPoint(), 1000);
+        }
+
+        double cartTotal = 0;
+        for (CartItem item : cart.getItems()) {
+            cartTotal += item.getPrice() * item.getQuantity();
         }
 
 
+        Voucher productVoucher = (Voucher) session.getAttribute("appliedDiscountVoucher");
+        Voucher shipVoucher = (Voucher) session.getAttribute("appliedShipVoucher");
+
+        int productVoucherId = (productVoucher != null) ? productVoucher.getId() : 0;
+        int shipVoucherId = (shipVoucher != null) ? shipVoucher.getId() : 0;
 
 
-        Voucher dis = (Voucher) session.getAttribute("appliedDiscountVoucher");
-        Voucher ship = (Voucher) session.getAttribute("appliedShipVoucher");
-
-        int disid = dis == null ? 0 : dis.getId();
-        int shipid = ship == null ? 0 : ship.getId();
-
-        int userId = user.getId();
-        int pointUsed =user.getPoint();
+        double productDiscountMoney =
+                (productVoucher != null) ? productVoucher.getValuee() : 0;
 
 
-        if (usePoint && pointUsed >=100) {
-            user.setPoint(user.getPoint() - pointUsed);
-            userService.updateDiem(userId, pointUsed);
-        }
+        double shipDiscountMoney =
+                (shipVoucher != null) ? shipVoucher.getValuee() : 0;
 
-        //Xu ly VNPay
 
-        if (flagVNPay != null) {
+        double realShipFee = shipFee - shipDiscountMoney;
+        if (realShipFee < 0) realShipFee = 0;
 
-            addressId = (int) session.getAttribute("pendingAddressId");
-            shipType = (String) session.getAttribute("pendingShipType");
-            shipFee = (double) session.getAttribute("pendingShipFee");
-            finalTotal = (double) session.getAttribute("pendingFinalTotal");
-            note = (String) session.getAttribute("pendingNote");
-            deliveryRange = (String) session.getAttribute("pendingDeliveryRange");
+        double finalTotal =
+                cartTotal
+                        + realShipFee
+                        - productDiscountMoney
+                        - pointUsed;
 
-        }
-        if ("vnpay".equals(paymentMethod) && flagVNPay == null) {
+        if (finalTotal < 0) finalTotal = 0;
+
+
+        if ("vnpay".equals(paymentMethod) && fromVNPay == null) {
+
             session.setAttribute("pendingMode", mode);
             session.setAttribute("pendingAddressId", addressId);
-            session.setAttribute("pendingShipType", shipType);
-            session.setAttribute("pendingShipFee", shipFee);
+            session.setAttribute("pendingShipType", serviceId);
+            session.setAttribute("pendingShipName", shipName);
+            session.setAttribute("pendingShipFee", realShipFee);
             session.setAttribute("pendingFinalTotal", finalTotal);
-            session.setAttribute("pendingNote", note);
+            session.setAttribute("pendingNote", request.getParameter("orderNote"));
             session.setAttribute("pendingDeliveryRange", deliveryRange);
             session.setAttribute("pendingPayment", paymentMethod);
 
             Token8 token = new Token8();
-            long amount = (long) finalTotal;
-            String paymentUrl = VNPayUtils.createPaymentUrl(token.generateToken8(), amount);
-            response.sendRedirect(paymentUrl);
+
+            String url = VNPayUtils.createPaymentUrl(
+                    token.generateToken8(),
+                    (long) finalTotal
+            );
+
+            response.sendRedirect(url);
             return;
         }
-        if (flagVNPay != null) {
+
+        if (fromVNPay != null) {
             String code = request.getParameter("vnp_ResponseCode");
 
             if (!"00".equals(code)) {
-                String msg = "Thanh Toán không thành công";
-                request.setAttribute("error", msg);
-                request.getRequestDispatcher("/ThanhToan").forward(request, response);
+                request.setAttribute("error", "Thanh toán không thành công");
+                request.getRequestDispatcher("ThanhToan").forward(request, response);
                 return;
             }
         }
-        String paymentStatus = paymentMethod.equalsIgnoreCase("cod") ? "NOPAID" : "PAID";
+
 
         OrderService orderService = new OrderService();
-        boolean check = orderService.addOrder(userId, finalTotal, note,paymentMethod,paymentStatus,disid, shipid, addressId, shipType, shipFee, deliveryRange, cart);
+
+        String paymentStatus =
+                "cod".equalsIgnoreCase(paymentMethod) ? "NOPAID" : "PAID";
+
+        boolean ok = orderService.addOrder(
+                user.getId(),
+                finalTotal,
+                request.getParameter("orderNote"),
+                paymentMethod,
+                paymentStatus,
+                productVoucherId,
+                shipVoucherId,
+                addressId,
+                shipName,
+                realShipFee,
+                deliveryRange,
+                cart
+        );
+
+        if (!ok) {
+            request.setAttribute("error", "Tạo đơn hàng thất bại");
+            request.getRequestDispatcher("ThanhToan").forward(request, response);
+            return;
+        }
+
+        UserService userService = new UserService();
+
+        if (usePoint) {
+            user.setPoint(user.getPoint() - pointUsed);
+            userService.updateDiem(user.getId(), pointUsed);
+        }
+
+        user.setPoint(user.getPoint() + (int) (finalTotal * 0.05));
+        session.setAttribute("user", user);
+
+        session.removeAttribute("cart");
+        session.removeAttribute("buyNowCart");
 
         session.removeAttribute("appliedDiscountVoucher");
         session.removeAttribute("appliedShipVoucher");
 
-        BookService bookService = new BookService();
+        session.removeAttribute("pendingMode");
+        session.removeAttribute("pendingAddressId");
+        session.removeAttribute("pendingShipType");
+        session.removeAttribute("pendingShipName");
+        session.removeAttribute("pendingShipFee");
+        session.removeAttribute("pendingFinalTotal");
+        session.removeAttribute("pendingNote");
+        session.removeAttribute("pendingDeliveryRange");
+        session.removeAttribute("pendingPayment");
 
-        if (check) {
-            userService.tichDiem(userId, finalTotal);
-            user.setPoint(user.getPoint() + (int) (finalTotal * 0.05));
-            session.setAttribute("user", user);
-            if ("buynow".equals(mode)) {
-                Cart buyNowCart = (Cart) session.getAttribute("buyNowCart");
-                session.removeAttribute("buyNowCart");
-
-                Cart mainCart = (Cart) session.getAttribute("cart");
-                if (mainCart == null) {
-                    response.sendRedirect("my-orders");
-                    return;
-                }
-
-                Iterator<CartItem> iterator = mainCart.getItems().iterator();
-
-                while (iterator.hasNext()) {
-                    CartItem item = iterator.next();
-                    int bookId = item.getBook().getId();
-
-                    int stock = bookService.getStockByBookId(bookId);
-
-                    if (stock <= 0) {
-                        iterator.remove();
-                        continue;
-                    }
-
-                    if (item.getQuantity() > stock) {
-                        item.setQuantity(stock);
-                    }
-                }
-            } else {
-                session.removeAttribute("cart");
-            }
-
-            session.removeAttribute("pendingMode");
-            session.removeAttribute("pendingAddressId" );
-            session.removeAttribute("pendingShipType");
-            session.removeAttribute("pendingShipFee");
-            session.removeAttribute("pendingFinalTotal");
-            session.removeAttribute("pendingNote");
-            session.removeAttribute("pendingDeliveryRange");
-            session.removeAttribute("pendingPayment");
-            session.removeAttribute("pendingUsePoint");
-            session.removeAttribute("pendingPointUsed");
-            response.sendRedirect("my-orders");
-        } else {
-            response.sendRedirect("ThanhToan");
-        }
+        response.sendRedirect("my-orders");
     }
 }

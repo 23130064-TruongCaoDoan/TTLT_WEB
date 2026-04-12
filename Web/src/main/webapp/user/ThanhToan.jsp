@@ -30,7 +30,21 @@
         <form method="get" action="ThanhToan" id="checkoutForm">
             <div class="container">
                 <input type="hidden" name="mode" value="${param.mode}">
-                <!-- address  -->
+                <div class="checkout-section">
+                    <div class="section-title">VOUCHER</div>
+                    <div class="gift-infor">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <a href="#" class="more-voucher" id="choose-code">Chọn mã khuyến mãi</a>
+                            </div>
+                            <div style="color: #f7941d">
+                                <c:if test="${numApplyVoucher >0}">
+                                    <span>Đã áp dụng ${numApplyVoucher} voucher </span> </c:if>
+                                <c:if test="${numApplyVoucher <=0}"><span> Chưa voucher nào được áp dụng </span> </c:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="checkout-section">
                     <div class="section-title">ĐỊA CHỈ GIAO HÀNG</div>
                     <c:forEach var="address" items="${listAddress}">
@@ -51,15 +65,11 @@
                     <a class="add-address" href="addAddress"><i class="fa-solid fa-plus"></i> Giao hàng đến địa
                         chỉ khác</a>
                 </div>
-
-                <!-- ship  -->
                 <div class="checkout-section">
                     <div class="section-title">PHƯƠNG THỨC VẬN CHUYỂN</div>
                     <div id="shippingContainer">
-                        <!-- Render động ở đây -->
                     </div>
                 </div>
-                <!-- pay  -->
                 <div class="checkout-section">
                     <div class="section-title">PHƯƠNG THỨC THANH TOÁN</div>
                     <div class="payment-item">
@@ -86,28 +96,19 @@
                     <div class="section-title">THÀNH VIÊN</div>
                     <div class="member-info">
                         <div>Số Point hiện có: <span class="highlight"><fmt:formatNumber value="${user.getPoint()}"/></span></div>
-                        <label>
-                            <input type="checkbox" id="usePoint" name="usePoint" value="1">
+                        <label >
+                            <input type="checkbox" id="usePoint" name="usePoint" value="1"
+                            ${user.point < 100 ? "disabled" : ""}>
                             Dùng point để thanh toán
                         </label></br>
+                        <c:if test="${user.point < 100}">
+                            <div style="color:red;font-size:13px;margin-top:5px;">
+                                Bạn cần tối thiểu 100 point để sử dụng
+                            </div>
+                        </c:if>
                     </div>
                 </div>
 
-                <div class="checkout-section">
-                    <div class="section-title">VOUCHER</div>
-                    <div class="gift-infor">
-                        <div class="input-row">
-                            <div class="input-group">
-                                <a href="#" class="more-voucher" id="choose-code">Chọn mã khuyến mãi</a>
-                            </div>
-                            <div style="color: #f7941d">
-                                <c:if test="${numApplyVoucher >0}">
-                                    <span>Đã áp dụng ${numApplyVoucher} voucher </span> </c:if>
-                                <c:if test="${numApplyVoucher <=0}"><span> Chưa voucher nào được áp dụng </span> </c:if>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="checkout-section">
                     <div class="section-title">THÔNG TIN KHÁC</div>
@@ -189,13 +190,11 @@
                 <form method="post" action="CreateOrder" id="orderForm">
                     <div class="buttonAndTerm">
                         <input type="hidden" name="mode" value="${param.mode}">
-
                         <input type="hidden" name="addressId" id="finalAddressId">
                         <input type="hidden" name="shipType" id="finalShipType">
                         <input type="hidden" name="usePoint" id="finalUsePoint">
                         <input type="hidden" name="orderNote" id="finalNote">
                         <input type="hidden" name="payment" id="finalPayment">
-                        <input type="hidden" name="deliveryRange" id="deliveryRange">
 
                         <div class="terms">
                             <input type="checkbox" id="agree">
@@ -579,11 +578,22 @@
         });
 
         const firstChecked = document.querySelector('input[name="addressId"]:checked');
+
         if (firstChecked) {
+            showLoadingShipping();
             loadShipping(firstChecked.value);
+        } else {
+            showLoadingShipping();
         }
+
     });
 
+
+    const container = document.getElementById("shippingContainer");
+
+    function showLoadingShipping() {
+        container.innerHTML = "<p>Đang xử lý phương thức vận chuyển...</p>";
+    }
 
 
     function applyVoucher(voucherId) {
@@ -629,13 +639,13 @@
 
 
     function loadShipping(addressId) {
-
+        const mode = new URLSearchParams(window.location.search).get("mode");
         fetch("calculateShipping", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: "addressId=" + addressId
+            body: "addressId=" + addressId + "&mode=" + mode
         })
             .then(res => res.json())
             .then(data => {
@@ -685,17 +695,23 @@
 
         const fee = Number(selected.dataset.fee);
 
+        const shipDiscount = Number("${sessionScope.shipDiscount != null ? sessionScope.shipDiscount : 0}");
+
+        let shippingAfterDiscount = fee - shipDiscount;
+        if (shippingAfterDiscount < 0) shippingAfterDiscount = 0;
+
         document.querySelector(".shipping-fee").innerText =
-            fee.toLocaleString("vi-VN") + " đ";
+            shippingAfterDiscount.toLocaleString("vi-VN") + " đ";
 
         const baseTotal = Number("${totalBill}");
         const discount = Number("${discountMoney}");
 
-        const final = baseTotal + fee - discount;
+        const final = baseTotal + shippingAfterDiscount - discount;
 
         document.querySelector(".total-price").innerText =
             final.toLocaleString("vi-VN") + " đ";
 
+        // update hidden field
         document.getElementById("finalShipType").value = selected.value;
     }
 

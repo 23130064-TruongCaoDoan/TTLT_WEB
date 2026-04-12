@@ -1,5 +1,7 @@
 package Util;
 
+import Service.AddressService;
+import model.Address;
 import org.cloudinary.json.JSONArray;
 import org.cloudinary.json.JSONObject;
 
@@ -47,7 +49,6 @@ public class GHNApiUtil {
 
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Token", TOKEN);
-        conn.setRequestProperty("ShopId", String.valueOf(SHOP_ID));
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
 
@@ -123,15 +124,21 @@ public class GHNApiUtil {
 
     public static int getServiceId(int toDistrictId) throws Exception {
 
-        JSONObject body = new JSONObject();
-        body.put("shop_id", SHOP_ID);
-        body.put("to_district", toDistrictId);
-        JSONObject response =sendPostRequest("/v2/shipping-order/available-services", body);
-        JSONArray services = response.getJSONArray("data");
-        if (services.length() == 0) {
-            throw new Exception("No service available");
+        JSONArray services = getAvailableServices(toDistrictId);
+
+        for (int i = 0; i < services.length(); i++) {
+            JSONObject s = services.getJSONObject(i);
+            int serviceType = s.optInt("service_type_id");
+            if (serviceType == 2) {
+                return s.getInt("service_id");
+            }
         }
-        return services.getJSONObject(0).getInt("service_id");
+
+        if (services.length() > 0) {
+            return services.getJSONObject(0).getInt("service_id");
+        }
+
+        throw new Exception("No service available");
     }
 
     public static int calculateShippingFee(int toDistrictId,String toWardCode,int weight,int serviceId) throws Exception {
@@ -139,6 +146,7 @@ public class GHNApiUtil {
         JSONObject body = new JSONObject();
         body.put("shop_id", SHOP_ID);
         body.put("service_id", serviceId);
+        body.put("from_district_id", FROM_DISTRICT_ID);
         body.put("to_district_id", toDistrictId);
         body.put("to_ward_code", toWardCode);
         body.put("height", 10);
@@ -194,6 +202,61 @@ public class GHNApiUtil {
 
 
     public static void main(String[] args) throws Exception {
-        System.out.println(GHNApiUtil.getProvinceIdByName("tỉnh Long An"));
+//        int provinceId = GHNApiUtil.getProvinceIdByName("Long An");
+//
+//        int districtId = GHNApiUtil.getDistrictIdByName(
+//                "Cần giuộc",
+//                provinceId
+//        );
+//
+//        String wardCode = GHNApiUtil.getWardCodeByName(
+//                "Mỹ Lộc",
+//                districtId
+//        );
+//
+//        System.out.println(
+//                GHNApiUtil.getLeadTime(
+//                        districtId,
+//                        wardCode,
+//                        53322
+//                )
+//        );
+//        System.out.println(GHNApiUtil.getProvinceIdByName("thành phố Hồ chí minh"));
+//        System.out.println(GHNApiUtil.getDistrictIdByName("thành phố thủ đức",202));
+//        System.out.println(GHNApiUtil.getWardCodeByName("phường tăng nhơn phú a",3695));
+//        System.out.println(GHNApiUtil.getServiceId(1540));
+//
+//        System.out.println(getLeadTime(1907,"491307",53321));
+//
+////        JSONArray services = GHNApiUtil.getAvailableServices(toDistrictId);
+////
+////        for (int i = 0; i < services.length(); i++) {
+////            System.out.println(services.getJSONObject(i).toString(2));
+////        }
+//
+//        System.out.println(GHNApiUtil.calculateShippingFee(
+//                1540,
+//                "440505",
+//                10000000,
+//                53321
+//        ));
+//
+//        AddressService addressService = new AddressService();
+//        Address address = addressService.getAddressById(16);
+//        System.out.println(address.toString());
+//        System.out.println(address.getCity());
+//        System.out.println(address.getDistricts());
+//        System.out.println(address.getWard());
+//
+//        int toProvinceId = GHNApiUtil.getProvinceIdByName("tỉnh long an");
+//        int toDistrictId = GHNApiUtil.getDistrictIdByName("huyện cần giuộc",toProvinceId);
+//        String toWardCode = GHNApiUtil.getWardCodeByName("xã mỹ lộc", toDistrictId);
+//
+//
+//        System.out.println(toProvinceId);
+//        System.out.println(toDistrictId);
+//        System.out.println(toWardCode);
+//
+//        System.out.println(calculateShippingFee(toDistrictId,toWardCode,300,53321));
     }
 }
