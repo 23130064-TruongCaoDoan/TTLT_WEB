@@ -100,6 +100,7 @@ public class Address {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", city='" + city + '\'' +
+                ", districts='" + districts + '\'' +
                 ", ward='" + ward + '\'' +
                 ", specificAddress='" + specificAddress + '\'' +
                 ", isDefault=" + isDefault +
