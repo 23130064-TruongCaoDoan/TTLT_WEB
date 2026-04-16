@@ -88,13 +88,15 @@ public class VNPayPayment extends HttpServlet {
             return;
         }
 
+        int currentPoint = user.getPoint();
         if (usePoint) {
-            user.setPoint(user.getPoint() - pointUsed);
-            userService.updateDiem(user.getId(), pointUsed);
+            currentPoint -= pointUsed;
         }
-
-        user.setPoint(user.getPoint() + (int) (finalTotal * 0.05));
+        int rewardPoint = (int) (finalTotal * 0.05);
+        currentPoint += rewardPoint;
+        user.setPoint(currentPoint);
         session.setAttribute("user", user);
+        userService.updateDiem(user.getId(), currentPoint);
 
         session.removeAttribute("cart");
         session.removeAttribute("buyNowCart");

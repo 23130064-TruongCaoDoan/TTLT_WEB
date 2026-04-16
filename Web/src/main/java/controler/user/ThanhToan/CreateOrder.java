@@ -143,7 +143,7 @@ public class CreateOrder extends HttpServlet {
                 return;
             }
 
-            pointUsed = Math.min(user.getPoint(), 1000);
+            pointUsed = (int) Math.min(user.getPoint(), cart.getTotalBill());
         }
 
         double cartTotal = 0;
@@ -226,14 +226,16 @@ public class CreateOrder extends HttpServlet {
         }
 
         UserService userService = new UserService();
-
+        int currentPoint = user.getPoint();
         if (usePoint) {
-            user.setPoint(user.getPoint() - pointUsed);
-            userService.updateDiem(user.getId(), pointUsed);
+            currentPoint -= pointUsed;
         }
-
-        user.setPoint(user.getPoint() + (int) (finalTotal * 0.05));
+        int rewardPoint = (int) (finalTotal * 0.05);
+        currentPoint += rewardPoint;
+        user.setPoint(currentPoint);
         session.setAttribute("user", user);
+        userService.updateDiem(user.getId(), currentPoint);
+
 
         session.removeAttribute("cart");
         session.removeAttribute("buyNowCart");

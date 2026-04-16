@@ -530,7 +530,43 @@
         const pointRow = document.getElementById("pointRow");
         const pointDiscountText = document.getElementById("pointDiscountText");
 
-        const originalTotal = Number("${finalTotal}");
+        usePointCheckbox.addEventListener("change", function () {
+
+            const baseTotal = Number("${totalBill}");
+            const discount = Number("${discountMoney}");
+            const selectedShip = document.querySelector('input[name="shipService"]:checked');
+
+            let shipFee = 0;
+            if (selectedShip) {
+                const rawFee = Number(selectedShip.dataset.fee);
+                const shipDiscount = Number("${sessionScope.shipDiscount != null ? sessionScope.shipDiscount : 0}");
+                shipFee = rawFee - shipDiscount;
+                if (shipFee < 0) shipFee = 0;
+            }
+
+            const currentTotal = baseTotal + shipFee - discount;
+
+            if (this.checked && userPoint >= 100) {
+
+                const pointUsed = Math.min(userPoint, currentTotal);
+
+                pointDiscountText.innerText =
+                    "-" + pointUsed.toLocaleString("vi-VN") + " đ";
+
+                totalPriceEl.innerText =
+                    (currentTotal - pointUsed).toLocaleString("vi-VN") + " đ";
+
+                pointRow.style.display = "flex";
+
+            } else {
+
+                totalPriceEl.innerText =
+                    currentTotal.toLocaleString("vi-VN") + " đ";
+
+                pointRow.style.display = "none";
+            }
+
+        });
         const userPoint = Number("${user.point}");
 
         usePointCheckbox.addEventListener("change", function () {

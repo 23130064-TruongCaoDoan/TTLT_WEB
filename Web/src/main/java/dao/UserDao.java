@@ -120,7 +120,7 @@ public class UserDao extends BaseDao {
 
     public void updateDiem(int userId, double pointUsed) {
         getJdbi().withHandle(handle -> (
-                handle.createUpdate("update `user` set point= point - :pointUsed where id=:id")
+                handle.createUpdate("update `user` set point =:pointUsed where id=:id")
                         .bind("pointUsed",(pointUsed))
                         .bind("id",userId)
                         .execute()
