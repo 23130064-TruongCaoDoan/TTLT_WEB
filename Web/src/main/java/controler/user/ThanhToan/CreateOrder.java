@@ -51,12 +51,9 @@ public class CreateOrder extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-
-
         User user = (User) session.getAttribute("user");
         if (user == null) {
             response.sendRedirect("login");
@@ -65,7 +62,6 @@ public class CreateOrder extends HttpServlet {
 
         String mode = request.getParameter("mode");
         String paymentMethod = request.getParameter("payment");
-        String fromVNPay = request.getParameter("fromVNPay");
 
 
         Cart cart = "buynow".equals(mode)
@@ -163,12 +159,10 @@ public class CreateOrder extends HttpServlet {
         int shipVoucherId = (shipVoucher != null) ? shipVoucher.getId() : 0;
 
 
-        double productDiscountMoney =
-                (productVoucher != null) ? productVoucher.getValuee() : 0;
+        double productDiscountMoney = (productVoucher != null) ? productVoucher.getValuee() : 0;
 
 
-        double shipDiscountMoney =
-                (shipVoucher != null) ? shipVoucher.getValuee() : 0;
+        double shipDiscountMoney = (shipVoucher != null) ? shipVoucher.getValuee() : 0;
 
 
         double realShipFee = shipFee - shipDiscountMoney;
@@ -183,8 +177,7 @@ public class CreateOrder extends HttpServlet {
         if (finalTotal < 0) finalTotal = 0;
 
 
-        if ("vnpay".equals(paymentMethod) && fromVNPay == null) {
-
+        if ("vnpay".equals(paymentMethod)) {
             session.setAttribute("pendingMode", mode);
             session.setAttribute("pendingAddressId", addressId);
             session.setAttribute("pendingShipType", serviceId);
@@ -194,33 +187,22 @@ public class CreateOrder extends HttpServlet {
             session.setAttribute("pendingNote", request.getParameter("orderNote"));
             session.setAttribute("pendingDeliveryRange", deliveryRange);
             session.setAttribute("pendingPayment", paymentMethod);
+            session.setAttribute("pendingProductVoucherId", productVoucherId);
+            session.setAttribute("pendingShipVoucherId", shipVoucherId);
+            session.setAttribute("pendingUsePoint", usePoint);
+            session.setAttribute("pendingPointUsed", pointUsed);
 
             Token8 token = new Token8();
 
-            String url = VNPayUtils.createPaymentUrl(
-                    token.generateToken8(),
-                    (long) finalTotal
-            );
+            String url = VNPayUtils.createPaymentUrl(token.generateToken8(), (long) finalTotal);
 
             response.sendRedirect(url);
             return;
         }
 
-        if (fromVNPay != null) {
-            String code = request.getParameter("vnp_ResponseCode");
-
-            if (!"00".equals(code)) {
-                request.setAttribute("error", "Thanh toán không thành công");
-                request.getRequestDispatcher("ThanhToan").forward(request, response);
-                return;
-            }
-        }
-
-
         OrderService orderService = new OrderService();
 
-        String paymentStatus =
-                "cod".equalsIgnoreCase(paymentMethod) ? "NOPAID" : "PAID";
+        String paymentStatus = "cod".equalsIgnoreCase(paymentMethod) ? "NOPAID" : "PAID";
 
         boolean ok = orderService.addOrder(
                 user.getId(),
@@ -258,16 +240,6 @@ public class CreateOrder extends HttpServlet {
 
         session.removeAttribute("appliedDiscountVoucher");
         session.removeAttribute("appliedShipVoucher");
-
-        session.removeAttribute("pendingMode");
-        session.removeAttribute("pendingAddressId");
-        session.removeAttribute("pendingShipType");
-        session.removeAttribute("pendingShipName");
-        session.removeAttribute("pendingShipFee");
-        session.removeAttribute("pendingFinalTotal");
-        session.removeAttribute("pendingNote");
-        session.removeAttribute("pendingDeliveryRange");
-        session.removeAttribute("pendingPayment");
 
         response.sendRedirect("my-orders");
     }
