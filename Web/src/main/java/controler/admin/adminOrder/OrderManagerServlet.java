@@ -9,7 +9,9 @@ import model.OrderView;
 import model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "OrderManagerServlet", value = "/OrderManagerServlet")
 public class OrderManagerServlet extends HttpServlet {
@@ -42,7 +44,16 @@ public class OrderManagerServlet extends HttpServlet {
         String sortDate = request.getParameter("sortDate");
         List<OrderView> list=orderService.searchOrder(q,sortDate);
 
+        Map<String, List<String>> transitions = Map.of(
+                "PENDING", List.of("PROCESSING", "CANCELLED"),
+                "PROCESSING", List.of("SHIPPING", "CANCELLED"),
+                "SHIPPING", List.of("COMPLETED"),
+                "COMPLETED", List.of("REFUNDED"),
+                "REFUNDED", List.of(),
+                "CANCELLED", List.of()
+        );
 
+        request.setAttribute("transitions", transitions);
         request.setAttribute("orders", list);
         request.getRequestDispatcher("admin/quanlidonhang.jsp").forward(request, response);
     }
