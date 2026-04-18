@@ -202,4 +202,8 @@ public class VoucherService {
     public void tangVoucher(List<Integer> listU, String voucherParam) {
         voucherDao.tangVoucher(listU, voucherParam);
     }
+
+    public int countValidVouchers() {
+        return voucherDao.countValidVouchers();
+    }
 }

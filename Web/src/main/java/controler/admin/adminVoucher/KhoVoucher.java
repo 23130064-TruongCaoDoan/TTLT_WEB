@@ -42,8 +42,12 @@ public class KhoVoucher extends HttpServlet {
         List<String> listTypes = bookService.getAllBookTypes();
         List<String> listPublishers = bookService.getAllPublishers();
 
+        int validVouchers = voucherService.countValidVouchers();
+
         request.setAttribute("listTypes", listTypes);
         request.setAttribute("listPublishers", listPublishers);
+
+        request.setAttribute("validVouchers", validVouchers);
 
         request.setAttribute("listVoucher", listVoucher);
         request.getRequestDispatcher("admin/khoVoucher.jsp").forward(request, response);

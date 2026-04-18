@@ -264,4 +264,12 @@ public class VoucherDao extends BaseDao {
         });
     }
 
+    public int countValidVouchers() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM voucher WHERE usage_limit > 0 AND end_date >= CURDATE()")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
 }

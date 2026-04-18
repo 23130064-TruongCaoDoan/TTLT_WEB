@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css_admin/khoVoucher.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/notifySuccess.css">
+    <link rel="stylesheet" href="assets/css_admin/ThongKe.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
 </head>
 <body>
@@ -19,6 +20,16 @@
         <c:import url="MenuFunctionAdmin.jsp"></c:import>
         <div class="voucher-container">
             <h2>Kho Voucher</h2>
+            <div class="thongke-container">
+                <div class="cards">
+                    <div class="card card-active">
+                        <i class="fa-solid fa-ticket-simple"></i>
+                        <h3>Đang hoạt động</h3>
+                        <p>${validVouchers != null ? validVouchers : 0}</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="function">
                 <button id="add">Thêm voucher</button>
                 <form action="filterVoucher" method="get" class="timkiem">
@@ -184,6 +195,46 @@
 
         <button type="submit" id="btn-save">Lưu voucher</button>
     </form>
+
+    <div id="active-voucher-panel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 999;">
+        <div id="active-voucher-container" style="background: #fff; padding: 25px; border-radius: 12px; width: 70%; max-height: 80%; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0; color: #0d3164;">Danh sách Voucher đang hoạt động</h2>
+                <span class="close-panel" style="font-size: 28px; cursor: pointer; font-weight: bold;">&times;</span>
+            </div>
+
+            <div class="table-wrapper" style="overflow-y: auto; flex: 1; border: 1px solid #ddd; border-radius: 8px;">
+                <table>
+                    <thead style="position: sticky; top: 0; background: #f4f7fa; z-index: 10;">
+                        <tr>
+                            <th>Mã</th>
+                            <th>Mô tả</th>
+                            <th>Loại</th>
+                            <th>Giá trị</th>
+                            <th>Thời hạn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${listVoucher}" var="v">
+                            <c:if test="${v.isActive()}">
+                                <tr>
+                                    <td><strong>${v.code}</strong></td>
+                                    <td>${v.description}</td>
+                                    <td>${v.type == 'discount' ? 'Giảm giá' : 'Vận chuyển'}</td>
+                                    <td>${v.valuee}</td>
+                                    <td>${v.getEndDateFormatted()}</td>
+                                </tr>
+                            </c:if>
+                        </c:forEach>
+                        <c:if test="${empty listVoucher}">
+                            <tr><td colspan="5">Không có dữ liệu</td></tr>
+                        </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </main>
 <script>
     let mode = "add";
@@ -544,6 +595,21 @@
                 choiceInstance.setChoiceByValue("");
             }
         }
+
+        document.addEventListener("click", function (e) {
+            const activePanel = document.getElementById("active-voucher-panel");
+            if (e.target.closest(".card-active")) {
+                activePanel.style.display = "flex";
+            }
+
+            if (e.target.closest(".close-panel")) {
+                activePanel.style.display = "none";
+            }
+
+            if (e.target === activePanel) {
+                activePanel.style.display = "none";
+            }
+        });
 
 </script>
 </body>
