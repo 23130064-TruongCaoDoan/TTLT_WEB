@@ -206,4 +206,8 @@ public class VoucherService {
     public int countValidVouchers() {
         return voucherDao.countValidVouchers();
     }
+
+    public int countExpiredVouchers() {
+        return voucherDao.countExpiredVouchers();
+    }
 }

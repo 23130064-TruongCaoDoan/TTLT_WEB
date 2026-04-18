@@ -272,4 +272,12 @@ public class VoucherDao extends BaseDao {
         );
     }
 
+    public int countExpiredVouchers() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM voucher WHERE end_date < CURDATE()")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
 }
