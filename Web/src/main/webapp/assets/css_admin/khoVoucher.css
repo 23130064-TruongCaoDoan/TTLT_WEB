@@ -329,32 +329,12 @@ input, select {
 
 .voucher-container .thongke-container {
     width: 100%;
-    flex: none;
     box-shadow: none;
     padding: 0;
-    margin-bottom: 25px;
+    background: transparent;
+    flex: none;
 }
 
-.card.card-active i { color: #1e8e3e !important; }
-.card.card-active { border-left: 5px solid #1e8e3e; }
-
-.card.card-expired i { color: #d9534f !important; }
-.card.card-expired { border-left: 5px solid #d9534f; }
-
-.card.card-outofstock i { color: #f39c12 !important; }
-.card.card-outofstock { border-left: 5px solid #f39c12; }
-
-.thongke-container .card p {
-    color: #0d3164;
-    font-size: 22px;
-}
-
-.card-active {
+.voucher-container .thongke-container .card {
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-active:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
 }

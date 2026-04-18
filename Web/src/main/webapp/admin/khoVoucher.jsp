@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="assets/css_admin/khoVoucher.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/notifySuccess.css">
-    <link rel="stylesheet" href="assets/css_admin/ThongKe.css">
+    <link rel="stylesheet" href="assets/css_admin/ThongKe.css?">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
 </head>
 <body>
@@ -21,7 +21,7 @@
         <div class="voucher-container">
             <h2>Kho Voucher</h2>
             <div class="thongke-container">
-                <div class="cards">
+                <div class="cards" >
                     <div class="card card-active">
                         <i class="fa-solid fa-ticket-simple"></i>
                         <h3>Đang hoạt động</h3>
@@ -32,6 +32,12 @@
                         <i class="fa-solid fa-calendar-xmark"></i>
                         <h3>Đã hết hạn</h3>
                         <p>${expiredVouchers != null ? expiredVouchers : 0}</p>
+                    </div>
+
+                    <div class="card card-outofstock">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h3>Hết lượt sử dụng</h3>
+                        <p>${outOfStockVouchers != null ? outOfStockVouchers : 0}</p>
                     </div>
                 </div>
             </div>
@@ -267,7 +273,38 @@
             </div>
         </div>
     </div>
-
+    <div id="panel-outofstock" class="active-voucher-panel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 999;">
+        <div style="background: #fff; padding: 25px; border-radius: 12px; width: 70%; max-height: 80%; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0; color: #f39c12;">Voucher Hết lượt sử dụng</h2>
+                <span class="close-panel" style="font-size: 28px; cursor: pointer; font-weight: bold;">&times;</span>
+            </div>
+            <div class="table-wrapper" style="overflow-y: auto; flex: 1; border: 1px solid #ddd; border-radius: 8px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã</th>
+                            <th>Mô tả</th>
+                            <th>Loại</th>
+                            <th>Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${listVoucher}" var="v">
+                            <c:if test="${v.usage_limit <= 0}">
+                                <tr>
+                                    <td><strong>${v.code}</strong></td>
+                                    <td>${v.description}</td>
+                                    <td>${v.type}</td>
+                                    <td style="font-weight: bold; color: #f39c12;">0</td>
+                                </tr>
+                            </c:if>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </main>
 <script>
     let mode = "add";
@@ -632,21 +669,27 @@
         document.addEventListener("click", function (e) {
             const pActive = document.getElementById("panel-active");
             const pExpired = document.getElementById("panel-expired");
+            const pOutOfStock = document.getElementById("panel-outofstock");
 
-           if (e.target.closest(".card-active")) {
+            if (e.target.closest(".card-active")) {
                    pActive.style.display = "flex";
                }
             if (e.target.closest(".card-expired")) {
                     pExpired.style.display = "flex";
                 }
+            if (e.target.closest(".card-outofstock")) {
+                    pOutOfStock.style.display = "flex";
+                }
 
             if (e.target.closest(".close-panel")) {
                 pActive.style.display = "none";
                 pExpired.style.display = "none";
+                pOutOfStock.style.display = "none";
             }
 
             if (e.target === pActive) pActive.style.display = "none";
             if (e.target === pExpired) pExpired.style.display = "none";
+            if (e.target === pOutOfStock) pOutOfStock.style.display = "none";
         });
 
 </script>

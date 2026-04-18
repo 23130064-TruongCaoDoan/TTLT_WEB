@@ -210,4 +210,8 @@ public class VoucherService {
     public int countExpiredVouchers() {
         return voucherDao.countExpiredVouchers();
     }
+
+    public int countOutOfStockVouchers() {
+        return voucherDao.countOutOfStockVouchers();
+    }
 }

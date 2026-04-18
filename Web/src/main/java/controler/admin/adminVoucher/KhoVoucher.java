@@ -44,12 +44,14 @@ public class KhoVoucher extends HttpServlet {
 
         int validVouchers = voucherService.countValidVouchers();
         int expiredVouchers = voucherService.countExpiredVouchers();
+        int outOfStockVouchers = voucherService.countOutOfStockVouchers();
 
         request.setAttribute("listTypes", listTypes);
         request.setAttribute("listPublishers", listPublishers);
 
         request.setAttribute("validVouchers", validVouchers);
         request.setAttribute("expiredVouchers", expiredVouchers);
+        request.setAttribute("outOfStockVouchers", outOfStockVouchers);
 
         request.setAttribute("listVoucher", listVoucher);
         request.getRequestDispatcher("admin/khoVoucher.jsp").forward(request, response);
