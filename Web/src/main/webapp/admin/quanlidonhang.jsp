@@ -41,7 +41,7 @@
                 <div class="title">
                     <h3>Danh sách đơn hàng</h3>
                 </div>
-                <div class="table-wrapper">
+                <div class="table-wrapper" id="wrapper">
                     <table>
                         <thead>
                         <tr>
@@ -200,66 +200,43 @@
 
 <script src="assets/js/qldh.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    function bindStatusEvents() {
         document.querySelectorAll(".status-select").forEach(select => {
-            select.addEventListener("change", function () {
-
-                const statusSelected = this.value;
-                const orderId = this.closest("td").querySelector(".orderId").value;
-
-                if (!confirm("Bạn chắc chắn muốn thay đổi trạng thái của đơn hàng này?")) {
-                    location.reload();
-                    return;
-                }
-
-                fetch(contextPath + "/UpdateOrderStatus", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "orderId=" + orderId + "&orderStatus=" + statusSelected
-                })
-                    .then(res => res.text())
-                    .then(data => {
-                        alert("Cập nhật trạng thái thành công!");
-                        updateStatusOptions(this, statusSelected);
-                    })
-                    .catch(err => {
-                        alert("Lỗi!");
-                        console.error(err);
-                    });
-
-            });
-        });
-    });
-</script>
-<script>
-    const transitions = {
-        PENDING: ["PROCESSING", "CANCELLED"],
-        PROCESSING: ["SHIPPING", "CANCELLED"],
-        SHIPPING: ["COMPLETED"],
-        COMPLETED: ["REFUNDED"],
-        REFUNDED: [],
-        CANCELLED: []
-    };
-    function updateStatusOptions(select, currentStatus) {
-        const nextStatuses = transitions[currentStatus] || [];
-        select.innerHTML = "";
-        const currentOption = document.createElement("option");
-        currentOption.value = currentStatus;
-        currentOption.textContent = currentStatus;
-        currentOption.selected = true;
-        currentOption.disabled = true;
-
-        select.appendChild(currentOption);
-
-        nextStatuses.forEach(s => {
-            const option = document.createElement("option");
-            option.value = s;
-            option.textContent = s;
-            select.appendChild(option);
+            select.addEventListener("change", handleChange);
         });
     }
+    function handleChange() {
+        const statusSelected = this.value;
+        const orderId = this.closest("td").querySelector(".orderId").value;
+
+        if (!confirm("Bạn chắc chắn muốn thay đổi trạng thái?")) {
+            location.reload();
+            return;
+        }
+
+        fetch(contextPath + "/UpdateOrderStatus", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "orderId=" + orderId + "&orderStatus=" + statusSelected
+        })
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("wrapper").innerHTML = html;
+
+                bindStatusEvents();
+            })
+            .catch(err => {
+                alert("Lỗi!");
+                console.error(err);
+            });
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        bindStatusEvents();
+    });
 </script>
 </body>
 </html>

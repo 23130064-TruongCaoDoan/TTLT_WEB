@@ -8,9 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.OrderView;
 import model.User;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 @WebServlet(name = "UpdateOrderStatus", value = "/UpdateOrderStatus")
@@ -38,7 +41,25 @@ public class UpdateOrderStatus extends HttpServlet {
 
         OrderService orderService = new OrderService();
         orderService.updateOrderStatus(orderId, orderStatus);
-        response.getWriter().write("OK");
+
+        String q = request.getParameter("q");
+
+        String sortDate = request.getParameter("sortDate");
+        List<OrderView> list=orderService.searchOrder(q,sortDate);
+
+        Map<String, List<String>> transitions = Map.of(
+                "PENDING", List.of("PROCESSING", "CANCELLED"),
+                "PROCESSING", List.of("SHIPPING", "CANCELLED"),
+                "SHIPPING", List.of("COMPLETED"),
+                "COMPLETED", List.of("REFUNDED"),
+                "REFUNDED", List.of(),
+                "CANCELLED", List.of()
+        );
+
+        request.setAttribute("orders", list);
+        request.setAttribute("transitions", transitions);
+
+        request.getRequestDispatcher("admin/orderTable.jsp").forward(request, response);
     }
 
 }
