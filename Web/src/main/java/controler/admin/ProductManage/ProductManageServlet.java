@@ -37,9 +37,37 @@ public class ProductManageServlet extends HttpServlet {
         String q = request.getParameter("q");
         String type = request.getParameter("type");
         String stock = request.getParameter("sortStock");
+
+        int pageSize = 20;
+        int currentPage = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isBlank()) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage <= 0) {
+                    currentPage = 1;
+                }
+            } catch (Exception e) {
+                currentPage = 1;
+            }
+        }
+
+        int totalBooks = bookService.countSearchAndFilter(q, type);
+        int totalPages = (int) Math.ceil((double) totalBooks / pageSize);
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+        int offset = (currentPage - 1) * pageSize;
+        if (offset < 0) {
+            offset = 0;
+        }
+        List<Book> lsBook = bookService.searchAndFilterPaginated(q, type, stock, pageSize, offset);
+
         request.setAttribute("types", bookService.getAllBookTypes());
-        List<Book> lsBook = bookService.searchAndFilter(q, type, stock);
+        //List<Book> lsBook = bookService.searchAndFilter(q, type, stock);
         request.setAttribute("lsbook", lsBook);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
 
         ThongKeService thongKeService = new ThongKeService();
 
