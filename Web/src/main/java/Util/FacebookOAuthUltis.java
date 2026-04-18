@@ -17,7 +17,7 @@ public class FacebookOAuthUltis {
     static {
         try {
             Properties prop = new Properties();
-            prop.load(GoogleOAuthUtils.class.getClassLoader().getResourceAsStream("facebook.properties"));
+            prop.load(FacebookOAuthUltis.class.getClassLoader().getResourceAsStream("facebook.properties"));
             APP_ID = prop.getProperty("facebook.app.id");
             APP_SECRET = prop.getProperty("facebook.app.secret");
 
