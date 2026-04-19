@@ -326,3 +326,15 @@ input, select {
     color: #666;
     border: 1px solid #ccc;
 }
+
+.voucher-container .thongke-container {
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+    flex: none;
+}
+
+.voucher-container .thongke-container .card {
+    cursor: pointer;
+}

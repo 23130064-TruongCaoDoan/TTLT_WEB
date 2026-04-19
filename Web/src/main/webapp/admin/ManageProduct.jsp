@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/search-suggest.css">
     <link rel="stylesheet" href="assets/css_admin/ThongKe.css">
-    <link rel="stylesheet" href="assets/css_admin/mProduct.css">
+    <link rel="stylesheet" href="assets/css_admin/mProduct.css?v=2">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
 </head>
 <body>
@@ -68,10 +68,10 @@
 
                         <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
-                            <option value="asc" ${param.stock == 'asc' ? 'selected' : ''}>
+                            <option value="asc" ${param.sortStock == 'asc' ? 'selected' : ''}>
                                 Số lượng tăng dần
                             </option>
-                            <option value="desc" ${param.stock == 'desc' ? 'selected' : ''}>
+                            <option value="desc" ${param.sortStock == 'desc' ? 'selected' : ''}>
                                 Số lượng giảm dần
                             </option>
                         </select>
@@ -141,6 +141,31 @@
                     </tbody>
                 </table>
             </div>
+
+            <c:if test="${totalPages > 1}">
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        <li class="${currentPage == 1 ? 'disabled' : ''}">
+                            <a href="?page=${currentPage - 1}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        </li>
+
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <li class="${currentPage == i ? 'active' : ''}">
+                                <a href="?page=${i}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}">${i}</a>
+                            </li>
+                        </c:forEach>
+
+                        <li class="${currentPage == totalPages ? 'disabled' : ''}">
+                            <a href="?page=${currentPage + 1}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </c:if>
+
         </div>
     </div>
 </main>

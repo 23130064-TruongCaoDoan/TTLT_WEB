@@ -438,4 +438,17 @@ public class BookService {
         }
         System.out.println(books.size());
     }
+
+    public int countSearchAndFilter(String q, String type) {
+        if (q != null && q.isBlank()) q = null;
+        if (type != null && type.isBlank()) type = null;
+        return hd.countSearchAndFilter(q, type);
+    }
+
+    public List<Book> searchAndFilterPaginated(String q, String type, String stock, int limit, int offset) {
+        if (q != null && q.isBlank()) q = null;
+        if (type != null && type.isBlank()) type = null;
+        if (stock != null && stock.isBlank()) stock = null;
+        return hd.searchAndFilterPaginated(q, type, stock, limit, offset);
+    }
 }

@@ -756,4 +756,57 @@ public class BookDao extends BaseDao {
             return query.mapToBean(Book.class).list();
         });
     }
+
+    public int countSearchAndFilter(String q, String type) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder(
+                    "SELECT COUNT(*) FROM books b " +
+                    "LEFT JOIN authors a ON b.author_id = a.id " +
+                    "WHERE b.is_sell = 1"
+            );
+            if (q != null && !q.trim().isEmpty()) {
+                sql.append(" AND (b.title LIKE :q OR a.name LIKE :q OR b.type LIKE :q)");
+            }
+            if (type != null && !type.trim().isEmpty()) {
+                sql.append(" AND b.type = :type");
+            }
+            var query = handle.createQuery(sql.toString());
+            if (q != null && !q.trim().isEmpty()) query.bind("q", "%" + q + "%");
+            if (type != null && !type.trim().isEmpty()) query.bind("type", type);
+            return query.mapTo(int.class).one();
+        });
+    }
+
+    public List<Book> searchAndFilterPaginated(String q, String type, String stock, int limit, int offset) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder(
+                    "SELECT b.*, a.name AS author FROM books b " +
+                    "LEFT JOIN authors a ON b.author_id = a.id " +
+                    "WHERE b.is_sell = 1"
+            );
+            if (q != null && !q.trim().isEmpty()) {
+                sql.append(" AND (b.title LIKE :q OR a.name LIKE :q OR b.type LIKE :q)");
+            }
+            if (type != null && !type.trim().isEmpty()) {
+                sql.append(" AND b.type = :type");
+            }
+            if ("asc".equals(stock)) {
+                sql.append(" ORDER BY b.stock ASC");
+            } else if ("desc".equals(stock)) {
+                sql.append(" ORDER BY b.stock DESC");
+            } else {
+                sql.append(" ORDER BY b.add_date DESC, b.id DESC");
+            }
+            sql.append(" LIMIT :limit OFFSET :offset");
+
+            var query = handle.createQuery(sql.toString());
+            if (q != null && !q.trim().isEmpty()) query.bind("q", "%" + q + "%");
+            if (type != null && !type.trim().isEmpty()) query.bind("type", type);
+            query.bind("limit", limit);
+            query.bind("offset", offset);
+
+            return query.mapToBean(Book.class).list();
+        });
+    }
+
 }
