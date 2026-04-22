@@ -64,9 +64,12 @@ public class CreateOrder extends HttpServlet {
         String paymentMethod = request.getParameter("payment");
 
 
-        Cart cart = "buynow".equals(mode)
-                ? (Cart) session.getAttribute("buyNowCart")
-                : (Cart) session.getAttribute("cart");
+        Cart cart;
+        if ("buynow".equals(mode)) {
+            cart = (Cart) session.getAttribute("buyNowCart");
+        } else {
+            cart = (Cart) session.getAttribute("cart");
+        }
 
         if (cart == null || cart.getItems().isEmpty()) {
             request.setAttribute("error", "Giỏ hàng trống");
@@ -239,6 +242,7 @@ public class CreateOrder extends HttpServlet {
 
         session.removeAttribute("cart");
         session.removeAttribute("buyNowCart");
+
 
         session.removeAttribute("appliedDiscountVoucher");
         session.removeAttribute("appliedShipVoucher");
