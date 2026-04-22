@@ -91,12 +91,13 @@
 /*table*/
 .product-container .table-wrapper{
     width: 100%;
-    max-height: 500px; /* Giới hạn chiều cao để có thanh cuộn */
+    max-height: 500px;
     overflow-y: auto;
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
+    border: 1px solid #ccc;
 }
 .product-container .table-wrapper {
     overflow-y: auto;
@@ -104,10 +105,9 @@
 
 }
 .product-container .table-wrapper table{
-    border: 1px solid #ccc;
+    border: none;
     border-collapse: collapse;
-    border-radius: 5px;
-    padding: 0;
+    width: 100%;
 }
 
 .product-container .table-wrapper thead th {
@@ -222,4 +222,58 @@ textarea {
     background: rgba(0, 0, 0, 0.5);
     z-index: 100;
     display: none;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 6px;
+}
+.pagination li {
+    margin-left: 5px;
+}
+.pagination li a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    color: #555;
+    text-decoration: none;
+    border-radius: 6px;
+    background-color: transparent;
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.pagination li a:hover {
+    background-color: #f0f0f0;
+    color: #0d3164;
+}
+.pagination li.active a {
+    background-color: #0d3164;
+    color: white;
+    box-shadow: 0 2px 4px rgba(13, 49, 100, 0.3);
+    cursor: default;
+}
+.pagination li.disabled a {
+    color: #ccc;
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: transparent;
+}
+.pagination li i {
+    font-size: 14px;
 }

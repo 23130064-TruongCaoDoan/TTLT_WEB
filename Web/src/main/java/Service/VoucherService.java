@@ -202,4 +202,16 @@ public class VoucherService {
     public void tangVoucher(List<Integer> listU, String voucherParam) {
         voucherDao.tangVoucher(listU, voucherParam);
     }
+
+    public int countValidVouchers() {
+        return voucherDao.countValidVouchers();
+    }
+
+    public int countExpiredVouchers() {
+        return voucherDao.countExpiredVouchers();
+    }
+
+    public int countOutOfStockVouchers() {
+        return voucherDao.countOutOfStockVouchers();
+    }
 }

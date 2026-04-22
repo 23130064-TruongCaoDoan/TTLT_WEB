@@ -3,18 +3,23 @@ const popupEdit = document.getElementById("orderForm");
 const popupListSP = document.getElementById("listSP");
 
 
-document.querySelectorAll(".sua").forEach(btn => {
-    btn.addEventListener("click", () => {
+document.addEventListener("click", function (e) {
+
+    if (e.target.classList.contains("sua")) {
+
         overlay.style.display = "block";
         popupEdit.style.display = "block";
+
+        const btn = e.target;
 
         document.getElementById("orderCode").value = btn.dataset.id;
         document.getElementById("orderTitle").value = btn.dataset.name;
         document.getElementById("orderValue").value = btn.dataset.total;
         document.getElementById("typeBook").value = btn.dataset.address;
         document.getElementById("ageBook").value = btn.dataset.phone;
-        document.querySelector("textarea").value = btn.dataset.note || "";
-    });
+        document.querySelector("#orderForm textarea").value = btn.dataset.note || "";
+    }
+
 });
 
 document.getElementById("btnSaveOrder").addEventListener("click", () => {
@@ -63,16 +68,19 @@ function show(message, isSuccess = true) {
 }
 
 
-document.querySelectorAll(".cacsp").forEach(btn => {
-    btn.addEventListener("click", () => {
+document.addEventListener("click", function (e) {
+
+    if (e.target.classList.contains("cacsp")) {
+
         overlay.style.display = "block";
         popupListSP.style.display = "block";
 
-        const orderId = btn.dataset.id;
+        const orderId = e.target.dataset.id;
 
         fetch(contextPath + "/GetOrderItemsServlet?orderId=" + orderId)
             .then(res => res.json())
             .then(items => {
+
                 const tbody = document.getElementById("productTableBody");
                 tbody.innerHTML = "";
 
@@ -92,8 +100,9 @@ document.querySelectorAll(".cacsp").forEach(btn => {
                     `;
                     tbody.appendChild(tr);
                 });
+
             });
-    });
+    }
 });
 
 

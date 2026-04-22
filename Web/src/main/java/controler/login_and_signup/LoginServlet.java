@@ -30,7 +30,14 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         UserService userService = new UserService();
         User user = userService.findUser(username);
-       if(user!=null&&userService.checkPass(user, password)&& user.isStatus()==true){
+
+        if(!user.isStatus()){
+            request.setAttribute("username",username);
+            request.setAttribute("password",password);
+            request.setAttribute("error","Tài khoản bạn đã bị khóa");
+            request.getRequestDispatcher("user/login.jsp").forward(request, response);
+        }
+       if(user!=null&&userService.checkPass(user, password)){
            HttpSession oldSession = request.getSession(false);
            if (oldSession != null) {
                oldSession.invalidate();
