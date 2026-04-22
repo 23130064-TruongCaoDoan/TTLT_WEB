@@ -8,9 +8,9 @@ plugins {
 apply plugin: 'org.hidetake.ssh'
 remotes {
     host {
-        host = '192.168.1.9'
+        host = '192.168.20.136'
         user = 'root'
-        password = 'Doanga123@'
+        password = '123'
     }
 }
 ssh.settings {
