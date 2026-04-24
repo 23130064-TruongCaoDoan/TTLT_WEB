@@ -13,6 +13,7 @@
         <a href="<c:url value="/product-manage" />" class="function qlsanpham">Quản lý sản phẩm</a>
         <a href="<c:url value="/user-manage" />" class="function qlkhachhang">Quản lý khách hàng</a>
         <a href="<c:url value="/OrderManagerServlet" />" class="function qldonhang">Quản lý đơn hàng</a>
+        <a href="<c:url value="/admin-return-manager" />" class="function qltrahang">Quản lý trả hàng</a>
         <a href="<c:url value="/KhoVoucher" />" class="function storeVoucher">Kho Voucher</a>
         <a href="<c:url value="/Event" />" class="function event">Sự kiện</a>
         <a href="<c:url value="/Rate" />" class="function rating">Đánh giá</a>
