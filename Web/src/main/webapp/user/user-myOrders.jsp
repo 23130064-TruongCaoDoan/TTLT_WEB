@@ -111,6 +111,13 @@
                                             </button>
                                         </div>
                                     </c:if>
+                                    <c:if test="${ o.status.toLowerCase() == 'completed'}">
+                                        <div class="button">
+                                            <button onclick="window.location='rebuy?OrderId=${o.orderId}'">
+                                                Mua lại
+                                            </button>
+                                        </div>
+                                    </c:if>
                                     <div class="button">
                                         <button onclick="window.location='my-order?id=${o.orderId}'">
                                             Xem chi tiết
