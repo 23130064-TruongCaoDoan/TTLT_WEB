@@ -2,6 +2,7 @@ package DTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class MyOrderDTO {
     private int orderId;
@@ -75,6 +76,25 @@ public class MyOrderDTO {
                 ", totalQuantity=" + totalQuantity +
                 ", firstBookImage='" + firstBookImage + '\'' +
                 '}';
+    }
+
+    public boolean isCanReturn() {
+        try {
+            if (this.status == null || !this.status.equalsIgnoreCase("COMPLETED")) {
+                return false;
+            }
+
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            LocalDateTime orderDateTime = LocalDateTime.parse(this.orderDate, inputFormatter);
+
+            long daysBetween = ChronoUnit.DAYS.between(orderDateTime, LocalDateTime.now());
+
+            return daysBetween <= 7;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

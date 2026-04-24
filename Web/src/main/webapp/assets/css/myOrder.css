@@ -289,5 +289,78 @@
     display: flex;
     flex-direction: row;
 }
+.btn-return:hover {
+    background-color: #c82333;
+}
+.modal-return {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+.modal-return-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 25px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 
+.modal-return-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group select,
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+.modal-actions {
+    text-align: right;
+    margin-top: 25px;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.btn-danger {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background: #dc3545;
+    color: white;
+    border-radius: 5px;
+}
+
+.btn-danger:disabled {
+    background: #e4606d;
+    cursor: not-allowed;
+}
 

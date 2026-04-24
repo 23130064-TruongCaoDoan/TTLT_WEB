@@ -15,7 +15,7 @@
           rel="stylesheet">
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/user.css">
-    <link rel="stylesheet" href="assets/css/myOrder.css">
+    <link rel="stylesheet" href="assets/css/myOrder.css?v=2">
 </head>
 <body>
 <c:import url="/user/headerUser.jsp"></c:import>
@@ -117,6 +117,13 @@
                                                 Mua lại
                                             </button>
                                         </div>
+                                        <c:if test="${o.canReturn}">
+                                            <div class="button">
+                                                <button onclick="openReturnModal(${o.orderId})" class="btn-return">
+                                                    Trả hàng / Hoàn tiền
+                                                </button>
+                                            </div>
+                                        </c:if>
                                     </c:if>
                                     <div class="button">
                                         <button onclick="window.location='my-order?id=${o.orderId}'">
@@ -137,7 +144,35 @@
     </div>
 <c:import url="/user/footerUser.jsp"></c:import>
 
+    <div id="returnModal" class="modal-return">
+        <div class="modal-return-content">
+            <h3>Yêu cầu Trả hàng</h3>
+            <form id="returnForm" enctype="multipart/form-data">
+                <input type="hidden" name="orderId" id="returnOrderId">
 
+                <div class="form-group">
+                    <label>Lý do trả hàng:</label>
+                    <select name="reason" required>
+                        <option value="" disabled selected>-- Chọn lý do --</option>
+                        <option value="Hàng lỗi, rách bìa, hỏng">1. Hàng lỗi, rách bìa, hỏng</option>
+                        <option value="Giao sai sản phẩm">2. Giao sai sản phẩm</option>
+                        <option value="Thiếu sách">3. Thiếu sách</option>
+                        <option value="Sản phẩm khác với mô tả">4. Sản phẩm khác với mô tả</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Ảnh chứng minh (Bắt buộc):</label>
+                    <input type="file" name="proofImage" accept="image/*" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeReturnModal()" class="btn-secondary">Hủy</button>
+                    <button type="submit" class="btn-danger">Gửi yêu cầu</button>
+                </div>
+            </form>
+        </div>
+    </div>
 <script>
         const menuItems = document.querySelectorAll(".menu-item");
         menuItems.forEach(item => {
@@ -181,6 +216,50 @@
                 console.error(err);
                 alert("Có lỗi xảy ra!");
             });
+    });
+</script>
+<script>
+    function openReturnModal(orderId) {
+        document.getElementById('returnOrderId').value = orderId;
+        document.getElementById('returnModal').style.display = 'block';
+    }
+
+    function closeReturnModal() {
+        document.getElementById('returnModal').style.display = 'none';
+        document.getElementById('returnForm').reset();
+    }
+
+    document.getElementById('returnForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Chặn tải lại trang
+
+        let formData = new FormData(this);
+
+        let submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Đang gửi...';
+
+        fetch('request-return', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert(data.message);
+                closeReturnModal();
+                location.reload();
+            } else {
+                alert(data.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gửi yêu cầu';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Lỗi khi tải ảnh hoặc kết nối server!");
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Gửi yêu cầu';
+        });
     });
 </script>
 </body>
