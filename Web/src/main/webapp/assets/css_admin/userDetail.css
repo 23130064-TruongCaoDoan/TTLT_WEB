@@ -6,8 +6,7 @@
     font-weight: bold;
 }
 .user-details{
-    width: 70%;
-    flex: 3;
+    flex: 5;
     align-items: flex-start;
     background: #fff;
     padding: 21px;

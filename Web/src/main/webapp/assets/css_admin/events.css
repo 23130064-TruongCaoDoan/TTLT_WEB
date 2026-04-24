@@ -4,8 +4,7 @@
 }
 
 .event-container {
-    flex: 3;
-    width: 20vw;
+    flex: 5;
     align-items: flex-start;
     background: #fff;
     padding: 24px;
