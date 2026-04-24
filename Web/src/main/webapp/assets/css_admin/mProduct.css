@@ -1,12 +1,12 @@
 .content .Menu {
-    width: 30%;
+    width: 10%;
 }
 .Menu .menfunction .qlsanpham{
     border-left: 3px solid #0d3164;
     font-weight: bold;
 }
 .product-container{
-    flex: 3;
+    flex: 5;
     min-width: 0;
     align-items: flex-start;
     background: #fff;
