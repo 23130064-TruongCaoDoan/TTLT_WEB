@@ -75,4 +75,14 @@ public class OrderService {
         orderDao.updateOrderStatus(orderId,paymentStatus);
     }
 
+    public List<OrderView> getOrderOfUser(int id) {
+        return orderDao.getOrderOfUser(id);
+    }
+
+    public int totalOrder(int uid) {
+        return orderDao.totalOrder(uid);
+    }
+    public double totalAmountOrder(int uid) {
+        return orderDao.totalAmountOrder(uid);
+    }
 }

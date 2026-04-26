@@ -1,27 +1,4 @@
 
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f7fa;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.content {
-    display: flex;
-    gap: 20px;
-    flex-direction: row;
-    margin: 10px;
-    overflow: hidden;
-}
-
-a {
-    text-decoration: none;
-}
 
 .customer-detail-container {
     flex: 5;

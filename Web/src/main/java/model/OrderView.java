@@ -1,5 +1,8 @@
 package model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class OrderView {
     private int id;
     private int userId;
@@ -10,6 +13,9 @@ public class OrderView {
     private String status;
     private int totalAmount;
     private String note;
+    private int totalQuantity;
+    private String paymentMethod;
+    private String firstBookImage;
 
     public OrderView() {
     }
@@ -70,7 +76,10 @@ public class OrderView {
     }
 
     public String getOrderDate() {
-        return orderDate;
+        DateTimeFormatter input = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter output = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+        LocalDateTime dt = LocalDateTime.parse(orderDate, input);
+        return dt.format(output);
     }
 
     public void setOrderDate(String orderDate) {
@@ -99,6 +108,30 @@ public class OrderView {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getFirstBookImage() {
+        return firstBookImage;
+    }
+
+    public void setFirstBookImage(String firstBookImage) {
+        this.firstBookImage = firstBookImage;
     }
 }
 

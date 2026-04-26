@@ -219,4 +219,58 @@ public class OrderDao extends BaseDao {
         );
     }
 
+    public List<OrderView> getOrderOfUser(int id) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT" +
+                                "    o.id AS id," +
+                                "    o.user_id AS userId," +
+                                "    u.name AS userName," +
+                                "    d.phone AS phone," +
+                                "    CONCAT_WS(', '," +
+                                "        d.specificAddress," +
+                                "        d.ward," +
+                                "        d.city" +
+                                "    ) AS address," +
+                                "    o.order_date AS orderDate," +
+                                "    o.status AS status," +
+                                "    o.payment_method  AS paymentMethod," +
+                                "    o.total_amount AS totalAmount," +
+                                "    o.note AS note," +
+                                "    SUM(oi.quantity) AS totalQuantity," +
+                                "    MIN(b.cover_img_url) AS firstBookImage " +
+                                "FROM orders o " +
+                                "JOIN `user` u ON o.user_id = u.id " +
+                                "JOIN order_items oi ON o.id = oi.order_id " +
+                                "JOIN books b ON oi.book_id = b.id " +
+                                "JOIN shipping s ON o.id = s.order_id " +
+                                "JOIN address d ON s.address_id = d.id " +
+                                "WHERE o.user_id = :id " +
+                                "GROUP BY " +
+                                "    o.id, o.user_id, u.name, d.phone," +
+                                "    d.specificAddress, d.ward, d.city," +
+                                "    o.order_date, o.status, o.payment_method," +
+                                "    o.total_amount, o.note " +
+                                "ORDER BY o.order_date DESC")
+                        .bind("id",id)
+                        .mapToBean(OrderView.class)
+                        .list()
+                );
+    }
+
+    public int totalOrder(int uid) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("Select count(*) from ORDERS WHERE user_id=:id")
+                        .bind("id",uid)
+                        .mapTo(int.class).one()
+
+                );
+    }
+    public double totalAmountOrder(int uid){
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("Select Sum(total_amount) from ORDERS WHERE user_id=:id")
+                        .bind("id",uid)
+                        .mapTo(double.class).one()
+
+        );
+    }
 }

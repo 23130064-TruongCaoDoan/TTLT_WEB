@@ -214,4 +214,11 @@ public class VoucherService {
     public int countOutOfStockVouchers() {
         return voucherDao.countOutOfStockVouchers();
     }
+
+    public List<Voucher> getListVoucherOfUser(int id) {
+        List<Voucher> mergedList = new ArrayList<>();
+        mergedList.addAll(voucherDao.listVoucherShipUser(id));
+        mergedList.addAll(voucherDao.listVoucherDiscountUser(id));
+        return mergedList;
+    }
 }

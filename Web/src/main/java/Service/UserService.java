@@ -63,9 +63,8 @@ public class UserService {
         }
         return rs;
     }
-    public User getUserById(String id){
-        int idNumber = Integer.parseInt(id.substring(2));
-        return userDao.findUserById(idNumber);
+    public User getUserById(int id){
+        return userDao.findUserById(id);
     }
     public List<UserWithTotalSpentDTO> getUserWithTotalSpent(String q, String stock) {
         return userDao.getUserWithTotalSpent(q,stock);

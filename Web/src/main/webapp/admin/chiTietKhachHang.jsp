@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -38,14 +39,16 @@
                     <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
                     <div class="stat-info">
                         <h4>Tổng đơn hàng</h4>
-                        <p>${totalOrders != null ? totalOrders : 0}</p>
+                        <p><fmt:formatNumber value="${totalOrder}" type="number" groupingUsed="true"
+                                             maxFractionDigits="0"/></p>
                     </div>
                 </div>
                 <div class="stat-card money">
                     <div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
                     <div class="stat-info">
                         <h4>Tổng giao dịch</h4>
-                        <p>${totalSpent != null ? totalSpent : '0'} đ</p>
+                        <p><fmt:formatNumber value="${totalAmount}" type="number" groupingUsed="true"
+                                             maxFractionDigits="0"/> đ</p>
                     </div>
                 </div>
             </div>
@@ -58,30 +61,30 @@
                     <div class="personal-info-grid">
                         <div class="avatar-row">
                             <div class="avatar-wrapper">
-                                <img src="${customer.avatar != null ? customer.avatar : 'assets/images/default-avatar.png'}" alt="Avatar" id="avatarImg"/>
+                                <img src="${user.avatar != null ? user.avatar : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFCzxivJXCZk0Kk8HsHujTO3Olx0ngytPrWw&s'}" alt="Avatar" id="avatarImg"/>
                                 <button class="avatar-edit-btn" title="Đổi avatar" onclick="triggerAvatarUpload()">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                                 <input type="file" id="avatarInput" style="display:none" accept="image/*" onchange="uploadAvatar(this)"/>
                             </div>
                             <div>
-                                <div class="avatar-name">${customer.fullName}</div>
-                                <div class="avatar-role">${customer.role} · #${customer.id}</div>
+                                <div class="avatar-name">${user.name}</div>
+                                <div class="avatar-role">${user.role} · #${user.id}</div>
                             </div>
                         </div>
 
                         <div class="info-item">
                             <label>Mã khách hàng</label>
                             <div class="info-value-row">
-                                <span class="info-value">#${customer.id}</span>
+                                <span class="info-value">#${user.id}</span>
                             </div>
                         </div>
 
                         <div class="info-item" id="field-name">
                             <label>Tên khách hàng</label>
                             <div class="info-value-row">
-                                <span class="info-value">${customer.fullName}</span>
-                                <button class="edit-icon-btn" onclick="startEdit('name','${customer.fullName}','text')">
+                                <span class="info-value">${user.name}</span>
+                                <button class="edit-icon-btn" onclick="startEdit('name','${user.name}','text')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -90,8 +93,8 @@
                         <div class="info-item" id="field-birthYear">
                             <label>Năm sinh</label>
                             <div class="info-value-row">
-                                <span class="info-value">${customer.birthYear}</span>
-                                <button class="edit-icon-btn" onclick="startEdit('birthYear','${customer.birthYear}','number')">
+                                <span class="info-value">${user.birthday}</span>
+                                <button class="edit-icon-btn" onclick="startEdit('birthYear','${user.birthday}','number')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -100,8 +103,8 @@
                         <div class="info-item" id="field-email">
                             <label>Email</label>
                             <div class="info-value-row">
-                                <span class="info-value">${customer.email}</span>
-                                <button class="edit-icon-btn" onclick="startEdit('email','${customer.email}','email')">
+                                <span class="info-value">${user.email}</span>
+                                <button class="edit-icon-btn" onclick="startEdit('email','${user.email}','email')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -110,35 +113,26 @@
                         <div class="info-item" id="field-phone">
                             <label>Số điện thoại</label>
                             <div class="info-value-row">
-                                <span class="info-value">${customer.phone != null ? customer.phone : 'Chưa cập nhật'}</span>
-                                <button class="edit-icon-btn" onclick="startEdit('phone','${customer.phone}','text')">
+                                <span class="info-value">${user.phone != null ? user.phone : 'Chưa cập nhật'}</span>
+                                <button class="edit-icon-btn" onclick="startEdit('phone','${user.phone}','text')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div class="info-item" id="field-password">
-                            <label>Mật khẩu</label>
-                            <div class="info-value-row">
-                                <span class="info-value">••••••••</span>
-                                <button class="edit-icon-btn" onclick="startEdit('password','','password')">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-                            </div>
-                        </div>
 
                         <div class="info-item" id="field-status">
                             <label>Trạng thái</label>
                             <div class="info-value-row">
                                 <c:choose>
-                                    <c:when test="${customer.status == 'active'}">
+                                    <c:when test="${user.status}">
                                         <span class="badge active">Hoạt động</span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="badge inactive">Bị khóa</span>
                                     </c:otherwise>
                                 </c:choose>
-                                <button class="edit-icon-btn" onclick="startEditSelect('status','${customer.status}',['active:Hoạt động','inactive:Bị khóa'])">
+                                <button class="edit-icon-btn" onclick="startEditSelect('status','${user.status}',['active:Hoạt động','inactive:Bị khóa'])">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -147,7 +141,7 @@
                         <div class="info-item" id="field-role">
                             <label>Quyền tài khoản</label>
                             <div class="info-value-row">
-                                <span class="badge ${customer.role}">${customer.role}</span>
+                                <span class="badge ${user.role}">${user.role}</span>
                                 <button class="edit-icon-btn" onclick="startEditSelect('role','${customer.role}',['admin:Admin','manager:Quản lý','accountant:Kế toán','staff:Nhân viên','user:Người dùng'])">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
@@ -164,13 +158,13 @@
                 <div class="section-body">
                     <div class="address-list">
                         <c:choose>
-                            <c:when test="${not empty addressList}">
-                                <c:forEach items="${addressList}" var="addr">
+                            <c:when test="${not empty addresses}">
+                                <c:forEach items="${addresses}" var="addr">
                                     <div class="address-item">
                                         <div class="address-info">
-                                            <div class="address-name">${addr.receiverName}</div>
+                                            <div class="address-name">${addr.name}</div>
                                             <div class="address-phone">${addr.phone}</div>
-                                            <div class="address-detail">${addr.specificAddress}, ${addr.ward}, ${addr.district}, ${addr.province}</div>
+                                            <div class="address-detail">${addr.specificAddress}, ${addr.ward}, ${addr.districts}, ${addr.city}</div>
                                         </div>
                                         <i class="fa-solid fa-trash icon-trash" onclick="confirmDeleteItem('address',${addr.id})"></i>
                                     </div>
@@ -204,21 +198,19 @@
                                 <th>Giá trị</th>
                                 <th>Điều kiện</th>
                                 <th>Loại</th>
-                                <th>Số lượng</th>
                                 <th>Xóa</th>
                             </tr>
                             </thead>
                             <tbody>
                             <c:choose>
-                                <c:when test="${not empty customerVouchers}">
-                                    <c:forEach items="${customerVouchers}" var="cv">
+                                <c:when test="${not empty voucherList}">
+                                    <c:forEach items="${voucherList}" var="cv">
                                         <tr>
                                             <td><strong>${cv.code}</strong></td>
                                             <td>${cv.description}</td>
                                             <td>${cv.valuee}</td>
                                             <td>${cv.conditionPrice != null ? cv.conditionPrice : '—'}</td>
                                             <td>${cv.type}</td>
-                                            <td>${cv.quantity}</td>
                                             <td>
                                                 <i class="fa-solid fa-trash icon-trash" onclick="confirmDeleteItem('voucher',${cv.id})"></i>
                                             </td>
@@ -280,15 +272,15 @@
                             </thead>
                             <tbody id="orderTableBody">
                             <c:choose>
-                                <c:when test="${not empty orderList}">
-                                    <c:forEach items="${orderList}" var="order">
-                                        <tr data-status="${order.statusClass}">
+                                <c:when test="${not empty orders}">
+                                    <c:forEach items="${orders}" var="order">
+                                        <tr data-status="${order.status}">
                                             <td>#${order.id}</td>
-                                            <td>${order.totalPrice} đ</td>
-                                            <td>${order.itemCount}</td>
-                                            <td>${order.getOrderDateFormatted()}</td>
-                                            <td><span class="status ${order.statusClass}">${order.statusLabel}</span></td>
-                                            <td>${order.paymentType}</td>
+                                            <td>${order.totalAmount} đ</td>
+                                            <td>${order.totalQuantity}</td>
+                                            <td>${order.getOrderDate()}</td>
+                                            <td>${order.status}</td>
+                                            <td>${order.paymentMethod}</td>
                                             <td>
                                                 <button class="btn-view-products"
                                                         onclick="viewOrderProducts(${order.id})">
