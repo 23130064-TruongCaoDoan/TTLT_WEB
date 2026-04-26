@@ -39,4 +39,8 @@ public class AddressService {
     public void setAddressDefault(int id,int userId) {
         addressDao.setDefaultAddress(id,userId);
     }
+
+    public List<Address> getAddressOfUser(int id) {
+        return addressDao.getAddressOfUser(id);
+    }
 }

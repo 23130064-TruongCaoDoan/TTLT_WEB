@@ -98,6 +98,19 @@ public class AddressDao extends BaseDao{
         AddressDao dao = new AddressDao();
         Address  address = new Address();
         System.out.println(dao.getAddress(1));
+        List<Address> addresses = dao.getAddressOfUser(36);
+        for (Address address1 : addresses) {
+            System.out.println(address1);
+        }
 
     }
+
+    public List<Address> getAddressOfUser(int id) {
+        return getJdbi().withHandle(handle ->
+            handle.createQuery("SELECT * FROM ADDRESS WHERE user_id = :id")
+                    .bind("id", id)
+                    .mapToBean(Address.class).list()
+        );
+    }
+
 }

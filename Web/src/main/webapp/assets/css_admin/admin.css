@@ -1,18 +1,24 @@
-body{
+body {
     margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
 }
-main{
+
+main {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
-.content{
+
+.content {
     display: flex;
     gap: 20px;
     flex-direction: row;
     margin: 10px;
     overflow: hidden;
 }
-a{
+
+a {
     text-decoration: none;
 }
 header{

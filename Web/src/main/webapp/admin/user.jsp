@@ -77,6 +77,7 @@
                             <th>Tổng tiền mua</th>
                             <th>Quyền</th>
                             <th>Trang thái</th>
+                            <th>Chi tiết</th>
                         </tr>
                         </thead>
                         <tbody id="userTable">
@@ -138,6 +139,7 @@
                                         </select>
                                     </form>
                                 </td>
+                                <td> <i class="fas fa-info-circle" onclick="window.location.href='<%= request.getContextPath() %>/UserDetail?id=${u.id}'"></i></td>
                             </tr>
                         </c:forEach>
                         </tbody>
