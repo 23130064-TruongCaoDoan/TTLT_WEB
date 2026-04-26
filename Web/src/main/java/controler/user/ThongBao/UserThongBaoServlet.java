@@ -1,4 +1,4 @@
-package controler.user;
+package controler.user.ThongBao;
 
 import Service.NotificationService;
 import jakarta.servlet.*;

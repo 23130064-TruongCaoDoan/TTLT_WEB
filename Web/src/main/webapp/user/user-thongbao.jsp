@@ -32,7 +32,7 @@
                 <div class="nav-inform">
                     <p class="tab-inform active">THÔNG BÁO</p>
 
-                    <button id="markAllRead" >
+                    <button type="button"  id="markAllRead" >
                         Đánh dấu tất cả đã đọc
                     </button>
                 </div>
