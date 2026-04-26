@@ -9,7 +9,7 @@ import model.User;
 
 import java.io.IOException;
 
-@WebServlet(name = "read-all-notifications ", value = "/read-all-notifications ")
+@WebServlet(name = "read-all-notifications", value = "/read-all-notifications")
 public class ReadAllNotificationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -18,6 +18,11 @@ public class ReadAllNotificationServlet extends HttpServlet {
         if (user != null) {
             NotificationService notificationService = new NotificationService();
             notificationService.readAll(user.getId());
+        }
+        Integer count = (Integer) request.getSession().getAttribute("numNotiFy");
+
+        if (count != null && count > 0) {
+            request.getSession().setAttribute("numNotiFy", count - 1);
         }
 
         response.setStatus(HttpServletResponse.SC_OK);

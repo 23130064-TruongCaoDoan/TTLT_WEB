@@ -93,7 +93,7 @@
                         <div class="info-item" id="field-birthYear">
                             <label>Năm sinh</label>
                             <div class="info-value-row">
-                                <span class="info-value">${user.birthday}</span>
+                                <span class="info-value"> ${user.birthday.dayOfMonth}/${user.birthday.monthValue}/${user.birthday.year}</span>
                                 <button class="edit-icon-btn" onclick="startEdit('birthYear','${user.birthday}','number')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
@@ -240,12 +240,12 @@
                     <div class="order-filters">
                         <select class="filter-select" id="filterStatus" onchange="filterOrders()">
                             <option value="">Tất cả trạng thái</option>
-                            <option value="cho-xac-nhan">Chờ xác nhận</option>
-                            <option value="dang-xu-ly">Đang xử lý</option>
-                            <option value="dang-van-chuyen">Đang vận chuyển</option>
-                            <option value="da-giao">Đã giao</option>
-                            <option value="da-huy">Đã hủy</option>
-                            <option value="hoan-tra">Hoàn trả</option>
+                            <option value="PENDING">Chờ xác nhận</option>
+                            <option value="PROCESSING">Đang xử lý</option>
+                            <option value="SHIPPING">Đang vận chuyển</option>
+                            <option value="COMPLETED">Đã giao</option>
+                            <option value="CANCELLED">Đã hủy</option>
+                            <option value="REFUNDED">Hoàn trả</option>
                         </select>
                         <select class="filter-select" id="filterTime" onchange="filterOrders()">
                             <option value="">Sắp xếp</option>
@@ -274,9 +274,10 @@
                             <c:choose>
                                 <c:when test="${not empty orders}">
                                     <c:forEach items="${orders}" var="order">
-                                        <tr data-status="${order.status}">
+                                        <tr data-status="${order.status}" data-date="${order.orderDate}">
                                             <td>#${order.id}</td>
-                                            <td>${order.totalAmount} đ</td>
+                                            <td><fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"
+                                                                  maxFractionDigits="0"/>đ</td>
                                             <td>${order.totalQuantity}</td>
                                             <td>${order.getOrderDate()}</td>
                                             <td>${order.status}</td>
@@ -484,8 +485,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast"></div>
 
 </main>
 <script>
@@ -523,17 +522,50 @@
         openPopup("notifPopup");
     }
 
+    const userId = ${user.id};
+
     function sendNotification(){
+        const ititle = document.getElementById("notifTitle");
+        const icontent = document.getElementById("notifContent");
         const title = document.getElementById("notifTitle").value;
         const content = document.getElementById("notifContent").value;
 
-        if(!title || !content){
-            alert("Vui lòng nhập đầy đủ thông tin");
+
+
+        ititle.classList.remove("input-error");
+        icontent.classList.remove("input-error");
+        if(!title ){
+            ititle.classList.add("input-error");
+            ititle.focus();
             return;
         }
+        if(!content ){
+            icontent.classList.add("input-error");
+            icontent.focus();
+            return;
+        }
+        fetch("Notify", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "userIds=" + encodeURIComponent(userId)+
+                "&title=" + encodeURIComponent(title) +
+                "&content=" + encodeURIComponent(content)
+        })
+            .then(res => res.json())
+            .then(data => {
+                closeAllPopups();
+                if (data.success) {
+                    show(data.message);
+                    setTimeout(() => location.reload(), 3000);
+                } else {
+                    alert(data.message, false);
+                }
+            })
+            .catch(err => console.log(err));
 
-        alert("Đã gửi thông báo (demo UI)");
-        closeAllPopups();
+
     }
 
 
@@ -576,11 +608,21 @@
     }
 
 
+    function parseDate(str) {
+        if (!str) return new Date(0);
 
+        const [time, date] = str.split(" ");
+        const [hours, minutes, seconds] = time.split(":");
+        const [day, month, year] = date.split("-");
+
+        return new Date(year, month - 1, day, hours, minutes, seconds);
+    }
 
     function filterOrders(){
         const status = document.getElementById("filterStatus").value;
-        const rows = document.querySelectorAll("#orderTableBody tr");
+        const time = document.getElementById("filterTime").value;
+        const tbody = document.getElementById("orderTableBody");
+        let rows = Array.from(tbody.querySelectorAll("tr"));
 
         rows.forEach(r=>{
             if(!status){
@@ -589,6 +631,20 @@
                 r.style.display = r.dataset.status===status ? "" : "none";
             }
         });
+
+        let visibleRows= rows.filter(r => r.style.display!=="none");
+
+        if(time==="newest"){
+            visibleRows.sort((a,b) =>
+            parseDate(b.dataset.date)- parseDate(a.dataset.date));
+        }
+        if(time==="oldest"){
+            visibleRows.sort((a,b) =>
+                parseDate(a.dataset.date)- parseDate(b.dataset.date));
+        }
+
+        visibleRows.forEach(r => tbody.appendChild(r));
+
     }
 
 
@@ -691,6 +747,21 @@
         }
     }
 
+
+    function show(message, isSuccess = true) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.classList.remove("success", "error");
+        if (isSuccess) {
+            toast.classList.add("success");
+        } else {
+            toast.classList.add("error");
+        }
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2000);
+    }
 </script>
 </body>
 </html>

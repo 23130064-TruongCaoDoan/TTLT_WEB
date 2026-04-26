@@ -785,24 +785,6 @@
 .status.da-huy { background: #feeceb; color: #d32f2f; border: 1px solid #d32f2f; }
 .status.hoan-tra { background: #f3e5f5; color: #6a1b9a; border: 1px solid #6a1b9a; }
 
-#toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #1e8e3e;
-    color: white;
-    padding: 14px 22px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    z-index: 999;
-}
-
-#toast.show { opacity: 1; }
-#toast.error { background: #d9534f; }
 
 .empty-state {
     text-align: center;
@@ -821,3 +803,10 @@
 ::-webkit-scrollbar-track { background: #f4f7fa; border-radius: 3px; }
 ::-webkit-scrollbar-thumb { background: #c0cfe4; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #0d3164; }
+
+
+.input-error{
+    border: 1.5px solid red !important;
+    background-color: #fff5f5;
+    outline: none;
+}
