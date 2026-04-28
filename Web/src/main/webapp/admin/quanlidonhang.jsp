@@ -22,21 +22,30 @@
     <div class="content">
         <c:import url="MenuFunctionAdmin.jsp"></c:import>
 
-        <div class="order-container">
-            <h2>Quản lý đơn hàng</h2>
-            <div class="function">
-                <div class="find" style="width: 100%">
-                    <form action="" method="get" action="OrderManagerServlet">
-                        <input type="text" class="search" name="q" value="${param.q}" placeholder="Tìm kiếm sản phẩm">
-                        <select class="locorder" name="sortDate" style="width: 25%" onchange="this.form.submit()">
-                            <option value="all">Tất cả</option>
-                            <option value="desc" ${param.sortDate == 'desc' ? 'selected' : ''}>Đơn hàng mới nhất</option>
-                            <option value="asc" ${param.sortDate == 'asc' ? 'selected' : ''}>Đơn hàng cũ nhất</option>
-                        </select>
-                        <button type="submit" class="buttonSearch">Tìm kiếm</button>
-                    </form>
-                </div>
-            </div>
+            <div class="order-container">
+                <h2>Quản lý đơn hàng</h2>
+                    <div class="function">
+                        <div class="find">
+                            <form method="get" action="OrderManagerServlet" class="filter-form">
+                                <input type="text" class="search" name="q" value="${param.q}" placeholder="Tìm kiếm đơn hàng...">
+                                <div class="date-filter">
+                                    <label for="fromDate">Từ:</label>
+                                        <input type="date" name="fromDate" id="fromDate" value="${param.fromDate}">
+                                </div>
+                                <div class="date-filter">
+                                    <label for="toDate">Đến:</label>
+                                    <input type="date" name="toDate" id="toDate" value="${param.toDate}">
+                                </div>
+                                <select class="locorder" name="sortDate" onchange="this.form.submit()">
+                                    <option value="all">Tất cả</option>
+                                    <option value="desc" ${param.sortDate == 'desc' ? 'selected' : ''}>Đơn hàng mới nhất</option>
+                                    <option value="asc" ${param.sortDate == 'asc' ? 'selected' : ''}>Đơn hàng cũ nhất</option>
+                                </select>
+                                <button type="submit" class="buttonSearch">Tìm kiếm</button>
+                                <a href="OrderManagerServlet" class="buttonClear">Xóa lọc</a>
+                            </form>
+                        </div>
+                    </div>
             <div class="order-list">
                 <div class="title">
                     <h3>Danh sách đơn hàng</h3>
@@ -209,10 +218,23 @@
         const statusSelected = this.value;
         const orderId = this.closest("td").querySelector(".orderId").value;
 
+        const q = document.querySelector('input[name="q"]')?.value || "";
+        const fromDate = document.querySelector('input[name="fromDate"]')?.value || "";
+        const toDate = document.querySelector('input[name="toDate"]')?.value || "";
+        const sortDate = document.querySelector('select[name="sortDate"]')?.value || "all";
+
         if (!confirm("Bạn chắc chắn muốn thay đổi trạng thái?")) {
             location.reload();
             return;
         }
+
+        const data = new URLSearchParams();
+                data.append("orderId", orderId);
+                data.append("orderStatus", statusSelected);
+                data.append("q", q);
+                data.append("fromDate", fromDate);
+                data.append("toDate", toDate);
+                data.append("sortDate", sortDate);
 
         fetch(contextPath + "/UpdateOrderStatus", {
             method: "POST",
@@ -237,6 +259,19 @@
     document.addEventListener("DOMContentLoaded", function () {
         bindStatusEvents();
     });
+</script>
+<script>
+    let fromDateInput = document.getElementById("fromDate");
+    let toDateInput = document.getElementById("toDate");
+
+    if(fromDateInput && toDateInput) {
+        fromDateInput.addEventListener("change", function (){
+           toDateInput.setAttribute("min", this.value);
+        });
+        toDateInput.addEventListener("change", function (){
+            fromDateInput.setAttribute("max", this.value);
+        });
+    }
 </script>
 </body>
 </html>

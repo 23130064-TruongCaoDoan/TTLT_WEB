@@ -59,11 +59,13 @@ public class OrderService {
         return orderDao.deleteOrder(id);
     }
 
-    public List<OrderView> searchOrder(String q, String sortDate) {
+    public List<OrderView> searchOrder(String q, String sortDate, String fromDate, String toDate) {
         if (q != null && q.isBlank()) q = null;
         if (sortDate != null && sortDate.isBlank()) sortDate = null;
+        if (fromDate != null && fromDate.isBlank()) fromDate = null;
+        if (toDate != null && toDate.isBlank()) toDate = null;
 
-        return orderDao.searchAndFilter(q, sortDate);
+        return orderDao.searchAndFilter(q, sortDate, fromDate, toDate);
     }
     public List<OrderItemsView> getOrderItemsByOrderId(int orderId){
         return orderDao.getOrderItemsByOrderId(orderId);

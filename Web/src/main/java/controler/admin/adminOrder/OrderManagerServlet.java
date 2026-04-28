@@ -42,7 +42,17 @@ public class OrderManagerServlet extends HttpServlet {
         String q = request.getParameter("q");
 
         String sortDate = request.getParameter("sortDate");
-        List<OrderView> list=orderService.searchOrder(q,sortDate);
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+
+        if (fromDate != null && fromDate.trim().isEmpty()) {
+            fromDate = null;
+        }
+        if (toDate != null && toDate.trim().isEmpty()) {
+            toDate = null;
+        }
+
+        List<OrderView> list = orderService.searchOrder(q, sortDate, fromDate, toDate);
 
         Map<String, List<String>> transitions = Map.of(
                 "PENDING", List.of("PROCESSING", "CANCELLED"),
