@@ -21,24 +21,26 @@
         <div class="thongke-container">
             <h2>Thống kê</h2>
             <div class="filter-bar">
-                <select id="filter">
+                <select id="filter" class="form-control">
                     <option value="day"   ${type == 'day'   ? 'selected' : ''}>Thống kê theo ngày</option>
                     <option value="year"  ${type == 'year'  ? 'selected' : ''}>Thống kê theo năm</option>
                 </select>
-                <select name="yearFiler" id="yearSelect" style="display: none">
+                <select name="yearFiler" id="yearSelect" class="form-control" style="display: ${type == 'year' ? 'block' : 'none'};">
                     <c:forEach var="y" items="${listYear}">
-                        <option value="${y}">${y}</option>
+                        <option value="${y}" ${param.year == y ? 'selected' : ''}>Năm ${y}</option>
                     </c:forEach>
                 </select>
-                <form  action="ThongKe" method="get" id="dateSelect">
-                    <div>
-                        <label for="fromDate">Từ ngày:</label>
-                        <input type="date" name="fromDate" id="fromDate" value="${from}" max="" required>
-                        <label for="toDate">Đến ngày:</label>
-                        <input type="date" name="toDate" id="toDate" value="${to}" min="" required>
-                        <button type="submit">Thống kê</button>
-                    </div>
-                </form>
+                    <form action="ThongKe" method="get" id="dateSelect" style="display: ${type == 'year' ? 'none' : 'flex'};">
+                        <div class="date-filter">
+                            <label for="fromDate">Từ ngày:</label>
+                            <input type="date" name="fromDate" id="fromDate" value="${from}" max="" required>
+                        </div>
+                        <div class="date-filter">
+                            <label for="toDate">Đến ngày:</label>
+                            <input type="date" name="toDate" id="toDate" value="${to}" min="" required>
+                        </div>
+                        <button type="submit" class="buttonSearch">Lọc thống kê</button>
+                    </form>
             </div>
                 <div id="thongke-content">
                 <div class="cards" id="cards">
