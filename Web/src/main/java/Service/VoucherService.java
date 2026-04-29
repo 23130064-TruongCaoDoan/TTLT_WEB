@@ -153,7 +153,7 @@ public class VoucherService {
 
     public static void main(String[] args) {
         VoucherService voucherService = new VoucherService();
-        List<Voucher> lvoucher = voucherService.listVoucherDiscountUser(31);
+        List<Voucher> lvoucher = voucherService.listVoucherDiscountUser(36);
         System.out.println(lvoucher.toString());
     }
 
@@ -220,5 +220,14 @@ public class VoucherService {
         mergedList.addAll(voucherDao.listVoucherShipUser(id));
         mergedList.addAll(voucherDao.listVoucherDiscountUser(id));
         return mergedList;
+    }
+
+    public List<Voucher> getListVoucherStillValid() {
+        return voucherDao.getListVoucherStillValid();
+    }
+
+    public boolean deleteVoucherOfUser(int userId,int id) {
+        return voucherDao.deleteVoucherOfUser(userId,id);
+
     }
 }

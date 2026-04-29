@@ -22,7 +22,17 @@ public class deleteVoucher extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        boolean success= voucherService.deleteVoucher(id);
+        String userCodes = request.getParameter("userId");
+        boolean success;
+
+        if (userCodes.isEmpty()){
+            success= voucherService.deleteVoucher(id);
+        }
+        else{
+            int userId = Integer.parseInt(userCodes);
+            success= voucherService.deleteVoucherOfUser(userId,id);
+        }
+
         String json;
         if (success) {
             json = "{\"success\":true,\"message\":\"Xóa voucher thành công\"}";

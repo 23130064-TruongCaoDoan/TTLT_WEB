@@ -19,11 +19,7 @@ public class ReadAllNotificationServlet extends HttpServlet {
             NotificationService notificationService = new NotificationService();
             notificationService.readAll(user.getId());
         }
-        Integer count = (Integer) request.getSession().getAttribute("numNotiFy");
-
-        if (count != null && count > 0) {
-            request.getSession().setAttribute("numNotiFy", count - 1);
-        }
+        request.getSession().setAttribute("numNotiFy", 0);
 
         response.setStatus(HttpServletResponse.SC_OK);
     }
