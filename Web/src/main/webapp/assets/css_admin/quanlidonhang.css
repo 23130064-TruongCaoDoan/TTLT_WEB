@@ -5,7 +5,10 @@
 
 .order-container {
     flex: 5;
-    align-items: flex-start;
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     background: #fff;
     padding: 24px;
     border-radius: 12px;
@@ -20,10 +23,12 @@
 }
 
 .order-container .function {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
     margin-bottom: 20px;
+    background: #f4f7f6;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .order-container .function #addorder,
@@ -37,17 +42,71 @@
     font-weight: 600;
 }
 
-.order-container .function  {
-    display: flex;
-    gap: 10px;
+.order-container .function .find {
+    width: 100%;
 }
 
-.order-container .function input {
-    width: 20vw;
+.filter-form {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.filter-form .search {
+    flex: 2;
+    min-width: 250px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.filter-form .date-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.filter-form .date-filter label {
+    margin: 0;
+    font-weight: bold;
+    color: #0d3164;
+}
+
+.filter-form .date-filter input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 130px;
+}
+
+.filter-form .locorder {
+    flex: 1;
+    min-width: 180px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
+
+.order-container .function button.buttonSearch {
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+
+.order-container .function button.buttonSearch:hover {
+    background-color: #0a254b;
+}
+
 
 .order-list .title {
     display: flex;
@@ -159,6 +218,30 @@ textarea {
     border-collapse: collapse;
 }
 
+.buttonClear {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #e0e0e0;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-left: 5px;
+    transition: background 0.3s;
+}
+
+.buttonClear:hover {
+    background-color: #d32f2f;
+    color: white;
+}
+
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .order-list th,
 .order-list td,#listSP th ,#listSP td  {
     border: 1px solid #ccc;
@@ -167,6 +250,9 @@ textarea {
     white-space: nowrap;
 }
 
+.order-list {
+    width: 100%;
+}
 
 .order-list thead th,#listSP thead {
     position: sticky;
@@ -206,7 +292,7 @@ textarea {
     width: 85vw;
     max-width: 1000px;
     max-height: 80vh;
-    overflow: hidden; /* popup KHÔNG scroll */
+    overflow: hidden;
 }
 
 #listSP table {
