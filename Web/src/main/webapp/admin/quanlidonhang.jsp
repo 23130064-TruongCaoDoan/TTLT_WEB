@@ -231,6 +231,7 @@
         const fromDate = document.querySelector('input[name="fromDate"]')?.value || "";
         const toDate = document.querySelector('input[name="toDate"]')?.value || "";
         const sortDate = document.querySelector('select[name="sortDate"]')?.value || "all";
+        const statusFilter = document.querySelector('select[name="statusFilter"]')?.value || "all";
 
         if (!confirm("Bạn chắc chắn muốn thay đổi trạng thái?")) {
             location.reload();
@@ -244,13 +245,14 @@
                 data.append("fromDate", fromDate);
                 data.append("toDate", toDate);
                 data.append("sortDate", sortDate);
+                data.append("statusFilter", statusFilter);
 
         fetch(contextPath + "/UpdateOrderStatus", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: "orderId=" + orderId + "&orderStatus=" + statusSelected
+            body: data.toString()
         })
             .then(res => res.text())
             .then(html => {
