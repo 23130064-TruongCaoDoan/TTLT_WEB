@@ -124,7 +124,7 @@ public class OrderDao extends BaseDao {
         ));
     }
 
-    public List<OrderView> searchAndFilter(String q, String sortDate) {
+    public List<OrderView> searchAndFilter(String q, String sortDate,String fromDate, String toDate, String statusFilter) {
 
         return getJdbi().withHandle(handle -> {
 
@@ -147,17 +147,30 @@ public class OrderDao extends BaseDao {
                         JOIN `user` u ON o.user_id = u.id
                         JOIN shipping s ON o.id = s.order_id
                         JOIN address d ON s.address_id = d.id
+                        WHERE 1=1
                     """);
 
 
             if (q != null && !q.isBlank()) {
                 sql.append("""
-                            WHERE (
+                            AND (
                                 u.name LIKE :q
                                 OR o.id LIKE :q
                                 OR o.status LIKE :q
                             )
                         """);
+            }
+
+            if (fromDate != null && !fromDate.isBlank()) {
+                sql.append(" AND o.order_date >= :fromDate ");
+            }
+
+            if (toDate != null && !toDate.isBlank()) {
+                sql.append(" AND o.order_date <= :toDate ");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("all") && !statusFilter.isBlank()) {
+                sql.append(" AND o.status = :statusFilter ");
             }
 
             if ("asc".equals(sortDate)) {
@@ -170,6 +183,17 @@ public class OrderDao extends BaseDao {
 
             if (q != null && !q.isBlank()) {
                 query.bind("q", "%" + q + "%");
+            }
+
+            if (fromDate != null && !fromDate.isBlank()) {
+                query.bind("fromDate", fromDate + " 00:00:00");
+            }
+            if (toDate != null && !toDate.isBlank()) {
+                query.bind("toDate", toDate + " 23:59:59");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("all") && !statusFilter.isBlank()) {
+                query.bind("statusFilter", statusFilter);
             }
 
             return query.mapToBean(OrderView.class).list();
