@@ -15,6 +15,8 @@ import model.Voucher;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "UserDetail", value = "/UserDetail")
 public class UserDetail extends HttpServlet {
@@ -31,6 +33,17 @@ public class UserDetail extends HttpServlet {
 
         List<Address> addresses=addressService.getAddressOfUser(uid);
         List<Voucher> voucherList=voucherService.getListVoucherOfUser(uid);
+        List<Voucher> allVoucher=voucherService.getListVoucherStillValid();
+
+        Set<Integer> userVoucherIds = voucherList.stream()
+                .map(Voucher::getId)
+                .collect(Collectors.toSet());
+
+        List<Voucher> availableVoucher = allVoucher.stream()
+                .filter(v -> !userVoucherIds.contains(v.getId()))
+                .toList();
+
+
         List<OrderView> orders = orderService.getOrderOfUser(uid);
         User user = userService.getUserById(uid);
         int totalOrder = orderService.totalOrder(uid);
@@ -41,6 +54,7 @@ public class UserDetail extends HttpServlet {
 
         request.setAttribute("addresses",addresses);
         request.setAttribute("voucherList",voucherList);
+        request.setAttribute("availableVoucher",availableVoucher);
         request.setAttribute("orders",orders);
         request.setAttribute("user",user);
 

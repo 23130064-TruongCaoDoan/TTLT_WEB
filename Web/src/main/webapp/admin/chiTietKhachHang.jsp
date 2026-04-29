@@ -61,11 +61,13 @@
                     <div class="personal-info-grid">
                         <div class="avatar-row">
                             <div class="avatar-wrapper">
-                                <img src="${user.avatar != null ? user.avatar : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFCzxivJXCZk0Kk8HsHujTO3Olx0ngytPrWw&s'}" alt="Avatar" id="avatarImg"/>
+                                <img src="${user.avatar != null ? user.avatar : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFCzxivJXCZk0Kk8HsHujTO3Olx0ngytPrWw&s'}"
+                                     alt="Avatar" id="avatarImg"/>
                                 <button class="avatar-edit-btn" title="Đổi avatar" onclick="triggerAvatarUpload()">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
-                                <input type="file" id="avatarInput" style="display:none" accept="image/*" onchange="uploadAvatar(this)"/>
+                                <input type="file" id="avatarInput" style="display:none" accept="image/*"
+                                       onchange="uploadAvatar(this)"/>
                             </div>
                             <div>
                                 <div class="avatar-name">${user.name}</div>
@@ -94,7 +96,8 @@
                             <label>Năm sinh</label>
                             <div class="info-value-row">
                                 <span class="info-value"> ${user.birthday.dayOfMonth}/${user.birthday.monthValue}/${user.birthday.year}</span>
-                                <button class="edit-icon-btn" onclick="startEdit('birthYear','${user.birthday}','number')">
+                                <button class="edit-icon-btn"
+                                        onclick="startEdit('birthYear','${user.birthday}','number')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -132,7 +135,8 @@
                                         <span class="badge inactive">Bị khóa</span>
                                     </c:otherwise>
                                 </c:choose>
-                                <button class="edit-icon-btn" onclick="startEditSelect('status','${user.status}',['active:Hoạt động','inactive:Bị khóa'])">
+                                <button class="edit-icon-btn"
+                                        onclick="startEditSelect('status','${user.status}',['active:Hoạt động','inactive:Bị khóa'])">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -142,7 +146,8 @@
                             <label>Quyền tài khoản</label>
                             <div class="info-value-row">
                                 <span class="badge ${user.role}">${user.role}</span>
-                                <button class="edit-icon-btn" onclick="startEditSelect('role','${customer.role}',['admin:Admin','manager:Quản lý','accountant:Kế toán','staff:Nhân viên','user:Người dùng'])">
+                                <button class="edit-icon-btn"
+                                        onclick="startEditSelect('role','${customer.role}',['admin:Admin','manager:Quản lý','accountant:Kế toán','staff:Nhân viên','user:Người dùng'])">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -166,7 +171,8 @@
                                             <div class="address-phone">${addr.phone}</div>
                                             <div class="address-detail">${addr.specificAddress}, ${addr.ward}, ${addr.districts}, ${addr.city}</div>
                                         </div>
-                                        <i class="fa-solid fa-trash icon-trash" onclick="confirmDeleteItem('address',${addr.id})"></i>
+                                        <i class="fa-solid fa-trash icon-trash"
+                                           onclick="confirmDeleteItem('address',${addr.id})"></i>
                                     </div>
                                 </c:forEach>
                             </c:when>
@@ -209,10 +215,21 @@
                                             <td><strong>${cv.code}</strong></td>
                                             <td>${cv.description}</td>
                                             <td>${cv.valuee}</td>
-                                            <td>${cv.conditionPrice != null ? cv.conditionPrice : '—'}</td>
+                                            <td><c:if test="${cv.conditionPrice > 0}">
+                                                - Đơn tối thiểu: ${cv.conditionPrice} đ <br/>
+                                            </c:if>
+
+                                                <c:if test="${not empty cv.conditionBook}">
+                                                    - Sách áp dụng: ${cv.conditionBook} <br/>
+                                                </c:if>
+
+                                                <c:if test="${not empty cv.conditionPublisher}">
+                                                    - Nhà xuất bản: ${cv.conditionPublisher}
+                                                </c:if></td>
                                             <td>${cv.type}</td>
                                             <td>
-                                                <i class="fa-solid fa-trash icon-trash" onclick="confirmDeleteItem('voucher',${cv.id})"></i>
+                                                <i class="fa-solid fa-trash icon-trash"
+                                                   onclick="confirmDeleteItem('voucher',${cv.id})"></i>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -276,8 +293,10 @@
                                     <c:forEach items="${orders}" var="order">
                                         <tr data-status="${order.status}" data-date="${order.orderDate}">
                                             <td>#${order.id}</td>
-                                            <td><fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"
-                                                                  maxFractionDigits="0"/>đ</td>
+                                            <td><fmt:formatNumber value="${order.totalAmount}" type="number"
+                                                                  groupingUsed="true"
+                                                                  maxFractionDigits="0"/>đ
+                                            </td>
                                             <td>${order.totalQuantity}</td>
                                             <td>${order.getOrderDate()}</td>
                                             <td>${order.status}</td>
@@ -289,7 +308,8 @@
                                                 </button>
                                             </td>
                                             <td>
-                                                <i class="fa-solid fa-pen icon-trash" style="color:#3b7ddd;cursor:pointer;"
+                                                <i class="fa-solid fa-pen icon-trash"
+                                                   style="color:#3b7ddd;cursor:pointer;"
                                                    onclick="openEditOrderPopup(${order.id})"></i>
                                             </td>
                                             <td>
@@ -335,10 +355,11 @@
         <input type="text" class="voucher-search-input" id="voucherSearchInput"
                placeholder="Tìm kiếm voucher..." oninput="searchVouchers(this.value)">
         <div class="voucher-gift-list" id="voucherGiftList">
-            <c:forEach items="${allVouchers}" var="v">
-                <div class="voucher-gift-item" data-id="${v.id}" data-code="${v.code}" data-desc="${v.description}"
+            <c:forEach items="${availableVoucher}" var="v">
+                <div class="voucher-gift-item" data-id="${v.id}" data-code="${v.code}" data-type="${v.type}"
+                     data-desc="${v.description}"
                      onclick="toggleGiftVoucher(this)">
-                    <input type="checkbox" value="${v.id}">
+                    <input type="checkbox" value="${v.code}">
                     <div class="voucher-gift-info">
                         <div class="voucher-gift-code">${v.code}</div>
                         <div class="voucher-gift-desc">${v.description} · ${v.type}</div>
@@ -348,7 +369,7 @@
         </div>
         <div class="popup-actions">
             <button class="btn-secondary" onclick="closeAllPopups()">Hủy</button>
-            <button class="btn-primary" onclick="submitGiftVoucher()">
+            <button type="button" class="btn-primary" onclick="submitGiftVoucher()">
                 <i class="fa-solid fa-paper-plane"></i> Tặng
             </button>
         </div>
@@ -425,7 +446,8 @@
                 <select id="createOrderAddress">
                     <option value="">-- Tự nhập địa chỉ --</option>
                     <c:forEach items="${addressList}" var="addr">
-                        <option value="${addr.id}">${addr.receiverName} - ${addr.specificAddress}, ${addr.ward}, ${addr.district}</option>
+                        <option value="${addr.id}">${addr.receiverName}
+                            - ${addr.specificAddress}, ${addr.ward}, ${addr.district}</option>
                     </c:forEach>
                 </select>
             </div>
@@ -496,50 +518,49 @@
     let createOrderProducts = [];
 
 
-    function showOverlay(){
-        document.getElementById("overlay").style.display="block";
+    function showOverlay() {
+        document.getElementById("overlay").style.display = "block";
     }
 
-    function hideOverlay(){
-        document.getElementById("overlay").style.display="none";
+    function hideOverlay() {
+        document.getElementById("overlay").style.display = "none";
     }
 
-    function openPopup(id){
+    function openPopup(id) {
         showOverlay();
-        document.getElementById(id).style.display="block";
+        document.getElementById(id).style.display = "block";
     }
 
-    function closeAllPopups(){
+    function closeAllPopups() {
         hideOverlay();
         document.querySelectorAll(".popup-box, .delete-popup")
-            .forEach(p=>p.style.display="none");
+            .forEach(p => p.style.display = "none");
     }
 
-    document.getElementById("overlay").addEventListener("click",closeAllPopups);
+    document.getElementById("overlay").addEventListener("click", closeAllPopups);
 
 
-    function openNotifPopup(){
+    function openNotifPopup() {
         openPopup("notifPopup");
     }
 
     const userId = ${user.id};
 
-    function sendNotification(){
+    function sendNotification() {
         const ititle = document.getElementById("notifTitle");
         const icontent = document.getElementById("notifContent");
         const title = document.getElementById("notifTitle").value;
         const content = document.getElementById("notifContent").value;
 
 
-
         ititle.classList.remove("input-error");
         icontent.classList.remove("input-error");
-        if(!title ){
+        if (!title) {
             ititle.classList.add("input-error");
             ititle.focus();
             return;
         }
-        if(!content ){
+        if (!content) {
             icontent.classList.add("input-error");
             icontent.focus();
             return;
@@ -549,7 +570,7 @@
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: "userIds=" + encodeURIComponent(userId)+
+            body: "userIds=" + encodeURIComponent(userId) +
                 "&title=" + encodeURIComponent(title) +
                 "&content=" + encodeURIComponent(content)
         })
@@ -558,9 +579,8 @@
                 closeAllPopups();
                 if (data.success) {
                     show(data.message);
-                    setTimeout(() => location.reload(), 3000);
                 } else {
-                    alert(data.message, false);
+                    show(data.message, false);
                 }
             })
             .catch(err => console.log(err));
@@ -569,42 +589,80 @@
     }
 
 
-    function openGiftVoucherPopup(){
+    function openGiftVoucherPopup() {
         openPopup("giftVoucherPopup");
     }
 
-    function toggleGiftVoucher(el){
+    function toggleGiftVoucher(el) {
         el.classList.toggle("selected");
         el.querySelector("input").checked =
             el.classList.contains("selected");
     }
 
-    function submitGiftVoucher(){
+    function submitGiftVoucher() {
         const selected = document.querySelectorAll(".voucher-gift-item.selected");
-        if(selected.length===0){
-            alert("Chưa chọn voucher");
+        if (selected.length === 0) {
+            show("Chưa chọn voucher", false);
             return;
         }
-        alert("Đã tặng voucher (demo UI)");
-        closeAllPopups();
+
+        const voucherIds = Array.from(selected).map(item => item.dataset.code);
+
+        fetch("GiftVoucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "userId=" + encodeURIComponent(userId) + "&voucherIds=" + voucherIds.join(",")
+        })
+            .then(res => res.json())
+            .then(data => {
+                closeAllPopups();
+                if (data.success) {
+                    show(data.message);
+                    location.reload()
+                } else {
+                    show(data.message, false);
+                }
+            })
+            .catch(err => console.log(err));
     }
 
 
-
-
-    function confirmDeleteItem(type,id){
+    function confirmDeleteItem(type, id) {
         deleteType = type;
         deleteItemId = id;
 
         document.getElementById("deletePopupMsg")
-            .innerText="Bạn có chắc muốn xoá không?";
+            .innerText = "Bạn có chắc muốn xoá không?";
 
         openPopup("deletePopup");
     }
 
-    function confirmDelete(){
-        alert("Đã xoá (demo UI)");
-        closeAllPopups();
+    function confirmDelete() {
+
+        if (deleteType === "voucher") {
+            fetch("deleteVoucher", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "userId=" + encodeURIComponent(userId) + "&id=" + encodeURIComponent(deleteItemId)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    closeAllPopups();
+                    if (data.success) {
+                        show(data.message);
+                        location.reload();
+                    } else {
+                        show(data.message, false);
+                    }
+                })
+                .catch(err => console.log(err));
+
+            closeAllPopups();
+        }
     }
 
 
@@ -618,29 +676,29 @@
         return new Date(year, month - 1, day, hours, minutes, seconds);
     }
 
-    function filterOrders(){
+    function filterOrders() {
         const status = document.getElementById("filterStatus").value;
         const time = document.getElementById("filterTime").value;
         const tbody = document.getElementById("orderTableBody");
         let rows = Array.from(tbody.querySelectorAll("tr"));
 
-        rows.forEach(r=>{
-            if(!status){
-                r.style.display="";
-            }else{
-                r.style.display = r.dataset.status===status ? "" : "none";
+        rows.forEach(r => {
+            if (!status) {
+                r.style.display = "";
+            } else {
+                r.style.display = r.dataset.status === status ? "" : "none";
             }
         });
 
-        let visibleRows= rows.filter(r => r.style.display!=="none");
+        let visibleRows = rows.filter(r => r.style.display !== "none");
 
-        if(time==="newest"){
-            visibleRows.sort((a,b) =>
-            parseDate(b.dataset.date)- parseDate(a.dataset.date));
+        if (time === "newest") {
+            visibleRows.sort((a, b) =>
+                parseDate(b.dataset.date) - parseDate(a.dataset.date));
         }
-        if(time==="oldest"){
-            visibleRows.sort((a,b) =>
-                parseDate(a.dataset.date)- parseDate(b.dataset.date));
+        if (time === "oldest") {
+            visibleRows.sort((a, b) =>
+                parseDate(a.dataset.date) - parseDate(b.dataset.date));
         }
 
         visibleRows.forEach(r => tbody.appendChild(r));
@@ -648,44 +706,39 @@
     }
 
 
-
-
-    function viewOrderProducts(orderId){
+    function viewOrderProducts(orderId) {
         openPopup("orderProductsPopup");
     }
 
 
-
-
-    function startEdit(field,currentVal,type){
-        const row = document.querySelector("#field-"+field+" .info-value-row");
-        row.innerHTML=`
+    function startEdit(field, currentVal, type) {
+        const row = document.querySelector("#field-" + field + " .info-value-row");
+        row.innerHTML = `
         <input type="${type}" value="${currentVal}" id="edit-${field}">
         <button onclick="saveInline('${field}')">Lưu</button>
         <button onclick="location.reload()">Hủy</button>
     `;
     }
 
-    function saveInline(field){
+    function saveInline(field) {
         alert("Đã lưu (demo UI)");
         location.reload();
     }
 
 
-
-    function openEditOrderPopup(orderId){
-        editOrderProducts=[];
+    function openEditOrderPopup(orderId) {
+        editOrderProducts = [];
         renderEditProducts();
         openPopup("editOrderPopup");
     }
 
-    function renderEditProducts(){
-        const list=document.getElementById("editProductsList");
-        if(editOrderProducts.length===0){
-            list.innerHTML="<div>Chưa có sản phẩm</div>";
+    function renderEditProducts() {
+        const list = document.getElementById("editProductsList");
+        if (editOrderProducts.length === 0) {
+            list.innerHTML = "<div>Chưa có sản phẩm</div>";
             return;
         }
-        list.innerHTML=editOrderProducts.map((p,i)=>`
+        list.innerHTML = editOrderProducts.map((p, i) => `
         <div class="edit-product-item">
             ${p.name} x${p.quantity}
             <i class="fa-solid fa-trash" onclick="removeEditProduct(${i})"></i>
@@ -693,31 +746,30 @@
     `).join("");
     }
 
-    function removeEditProduct(i){
-        editOrderProducts.splice(i,1);
+    function removeEditProduct(i) {
+        editOrderProducts.splice(i, 1);
         renderEditProducts();
     }
 
-    function saveEditOrder(){
+    function saveEditOrder() {
         alert("Đã lưu chỉnh sửa đơn hàng (demo UI)");
         closeAllPopups();
     }
 
 
-
-    function openCreateOrderPopup(){
-        createOrderProducts=[];
+    function openCreateOrderPopup() {
+        createOrderProducts = [];
         renderCreateProducts();
         openPopup("createOrderPopup");
     }
 
-    function renderCreateProducts(){
-        const list=document.getElementById("createProductsList");
-        if(createOrderProducts.length===0){
-            list.innerHTML="<div>Chưa có sản phẩm</div>";
+    function renderCreateProducts() {
+        const list = document.getElementById("createProductsList");
+        if (createOrderProducts.length === 0) {
+            list.innerHTML = "<div>Chưa có sản phẩm</div>";
             return;
         }
-        list.innerHTML=createOrderProducts.map((p,i)=>`
+        list.innerHTML = createOrderProducts.map((p, i) => `
         <div class="edit-product-item">
             ${p.name} x${p.quantity}
             <i class="fa-solid fa-trash" onclick="removeCreateProduct(${i})"></i>
@@ -725,24 +777,23 @@
     `).join("");
     }
 
-    function removeCreateProduct(i){
-        createOrderProducts.splice(i,1);
+    function removeCreateProduct(i) {
+        createOrderProducts.splice(i, 1);
         renderCreateProducts();
     }
 
-    function submitCreateOrder(){
+    function submitCreateOrder() {
         alert("Đã tạo đơn hàng (demo UI)");
         closeAllPopups();
     }
 
 
-
-    function triggerAvatarUpload(){
+    function triggerAvatarUpload() {
         document.getElementById("avatarInput").click();
     }
 
-    function uploadAvatar(input){
-        if(input.files.length>0){
+    function uploadAvatar(input) {
+        if (input.files.length > 0) {
             alert("Đã chọn avatar (demo UI)");
         }
     }
@@ -761,6 +812,45 @@
         setTimeout(() => {
             toast.classList.remove("show");
         }, 2000);
+    }
+
+    function searchVouchers(keyword) {
+        keyword = keyword.toLowerCase().trim();
+
+        const items = document.querySelectorAll(".voucher-gift-item");
+        const list = document.getElementById("voucherGiftList");
+        const oldEmpty = document.getElementById("noVoucherFound");
+
+        let hasResult = false;
+
+        if (oldEmpty) oldEmpty.remove();
+
+        if (keyword === "") {
+            items.forEach(item => item.style.display = "");
+            return;
+        }
+
+        items.forEach(item => {
+            const code = item.dataset.code?.toLowerCase() || "";
+            const type = item.dataset.type?.toLowerCase() || "";
+            const desc = item.dataset.desc?.toLowerCase() || "";
+            if (code.includes(keyword) || type.includes(keyword) || desc.includes(keyword)) {
+                hasResult = true;
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+            }
+        });
+
+        if (!hasResult) {
+            const div = document.createElement("div");
+            div.id = "noVoucherFound";
+            div.style.padding = "10px";
+            div.style.textAlign = "center";
+            div.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Không tìm thấy voucher";
+            list.appendChild(div);
+        }
+
     }
 </script>
 </body>

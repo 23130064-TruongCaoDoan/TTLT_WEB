@@ -191,7 +191,7 @@ public class VoucherDao extends BaseDao {
                                 SELECT v.* FROM voucher v
                                 INNER JOIN voucher_user vu ON v.id = vu.voucher_id
                                 WHERE 
-                                  type='discount' 
+                                  v.type='discount' 
                                   AND vu.user_id = :userId
                                   AND v.start_date <= :today
                                   AND v.end_date >= :today
@@ -213,7 +213,7 @@ public class VoucherDao extends BaseDao {
                 handle.createQuery("""
                                 SELECT v.* FROM voucher v
                                 INNER JOIN voucher_user vu ON v.id = vu.voucher_id
-                                WHERE  type='ship'
+                                WHERE  v.type='ship'
                                   AND vu.user_id = :userId
                                   AND v.start_date <= :today
                                   AND v.end_date >= :today
@@ -288,4 +288,19 @@ public class VoucherDao extends BaseDao {
         );
     }
 
+    public List<Voucher> getListVoucherStillValid() {
+        LocalDate today = LocalDate.now();
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT * FROM VOUCHER WHERE start_date <= :today AND end_date >= :today").bind("today",today).mapToBean(Voucher.class).list()
+        );
+    }
+
+    public boolean deleteVoucherOfUser(int userId, int id) {
+        return getJdbi().withHandle(handle ->{
+            int count=handle.createUpdate("DELETE FROM voucher_user WHERE voucher_id = :id AND user_id = :userId").bind("id", id).bind("userId",userId).execute();
+
+            return count>0;
+        });
+
+    }
 }
