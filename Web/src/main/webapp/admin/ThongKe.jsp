@@ -39,7 +39,7 @@
                             <label for="toDate">Đến ngày:</label>
                             <input type="date" name="toDate" id="toDate" value="${to}" min="" required>
                         </div>
-                        <button type="submit" class="buttonSearch">Lọc thống kê</button>
+                        <button type="submit" class="buttonSearch">Thống kê</button>
                     </form>
             </div>
                 <div id="thongke-content">

@@ -47,10 +47,11 @@ public class UpdateOrderStatus extends HttpServlet {
         String sortDate = request.getParameter("sortDate");
         String fromDate = request.getParameter("fromDate");
         String toDate = request.getParameter("toDate");
+        String statusFilter = request.getParameter("statusFilter");
 
         if (fromDate != null && fromDate.trim().isEmpty()) fromDate = null;
         if (toDate != null && toDate.trim().isEmpty()) toDate = null;
-        List<OrderView> list = orderService.searchOrder(q, sortDate, fromDate, toDate);
+        List<OrderView> list = orderService.searchOrder(q, sortDate, fromDate, toDate, statusFilter);
 
         Map<String, List<String>> transitions = Map.of(
                 "PENDING", List.of("PROCESSING", "CANCELLED"),

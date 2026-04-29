@@ -26,7 +26,7 @@
                 <h2>Quản lý đơn hàng</h2>
                     <div class="function">
                         <div class="find">
-                            <form method="get" action="OrderManagerServlet" class="filter-form">
+                            <form method="get" action="OrderManagerServlet" class="filter-form" id="filterForm">
                                 <input type="text" class="search" name="q" value="${param.q}" placeholder="Tìm kiếm đơn hàng...">
                                 <div class="date-filter">
                                     <label for="fromDate">Từ:</label>
@@ -36,10 +36,14 @@
                                     <label for="toDate">Đến:</label>
                                     <input type="date" name="toDate" id="toDate" value="${param.toDate}">
                                 </div>
-                                <select class="locorder" name="sortDate" onchange="this.form.submit()">
-                                    <option value="all">Tất cả</option>
-                                    <option value="desc" ${param.sortDate == 'desc' ? 'selected' : ''}>Đơn hàng mới nhất</option>
-                                    <option value="asc" ${param.sortDate == 'asc' ? 'selected' : ''}>Đơn hàng cũ nhất</option>
+                                <select class="locorder" name="statusFilter" onchange="this.form.submit()">
+                                    <option value="all">Tất cả trạng thái</option>
+                                    <option value="PENDING" ${param.statusFilter == 'PENDING' ? 'selected' : ''}>Chờ xác nhận</option>
+                                    <option value="PROCESSING" ${param.statusFilter == 'PROCESSING' ? 'selected' : ''}>Đang xử lý</option>
+                                    <option value="SHIPPING" ${param.statusFilter == 'SHIPPING' ? 'selected' : ''}>Đang vận chuyển</option>
+                                    <option value="COMPLETED" ${param.statusFilter == 'COMPLETED' ? 'selected' : ''}>Đã giao</option>
+                                    <option value="CANCELLED" ${param.statusFilter == 'CANCELLED' ? 'selected' : ''}>Đã huỷ</option>
+                                    <option value="REFUNDED" ${param.statusFilter == 'REFUNDED' ? 'selected' : ''}>Hoàn trả</option>
                                 </select>
                                 <button type="submit" class="buttonSearch">Tìm kiếm</button>
                                 <a href="OrderManagerServlet" class="buttonClear">Xóa lọc</a>
@@ -49,6 +53,11 @@
             <div class="order-list">
                 <div class="title">
                     <h3>Danh sách đơn hàng</h3>
+                        <select class="locorder" name="sortDate" form="filterForm" onchange="document.getElementById('filterForm').submit()">
+                            <option value="all">Tất cả</option>
+                            <option value="desc" ${param.sortDate == 'desc' ? 'selected' : ''}>Đơn hàng mới nhất</option>
+                            <option value="asc" ${param.sortDate == 'asc' ? 'selected' : ''}>Đơn hàng cũ nhất</option>
+                        </select>
                 </div>
                 <div class="table-wrapper" id="wrapper">
                     <table>
