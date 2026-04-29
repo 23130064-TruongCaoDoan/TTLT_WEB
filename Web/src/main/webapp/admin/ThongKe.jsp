@@ -95,10 +95,23 @@
                         <h3>Top 10 Khách hàng mua nhiều nhất</h3>
                     </div>
                 </div>
-                <div class="chart">
-                    <h2>Biểu đồ doanh thu</h2>
-                    <canvas id="revenueChart"></canvas>
-                </div>
+                    <div class="chart-container">
+                        <div class="chart">
+                            <h2>Biểu đồ doanh thu</h2>
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+
+                        <div class="chart-row">
+                            <div class="chart-item">
+                                <h2>Sách bán theo thể loại</h2>
+                                <canvas id="categoryPieChart"></canvas>
+                            </div>
+                            <div class="chart-item">
+                                <h2>Số đơn hàng</h2>
+                                <canvas id="orderLineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -229,6 +242,7 @@
 
                 setTimeout(() => {
                     initChart();
+                    initPieChart();
                 }, 0);
 
             });
@@ -270,10 +284,10 @@
         let d = element[2];
         return d + "-" + m + "-" + y;
     }
+    let chartRevenue = null;
     let type = document.getElementById("filter").value;
-    let chartInstance = null;
     function initChart() {
-        const labels = [
+            const labels = [
             <c:forEach var="l" items="${revenueChartData}" varStatus="s">
                 <c:choose>
                     <c:when test="${type == 'year'}">
@@ -286,12 +300,14 @@
                 <c:if test="${!s.last}">,</c:if>
             </c:forEach>
         ];
+            console.log(labels)
 
         const revenueData = [
-            <c:forEach var="r" items="${revenueChartData}">
-                ${r.revenue},
+            <c:forEach var="r" items="${revenueChartData}" varStatus="s">
+                ${r.revenue}
+                <c:if test="${!s.last}">,</c:if>
             </c:forEach>
-        ];
+        ]
 
         const data = {
             labels: labels,
@@ -334,11 +350,72 @@
         const canvas = document.getElementById("revenueChart");
         if (!canvas) return;
 
-        if (chartInstance) {
-            chartInstance.destroy();
+        if (chartRevenue) {
+            chartRevenue.destroy();
         }
-        chartInstance = new Chart(canvas, config);
+        chartRevenue = new Chart(canvas, config);
     }
     initChart();
+</script>
+<script>
+    let chartPercentType = null;
+    function initPieChart() {
+        const pieLabels = [
+            <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
+                "${entry.key}"
+                <c:if test="${!s.last}">,</c:if>
+            </c:forEach>
+        ];
+
+        const pieData = [
+            <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
+                ${entry.value}
+                <c:if test="${!s.last}">,</c:if>
+            </c:forEach>
+        ];
+        const pieDataset = {
+            labels: pieLabels,
+            datasets: [{
+                label: 'Tỷ lệ (%)',
+                data: pieData,
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40'
+                ]
+            }]
+        };
+        const pieConfig = {
+            type: 'pie',
+            data: pieDataset,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sách bán theo thể loại (%)'
+                    },
+                    datalabels: {
+                        formatter: (value) => value.toFixed(1) + '%',
+                        color: '#fff'
+                    }
+                }
+            },
+        };
+          const canvasPie = document.getElementById("categoryPieChart");
+          if (!canvasPie) return;
+
+          if (chartPercentType) {
+              chartPercentType.destroy();
+          }
+        chartPercentType = new Chart(canvasPie, pieConfig);
+    }
+  initPieChart();
 </script>
 </html>

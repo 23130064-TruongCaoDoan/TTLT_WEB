@@ -45,6 +45,8 @@ public class CalculateShippingServlet extends HttpServlet {
             Cart cart;
             if ("buynow".equals(mode)) {
                 cart = (Cart) request.getSession().getAttribute("buyNowCart");
+            } else if ("rebuy".equals(mode)) {
+                cart = (Cart) request.getSession().getAttribute("rebuyCart");
             } else {
                 cart = (Cart) request.getSession().getAttribute("cart");
             }

@@ -66,9 +66,11 @@ public class CreateOrder extends HttpServlet {
 
         Cart cart;
         if ("buynow".equals(mode)) {
-            cart = (Cart) session.getAttribute("buyNowCart");
+            cart = (Cart) request.getSession().getAttribute("buyNowCart");
+        } else if ("rebuy".equals(mode)) {
+            cart = (Cart) request.getSession().getAttribute("rebuyCart");
         } else {
-            cart = (Cart) session.getAttribute("cart");
+            cart = (Cart) request.getSession().getAttribute("cart");
         }
 
         if (cart == null || cart.getItems().isEmpty()) {
@@ -239,9 +241,11 @@ public class CreateOrder extends HttpServlet {
         session.setAttribute("user", user);
         userService.updateDiem(user.getId(), currentPoint);
 
-
-        session.removeAttribute("cart");
+        if(mode.isEmpty() ) {
+            session.removeAttribute("cart");
+        }
         session.removeAttribute("buyNowCart");
+        session.removeAttribute("rebuyCart");
 
 
         session.removeAttribute("appliedDiscountVoucher");

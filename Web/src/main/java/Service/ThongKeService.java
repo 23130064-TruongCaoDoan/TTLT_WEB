@@ -8,6 +8,7 @@ import model.Book;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class ThongKeService {
     private final ThongKeDao dao = new ThongKeDao();
@@ -86,5 +87,11 @@ public class ThongKeService {
     }
     public List<Book> getOutOfStockBooks() {
         return dao.getOutOfStockBooks();
+    }
+    public Map<String, Double> getPercentTypeSold(String year) {
+        return dao.getSoldByCategory(year);
+    }
+    public Map<String, Double> getPercentTypeSold(LocalDate from, LocalDate to) {
+        return dao.getSoldByCategory(from,to);
     }
 }

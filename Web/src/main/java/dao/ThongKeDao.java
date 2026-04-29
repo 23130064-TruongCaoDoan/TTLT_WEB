@@ -6,9 +6,8 @@ import DTO.UserWithTotalSpentDTO;
 import model.Book;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ThongKeDao extends BaseDao {
 
@@ -400,7 +399,7 @@ public class ThongKeDao extends BaseDao {
     public int getUnsoldBooksCount() {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
-                        SELECT COUNT(*) 
+                        SELECT COUNT(*)
                         FROM books 
                         WHERE id NOT IN (
                             SELECT oi.book_id 
@@ -434,10 +433,63 @@ public class ThongKeDao extends BaseDao {
                 handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )
                 .mapTo(String.class).list());
     }
+    public Map<String, Double> getSoldByCategory(LocalDate from, LocalDate to) {
+        int totalProductSold = getTotalSoldProducts(from, to);
+        if (totalProductSold == 0) return Collections.emptyMap();
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                            SELECT b.type, (SUM(oi.quantity)*100.0)/:totalProductSold AS total
+                            FROM ORDERS o
+                            INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
+                            INNER JOIN BOOKS b ON b.id = oi.book_id
+                            WHERE o.status = 'COMPLETED'
+                              AND o.order_date BETWEEN :from AND :to
+                            GROUP BY b.type
+                        """)
+                        .bind("totalProductSold", totalProductSold)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .map((rs, ctx) -> Map.entry(
+                                rs.getString("type"),
+                                rs.getDouble("total")
+                        ))
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                Map.Entry::getValue
+                        ))
+        );
+    }
+    public Map<String, Double> getSoldByCategory(String year) {
+        int totalProductSold = getTotalSoldProducts(year);
+        if (totalProductSold == 0) return Collections.emptyMap();
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                            SELECT b.type, (SUM(oi.quantity)*100.0)/:totalProductSold AS total
+                            FROM ORDERS o
+                            INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
+                            INNER JOIN BOOKS b ON b.id = oi.book_id
+                            WHERE o.status = 'COMPLETED'
+                              AND o.order_date =:year
+                            GROUP BY b.type
+                        """)
+                        .bind("totalProductSold", totalProductSold)
+                        .bind("year", year)
+                        .map((rs, ctx) -> Map.entry(
+                                rs.getString("type"),
+                                rs.getDouble("total")
+                        ))
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                Map.Entry::getValue
+                        ))
+        );
+    }
+
 
     public static void main(String[] args) {
         ThongKeDao thongkeDao = new ThongKeDao();
         LocalDate now = LocalDate.now();
-        System.out.println(thongkeDao.getRevenueChart(now,now.plusDays(1)));
+        System.out.println(thongkeDao.getTotalSoldProducts(now,now.plusDays(1)));
+        System.out.println(thongkeDao.getSoldByCategory(now,now.plusDays(1)));
     }
 }
