@@ -97,7 +97,7 @@
                             <div class="info-value-row">
                                 <span class="info-value"> ${user.birthday.dayOfMonth}/${user.birthday.monthValue}/${user.birthday.year}</span>
                                 <button class="edit-icon-btn"
-                                        onclick="startEdit('birthYear','${user.birthday}','number')">
+                                        onclick="startEdit('birthYear','${user.birthday}','date')">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -136,7 +136,7 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <button class="edit-icon-btn"
-                                        onclick="startEditSelect('status','${user.status}',['active:Hoạt động','inactive:Bị khóa'])">
+                                        onclick="startEditSelect('status','${user.status}',['0:Khóa tài khoản','1:Mở khóa'])">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>

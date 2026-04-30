@@ -146,7 +146,7 @@ function confirmDelete() {
                     show(data.message);
                     setTimeout(() => {
                         location.reload();
-                    }, 3000);
+                    }, 1500);
                 } else {
                     show(data.message, false);
                 }
@@ -170,7 +170,31 @@ function confirmDelete() {
                     show(data.message);
                     setTimeout(() => {
                         location.reload();
-                    }, 3000);
+                    }, 1500);
+                } else {
+                    show(data.message, false);
+                }
+            })
+            .catch(err => console.log(err));
+
+        closeAllPopups();
+    }
+    if (deleteType === "address") {
+        fetch("deleteAddress", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "userId=" + encodeURIComponent(userId) + "&id=" + encodeURIComponent(deleteItemId)
+        })
+            .then(res => res.json())
+            .then(data => {
+                closeAllPopups();
+                if (data.success) {
+                    show(data.message);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
                 } else {
                     show(data.message, false);
                 }
@@ -270,8 +294,56 @@ function startEdit(field, currentVal, type) {
 }
 
 function saveInline(field) {
-    alert("Đã lưu (demo UI)");
-    location.reload();
+    const input= document.getElementById("edit-"+field);
+    if (!input) return;
+
+    let value=input.value.trim();
+
+
+    if(!value){
+        show("Không được để trống", false);
+        input.focus();
+        return;
+    }
+    if (field === "email") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            show("Email không hợp lệ", false);
+            input.focus();
+            return;
+        }
+    }
+    if (field === "phone") {
+        const phoneRegex = /^(03|05|07|08|09)[0-9]{8}$/;
+        if (!phoneRegex.test(value)) {
+            show("Số điện thoại không hợp lệ", false);
+            input.focus();
+            return;
+        }
+    }
+
+    fetch("UpdataUserServlet",{
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "userId="+encodeURIComponent(userId) +
+            "&field="+encodeURIComponent(field) +
+            "&value="+encodeURIComponent(value)
+    })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success){
+                show("Cập nhật thành công");
+                setTimeout(() => location.reload(), 1500);
+            }
+            else{
+                show("Thất bại", false);
+            }
+        })
+        .catch( err=> {
+            console.error(err)
+            show("Lỗi", false);
+        });
+
 }
 
 
@@ -342,9 +414,36 @@ function triggerAvatarUpload() {
 }
 
 function uploadAvatar(input) {
-    if (input.files.length > 0) {
-        alert("Đã chọn avatar (demo UI)");
+    if (input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    if (!file.type.startsWith("image/")) {
+        show("Chỉ được chọn file ảnh", false);
+        return;
     }
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+    formData.append("userId", userId);
+
+    fetch("UpdateAvatarServlet", {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("avatarImg").src = data.avatarUrl;
+                show("Cập nhật avatar thành công");
+            } else {
+                show(data.message, false);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            show("Lỗi upload", false);
+        });
 }
 
 
@@ -400,4 +499,23 @@ function searchVouchers(keyword) {
         list.appendChild(div);
     }
 
+}
+function startEditSelect(field, currentVal, options) {
+    const row = document.querySelector("#field-" + field + " .info-value-row");
+
+    let html = `<select id="edit-${field}">`;
+
+    options.forEach(opt => {
+        const [value, label] = opt.split(":");
+        html += `<option value="${value}" ${value == currentVal ? "selected" : ""}>
+                    ${label}
+                 </option>`;
+    });
+
+    html += `</select>
+        <button onclick="saveInline('${field}')">Lưu</button>
+        <button onclick="location.reload()">Hủy</button>
+    `;
+
+    row.innerHTML = html;
 }

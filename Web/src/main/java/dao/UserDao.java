@@ -99,12 +99,12 @@ public class UserDao extends BaseDao {
                 .execute()
                 );
     }
-    public void updateEmail(int id, String email) {
-        getJdbi().withHandle(handle ->
+    public boolean updateEmail(int id, String email) {
+       return getJdbi().withHandle(handle ->
                 handle.createUpdate("UPDATE user SET email=:email WHERE id = :id")
                         .bind("id", id)
                         .bind("email", email)
-                        .execute()
+                        .execute()>0
 
         );
     }
@@ -147,24 +147,24 @@ public class UserDao extends BaseDao {
                 ));
     }
 
-    public void updateRole(int userId, boolean  role) {
+    public boolean updateRole(int userId, boolean  role) {
         String sql = "UPDATE user SET role = :role WHERE id = :id";
 
-        getJdbi().useHandle(handle ->
+        return getJdbi().withHandle(handle ->
                 handle.createUpdate(sql)
                         .bind("role", role)
                         .bind("id", userId)
-                        .execute()
+                        .execute()>0
         );
     }
-    public void updateStatus(int userId, boolean  status) {
+    public boolean updateStatus(int userId, boolean  status) {
         String sql = "UPDATE user SET status = :status WHERE id = :id";
 
-        getJdbi().useHandle(handle ->
+        return getJdbi().withHandle(handle ->
                 handle.createUpdate(sql)
                         .bind("status", status)
                         .bind("id", userId)
-                        .execute()
+                        .execute()>0
         );
     }
 
@@ -181,4 +181,36 @@ public class UserDao extends BaseDao {
         );
     }
 
+    public void updateAvatar(Integer userId, String avatarUrl) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE user SET avatar=:avatar WHERE id = :id").bind("avatar", avatarUrl).bind("id",userId).execute()
+        );
+    }
+
+    public boolean updateName(int userId, String value) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE user SET name= :name  WHERE id= :id")
+                        .bind("name",value)
+                        .bind("id",userId)
+                        .execute()>0
+                );
+    }
+
+    public boolean updatePhone(int userId, String value) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE user SET phone= :phone  WHERE id= :id")
+                        .bind("phone",value)
+                        .bind("id",userId)
+                        .execute()>0
+        );
+    }
+
+    public boolean updateBirthDay(int userId, String value) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE user SET birthday= :birthday  WHERE id= :id")
+                        .bind("birthday",value)
+                        .bind("id",userId)
+                        .execute()>0
+        );
+    }
 }
