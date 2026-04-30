@@ -312,3 +312,23 @@ table thead {
 #dateSelect button.buttonSearch:hover {
     background-color: #0a254b;
 }
+.chart-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-pie,
+.chart-line {
+    flex: 1;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.chart-pie canvas,
+.chart-line canvas {
+    width: 100% !important;
+    height: 438px !important;
+}

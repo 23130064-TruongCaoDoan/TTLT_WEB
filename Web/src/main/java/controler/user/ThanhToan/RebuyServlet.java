@@ -47,7 +47,7 @@ public class RebuyServlet extends HttpServlet {
             rebuyCart.addItem(book, orderItemsView.getQuantity());
         }
 
-        session.setAttribute("cart", rebuyCart);
+        session.setAttribute("rebuyCart", rebuyCart);
 
         response.sendRedirect("ThanhToan?mode=rebuy");
     }

@@ -30,19 +30,19 @@
                         <option value="${y}" ${param.year == y ? 'selected' : ''}>Năm ${y}</option>
                     </c:forEach>
                 </select>
-                    <form action="ThongKe" method="get" id="dateSelect" style="display: ${type == 'year' ? 'none' : 'flex'};">
-                        <div class="date-filter">
-                            <label for="fromDate">Từ ngày:</label>
-                            <input type="date" name="fromDate" id="fromDate" value="${from}" max="" required>
-                        </div>
-                        <div class="date-filter">
-                            <label for="toDate">Đến ngày:</label>
-                            <input type="date" name="toDate" id="toDate" value="${to}" min="" required>
-                        </div>
-                        <button type="submit" class="buttonSearch">Thống kê</button>
-                    </form>
+                <form action="ThongKe" method="get" id="dateSelect" style="display: ${type == 'year' ? 'none' : 'flex'};">
+                    <div class="date-filter">
+                        <label for="fromDate">Từ ngày:</label>
+                        <input type="date" name="fromDate" id="fromDate" value="${from}" max="" required>
+                    </div>
+                    <div class="date-filter">
+                        <label for="toDate">Đến ngày:</label>
+                        <input type="date" name="toDate" id="toDate" value="${to}" min="" required>
+                    </div>
+                    <button type="submit" class="buttonSearch">Thống kê</button>
+                </form>
             </div>
-                <div id="thongke-content">
+            <div id="thongke-content">
                 <div class="cards" id="cards">
                     <div class="card">
                         <i class="fa-solid fa-money-bill-wave"></i>
@@ -97,9 +97,21 @@
                         <h3>Top 10 Khách hàng mua nhiều nhất</h3>
                     </div>
                 </div>
-                <div class="chart">
-                    <h2>Biểu đồ doanh thu</h2>
-                    <canvas id="revenueChart"></canvas>
+                <div class="chart-container">
+                    <div class="chart">
+                        <h2>Biểu đồ doanh thu</h2>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-pie">
+                            <h2>Tỷ lệ bán của từng loại</h2>
+                            <canvas id="categoryPieChart"></canvas>
+                        </div>
+                        <div class="chart-line">
+                            <h2>Số lượng đơn hàng bị hủy</h2>
+                            <canvas id="orderCancelledLineChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,66 +119,66 @@
     <div id="top10-customer-panel">
         <div id="top10-customer-container">
             <div class="table-wrapper">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Mã Khách Hàng</th>
-                            <th>Tên Khách Hàng</th>
-                            <th>Email</th>
-                            <th>Point</th>
-                            <th>Tổng tiền</th>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Mã Khách Hàng</th>
+                        <th>Tên Khách Hàng</th>
+                        <th>Email</th>
+                        <th>Point</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userTable">
+                    <c:forEach items="${top10Customers}" var="c">
+                        <tr class="infUser">
+                            <td>${c.customerCode}</td>
+                            <td>${c.name}</td>
+                            <td>${c.email}</td>
+                            <td>${c.point}</td>
+                            <td><fmt:formatNumber value="${c.totalSpent}" type="number"
+                                                  groupingUsed="true" maxFractionDigits="0"/></td>
                         </tr>
-                        </thead>
-                        <tbody id="userTable">
-                        <c:forEach items="${top10Customers}" var="c">
-                            <tr class="infUser">
-                                <td>${c.customerCode}</td>
-                                <td>${c.name}</td>
-                                <td>${c.email}</td>
-                                <td>${c.point}</td>
-                                <td><fmt:formatNumber value="${c.totalSpent}" type="number"
-                                                                     groupingUsed="true" maxFractionDigits="0"/></td>
-                            </tr>
-                        </c:forEach>
+                    </c:forEach>
 
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div id="top10-product-panel">
         <div id="top10-product-container">
-        <div class="table-wrapper" >
-                    <table>
-                        <thead>
+            <div class="table-wrapper" >
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Mã sách</th>
+                        <th>Tên sách</th>
+                        <th>Tác giả</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Loại sách</th>
+                        <th>Độ tuổi</th>
+                        <th>Hình ảnh</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${top10Books}" var="b">
                         <tr>
-                            <th>Mã sách</th>
-                            <th>Tên sách</th>
-                            <th>Tác giả</th>
-                            <th>Giá</th>
-                            <th>Số lượng</th>
-                            <th>Loại sách</th>
-                            <th>Độ tuổi</th>
-                            <th>Hình ảnh</th>
+                            <td>${b.bookCode}</td>
+                            <td>${b.title}</td>
+                            <td>—</td>
+                            <td><fmt:formatNumber value="${b.price}" type="number"
+                                                  groupingUsed="true" maxFractionDigits="0"/></td>
+                            <td>${b.totalSold}</td>
+                            <td>${b.type}</td>
+                            <td>${b.age}+</td>
+                            <td><img src="${b.coverImgUrl}" width="60"></td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${top10Books}" var="b">
-                            <tr>
-                                <td>${b.bookCode}</td>
-                                <td>${b.title}</td>
-                                <td>—</td>
-                                <td><fmt:formatNumber value="${b.price}" type="number"
-                                                                groupingUsed="true" maxFractionDigits="0"/></td>
-                                <td>${b.totalSold}</td>
-                                <td>${b.type}</td>
-                                <td>${b.age}+</td>
-                                <td><img src="${b.coverImgUrl}" width="60"></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -174,7 +186,7 @@
 </body>
 <script>
     document.getElementById("fromDate").addEventListener("change", function (){
-       document.getElementById("toDate").setAttribute("min", this.value);
+        document.getElementById("toDate").setAttribute("min", this.value);
     });
     document.getElementById("toDate").addEventListener("change", function (){
         document.getElementById("fromDate").setAttribute("max", this.value);
@@ -231,6 +243,7 @@
 
                 setTimeout(() => {
                     initChart();
+                    initPieChart();
                 }, 0);
 
             });
@@ -277,21 +290,21 @@
     function initChart() {
         const labels = [
             <c:forEach var="l" items="${revenueChartData}" varStatus="s">
-                <c:choose>
-                    <c:when test="${type == 'year'}">
-                        "${l.label}"
-                    </c:when>
-                    <c:otherwise>
-                        formatterDate("${l.label}")
-                    </c:otherwise>
+            <c:choose>
+                <c:when test="${type == 'year'}">
+                    "${l.label}"
+                </c:when>
+                <c:otherwise>
+                    formatterDate("${l.label}")
+                </c:otherwise>
                 </c:choose>
-                <c:if test="${!s.last}">,</c:if>
+            <c:if test="${!s.last}">,</c:if>
             </c:forEach>
         ];
 
         const revenueData = [
             <c:forEach var="r" items="${revenueChartData}">
-                ${r.revenue},
+            ${r.revenue},
             </c:forEach>
         ];
 
@@ -342,5 +355,66 @@
         chartInstance = new Chart(canvas, config);
     }
     initChart();
+</script>
+<script>
+    let chartPercentType = null;
+    function initPieChart() {
+        const pieLabels = [
+            <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
+            "${entry.key}"
+            <c:if test="${!s.last}">,</c:if>
+            </c:forEach>
+        ];
+
+        const pieData = [
+            <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
+            ${entry.value}
+            <c:if test="${!s.last}">,</c:if>
+            </c:forEach>
+        ];
+        const pieDataset = {
+            labels: pieLabels,
+            datasets: [{
+                label: 'Tỷ lệ (%)',
+                data: pieData,
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40'
+                ]
+            }]
+        };
+        const pieConfig = {
+            type: 'pie',
+            data: pieDataset,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sách bán theo thể loại (%)'
+                    },
+                    datalabels: {
+                        formatter: (value) => value.toFixed(1) + '%',
+                        color: '#fff'
+                    }
+                }
+            },
+        };
+        const canvasPie = document.getElementById("categoryPieChart");
+        if (!canvasPie) return;
+
+        if (chartPercentType) {
+            chartPercentType.destroy();
+        }
+        chartPercentType = new Chart(canvasPie, pieConfig);
+    }
+    initPieChart();
 </script>
 </html>

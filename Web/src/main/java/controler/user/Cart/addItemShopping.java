@@ -45,17 +45,6 @@ public class addItemShopping extends HttpServlet {
                 cart.updateUser(user);
             }
         }
-//        CommentService commentService = new CommentService();
-//        List<Book> bookListRe = bookService.getBookRecommendInDetail(book.getType());
-//        List<CommentView> commentViewList = commentService.getCommentView(bookId);
-//        Double averageRating = commentService.getAverageRating(bookId);
-//
-//        request.setAttribute("book", book);
-//        request.setAttribute("bookListRe", bookListRe);
-//        request.setAttribute("commentViewList", commentViewList);
-//        request.setAttribute("averageRating", averageRating);
-//        request.getRequestDispatcher("user/productDetail.jsp")
-//                .forward(request, response);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().print(
