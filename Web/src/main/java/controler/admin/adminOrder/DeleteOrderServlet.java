@@ -23,10 +23,18 @@ public class DeleteOrderServlet extends HttpServlet {
         String idRaw = request.getParameter("id");
 
         try {
-            int id = Integer.parseInt(idRaw);
-
             OrderService orderService = new OrderService();
-            boolean success = orderService.deleteOrder(id);
+            int id = Integer.parseInt(idRaw);
+            String userCodes = request.getParameter("userId");
+            boolean success;
+
+            if (userCodes.isEmpty()){
+                 success = orderService.deleteOrder(id);
+            }
+            else{
+                int userId = Integer.parseInt(userCodes);
+                success= orderService.deleteOrderOfUser(userId,id);
+            }
 
             if (success) {
                 response.getWriter().write(
@@ -39,7 +47,7 @@ public class DeleteOrderServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); // 👈 BẮT BUỘC để thấy lỗi
+            e.printStackTrace();
             response.setStatus(500);
             response.getWriter().write(
                     "{\"success\":false,\"message\":\"Lỗi server\"}"

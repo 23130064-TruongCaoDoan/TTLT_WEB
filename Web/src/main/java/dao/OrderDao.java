@@ -212,7 +212,8 @@ public class OrderDao extends BaseDao {
                         CAST(oi.quantity AS UNSIGNED) AS quantity,
                         b.type                  AS category,
                         b.age                   AS age,
-                        b.cover_img_url         AS image
+                        b.cover_img_url         AS image,
+                        oi.subtotal AS subtotal
                     FROM order_items oi
                     JOIN books b ON oi.book_id = b.id
                     LEFT JOIN authors a ON b.author_id = a.id
@@ -296,5 +297,25 @@ public class OrderDao extends BaseDao {
                         .mapTo(double.class).one()
 
         );
+    }
+
+    public boolean deleteOrderOfUser(int userId, int id) {
+        return getJdbi().inTransaction(handle -> {
+
+            handle.createUpdate("DELETE FROM SHIPPING WHERE order_id = :id")
+                    .bind("id", id)
+                    .execute();
+
+            handle.createUpdate("DELETE FROM ORDER_ITEMS WHERE order_id = :id")
+                    .bind("id", id)
+                    .execute();
+
+            int count = handle.createUpdate("DELETE FROM ORDERS WHERE id = :id AND user_id = :user_id")
+                    .bind("id", id)
+                    .bind("user_id", userId)
+                    .execute();
+
+            return count > 0;
+        });
     }
 }
