@@ -35,7 +35,7 @@ public class ThongKeServlet extends HttpServlet {
         List<BookWithSoldDTO> getTop10Books=null;
         String year=request.getParameter("year");
         List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
-        Map<String,Double> getPercentTypeSold = new HashMap<>();
+        Map<String, Double> getPercentTypeChart=new HashMap<>();
 
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -78,7 +78,7 @@ public class ThongKeServlet extends HttpServlet {
             getWorstSeller = thongKeService.getWorstSeller(year);
             getTop10Books = thongKeService.getTop10Books(year);
             getTotalRevenueChart = thongKeService.getRevenueChart(year);
-            getPercentTypeSold = thongKeService.getPercentTypeSold(year);
+            getPercentTypeChart = thongKeService.getPercentTypeSold(year);
         }else {
             totalRevenue = thongKeService.getTotalRevenue(from,to);
             getTop10Users = thongKeService.getTop10Users(from,to);
@@ -87,7 +87,7 @@ public class ThongKeServlet extends HttpServlet {
             getWorstSeller = thongKeService.getWorstSeller(from,to);
             getTop10Books = thongKeService.getTop10Books(from,to);
             getTotalRevenueChart = thongKeService.getRevenueChart(from,to);
-            getPercentTypeSold = thongKeService.getPercentTypeSold(from,to);
+            getPercentTypeChart = thongKeService.getPercentTypeSold(from,to);
 
         }
         request.setAttribute("totalRevenue",totalRevenue);
@@ -98,7 +98,7 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("top10Books", getTop10Books);
         request.setAttribute("listYear", thongKeService.getListYear());
         request.setAttribute("revenueChartData", getTotalRevenueChart);
-        request.setAttribute("percentTypeSold", getPercentTypeSold);
+        request.setAttribute("percentTypeSold", getPercentTypeChart);
         request.setAttribute("type", type);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);

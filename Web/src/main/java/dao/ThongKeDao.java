@@ -469,7 +469,7 @@ public class ThongKeDao extends BaseDao {
                             INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
                             INNER JOIN BOOKS b ON b.id = oi.book_id
                             WHERE o.status = 'COMPLETED'
-                              AND o.order_date =:year
+                              AND YEAR(o.order_date) = :year
                             GROUP BY b.type
                         """)
                         .bind("totalProductSold", totalProductSold)
@@ -489,7 +489,6 @@ public class ThongKeDao extends BaseDao {
     public static void main(String[] args) {
         ThongKeDao thongkeDao = new ThongKeDao();
         LocalDate now = LocalDate.now();
-        System.out.println(thongkeDao.getTotalSoldProducts(now,now.plusDays(1)));
-        System.out.println(thongkeDao.getSoldByCategory(now,now.plusDays(1)));
+        System.out.println(thongkeDao.getRevenueChart("2025"));
     }
 }
