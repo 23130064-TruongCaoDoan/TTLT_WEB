@@ -486,6 +486,7 @@ public class ThongKeDao extends BaseDao {
     }
 
 
+
     public static void main(String[] args) {
         ThongKeDao thongkeDao = new ThongKeDao();
         LocalDate now = LocalDate.now();
