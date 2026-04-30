@@ -87,4 +87,8 @@ public class OrderService {
     public double totalAmountOrder(int uid) {
         return orderDao.totalAmountOrder(uid);
     }
+
+    public boolean deleteOrderOfUser(int userId, int id) {
+        return orderDao.deleteOrderOfUser(userId,id);
+    }
 }

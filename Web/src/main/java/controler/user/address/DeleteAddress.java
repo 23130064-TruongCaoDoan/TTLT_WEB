@@ -29,12 +29,26 @@ public class DeleteAddress extends HttpServlet {
         boolean success = false;
         String message = "";
 
+        String userId = request.getParameter("userId");
+
+        AddressService addressService = new AddressService();
+
         if (idParam != null && !idParam.isEmpty()) {
             try {
                 int id = Integer.parseInt(idParam);
-                AddressService addressService = new AddressService();
-                addressService.deleteAddress(id);
-                success = true;
+                if(userId!=null){
+                    int uid = Integer.parseInt(userId);
+                    addressService.deleteAddressOfUser(uid,id);
+                    success = true;
+
+                }
+                else{
+                    addressService.deleteAddress(id);
+                    success = true;
+
+                }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 message = "Xóa địa chỉ thất bại!";

@@ -43,4 +43,8 @@ public class AddressService {
     public List<Address> getAddressOfUser(int id) {
         return addressDao.getAddressOfUser(id);
     }
+
+    public void deleteAddressOfUser(int uid, int id) {
+        addressDao.deleteAddressOfUser(uid,id);
+    }
 }

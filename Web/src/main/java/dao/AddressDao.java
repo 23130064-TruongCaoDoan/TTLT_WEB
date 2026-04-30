@@ -113,4 +113,12 @@ public class AddressDao extends BaseDao{
         );
     }
 
+    public void deleteAddressOfUser(int uid, int id) {
+        getJdbi().useHandle(handle -> {
+           handle.createUpdate("DELETE FROM ADDRESS WHERE id = :id AND user_id = :userId")
+                   .bind("id", id)
+                   .bind("userId", uid)
+                   .execute();
+        });
+    }
 }

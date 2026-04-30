@@ -1,6 +1,7 @@
 package Service;
 
 import DTO.UserWithTotalSpentDTO;
+import Util.EmailSender;
 import Util.PasswordUtil;
 import dao.UserDao;
 import model.User;
@@ -80,8 +81,8 @@ public class UserService {
     public void updateProfile(int id, String name, String phone, String email,boolean sex, LocalDate birthday, String avatar) {
         userDao.updateProfile(id, name, phone, email, sex, birthday, avatar);
     }
-    public void updateEmail(int id, String email) {
-        userDao.updateEmail(id, email);
+    public boolean updateEmail(int id, String email) {
+        return userDao.updateEmail(id, email);
     }
 
     public void tichDiem(int userId, double finalTotal) {
@@ -96,14 +97,39 @@ public class UserService {
         return userDao.changePassword(id, newPassword);
     }
 
-    public void updateRole(int userId, boolean role) {
-        userDao.updateRole(userId, role);
+    public boolean updateRole(int userId, boolean role) {
+        return userDao.updateRole(userId, role);
     }
-    public void updateStatus(int userId, boolean status) {
-        userDao.updateStatus(userId, status);
+    public boolean updateStatus(int userId, boolean status) {
+        EmailSender  emailSender = new EmailSender();
+        String email = userDao.findUserById(userId).getEmail();
+        String message="";
+        if (status) {
+            message="Tài khoản của bạn đã được mở";
+        }
+        else{
+            message="Tài khoản của bạn đã bị khóa";
+        }
+        emailSender.sendSimpleEmail(email,"THÔNG BÁO TRẠNG THÁI HOẠT ĐỘNG CỦA TÀI KHOẢN",message);
+        return userDao.updateStatus(userId, status);
     }
     public void addUserByAdmin(String fullname, String email, String password, int role, int status) {
         userDao.addUserByAdmin(fullname, email, password, role, status);
     }
 
+    public void updateAvatar(Integer userId, String avatarUrl) {
+        userDao.updateAvatar(userId,avatarUrl);
+    }
+
+    public boolean updateName(int userId, String value) {
+        return userDao.updateName(userId,value);
+    }
+
+    public boolean updatePhone(int userId, String value) {
+        return userDao.updatePhone(userId,value);
+    }
+
+    public boolean updateBirthDay(int userId, String value) {
+        return userDao.updateBirthDay(userId,value);
+    }
 }

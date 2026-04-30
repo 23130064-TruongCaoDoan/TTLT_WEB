@@ -9,11 +9,12 @@ public class OrderItemsView {
     private String category;
     private int age;
     private String image;
+    private double subtotal;
 
     public OrderItemsView() {
     }
 
-    public OrderItemsView(int bookId, String bookName, String author, double price, int quantity, String category, int age, String image) {
+    public OrderItemsView(int bookId, String bookName, String author, double price, int quantity, String category, int age, String image, double subtotal) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.author = author;
@@ -22,6 +23,7 @@ public class OrderItemsView {
         this.category = category;
         this.age = age;
         this.image = image;
+        this.subtotal = subtotal;
     }
 
     public int getBookId() {
@@ -86,5 +88,13 @@ public class OrderItemsView {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
     }
 }
