@@ -47,21 +47,23 @@
                     <div class="card">
                         <i class="fa-solid fa-money-bill-wave"></i>
                         <h3>Tổng doanh thu</h3>
-
                         <p><fmt:formatNumber value="${totalRevenue}" type="number"
                                              groupingUsed="true" maxFractionDigits="0"/> Đ</p>
                     </div>
                     <div class="card">
-                        <i class="fa-solid fa-user-tie"></i>
-                        <h3>Khách hàng mua nhiều nhất</h3>
-                        <p><c:choose>
-                            <c:when test="${topCustomer != null}">
-                                ${topCustomer.name}
-                            </c:when>
-                            <c:otherwise>
-                                Chưa có dữ liệu
-                            </c:otherwise>
-                        </c:choose></p>
+                        <i class="fa-solid fa-receipt"></i>
+                        <h3>Tổng đơn hàng</h3>
+                        <p>${totalOrders}</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h3>Tổng sản phẩm bán được</h3>
+                        <p>${totalSoldProducts}</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-receipt"></i>
+                        <h3>Số lượng đơn bị hủy</h3>
+                        <p>${totalCancelledOrders}</p>
                     </div>
                     <div class="card">
                         <i class="fa-solid fa-box-open"></i>
@@ -80,7 +82,7 @@
                         <i class="fa-solid fa-box"></i>
                         <h3>Sản phẩm bán ít nhất</h3>
                         <p><c:choose>
-                            <c:when test="${worstBook != null}">
+                            <c:when test="${totalCancelledOrders != 0}">
                                 ${worstBook.title}
                             </c:when>
                             <c:otherwise>

@@ -484,8 +484,56 @@ public class ThongKeDao extends BaseDao {
                         ))
         );
     }
-
-
+    public int getTotalOrders(LocalDate from, LocalDate to) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*)
+                        FROM orders
+                        WHERE status = 'COMPLETED' AND order_date BETWEEN :from AND :to
+                        """)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+    public int getTotalOrders(String year) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*)
+                        FROM orders
+                        WHERE status = 'COMPLETED' AND YEAR(order_date)=:year
+                        """)
+                        .bind("year", year)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+    public int getTotalCancelledOrders(String year) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*)
+                        FROM orders
+                        WHERE status = 'CANCELLED' AND YEAR(order_date)=:year
+                        """)
+                        .bind("year", year)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
+    public int getTotalCancelledOrders(LocalDate from, LocalDate to) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT COUNT(*)
+                        FROM orders
+                        WHERE status = 'CANCELLED' AND order_date BETWEEN :from AND :to
+                        """)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(0));
+    }
 
     public static void main(String[] args) {
         ThongKeDao thongkeDao = new ThongKeDao();
