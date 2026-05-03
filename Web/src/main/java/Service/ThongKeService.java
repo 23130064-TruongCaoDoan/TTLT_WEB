@@ -94,4 +94,17 @@ public class ThongKeService {
     public Map<String, Double> getPercentTypeSold(LocalDate from, LocalDate to) {
         return dao.getSoldByCategory(from,to);
     }
+    public int getTotalOrders(String year) {
+        return dao.getTotalOrders(year);
+    }
+    public int getTotalOrders(LocalDate from, LocalDate to) {
+        return dao.getTotalOrders(from,to);
+    }
+    public int getTotalCanceledOrders(String year) {
+        return dao.getTotalCancelledOrders(year);
+    }
+    public int getTotalCanceledOrders(LocalDate from, LocalDate to) {
+        return dao.getTotalCancelledOrders(from,to);
+    }
+
 }
