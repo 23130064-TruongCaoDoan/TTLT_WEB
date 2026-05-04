@@ -1,6 +1,7 @@
 package Service;
 
 import DTO.BookWithSoldDTO;
+import DTO.OrderDTOChart;
 import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
 import dao.ThongKeDao;
@@ -105,6 +106,13 @@ public class ThongKeService {
     }
     public int getTotalCanceledOrders(LocalDate from, LocalDate to) {
         return dao.getTotalCancelledOrders(from,to);
+    }
+
+    public List<OrderDTOChart> getOrderChart(String year) {
+        return dao.getOrderChart(year);
+    }
+    public List<OrderDTOChart> getOrderChart(LocalDate from, LocalDate to) {
+        return dao.getOrderChart(from,to);
     }
 
 }

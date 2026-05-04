@@ -115,6 +115,21 @@
                                         ]'>
                         </canvas>
                     </div>
+                    <div class="chart">
+                        <h2>Biểu đồ thể hiện số lượng đơn hàng</h2>
+                        <canvas id="orderLineChart"
+                                data-labels='[
+                                    <c:forEach var="l" items="${OrderChartData}" varStatus="s">
+                                        "${l.label}"<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'
+                                data-values='[
+                                    <c:forEach var="r" items="${OrderChartData}" varStatus="s">
+                                        ${r.total}<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'>
+                        </canvas>
+                    </div>
                     <div class="chart-row">
                         <div class="chart-pie">
                             <h2>Tỷ lệ bán của từng loại</h2>
@@ -132,8 +147,8 @@
                             </canvas>
                         </div>
                         <div class="chart-line">
-                            <h2>Số lượng đơn hàng bị hủy</h2>
-                            <canvas id="orderCancelledLineChart"></canvas>
+                            <h2>Chưa có biểu đồ</h2>
+                            <canvas></canvas>
                         </div>
                     </div>
                 </div>
@@ -208,6 +223,7 @@
 
 </main>
 </body>
+
 <script>
     document.getElementById("fromDate").addEventListener("change", function (){
         document.getElementById("toDate").setAttribute("min", this.value);
@@ -216,6 +232,7 @@
         document.getElementById("fromDate").setAttribute("max", this.value);
     });
 </script>
+
 <script>
     document.addEventListener("click", function (e) {
 
@@ -259,6 +276,8 @@
 
                 initChart();
                 initPieChart();
+                initLineChart();
+
             });
     }
     document.getElementById("filter").addEventListener("change", function () {
@@ -290,7 +309,9 @@
 
     });
 </script>
+
 <script>
+    const type = document.getElementById("filter")?.value || 'day';
     function formatterDate(date) {
         let element = date.split('-');
         let y = element[0];
@@ -298,10 +319,10 @@
         let d = element[2];
         return d + "-" + m + "-" + y;
     }
+    let chartInstance = null;
     function initChart() {
         const canvas = document.getElementById("revenueChart");
         if (!canvas) return;
-        const type = document.getElementById("filter")?.value || 'day';
         const rawLabels = JSON.parse(canvas.dataset.labels);
         const revenueData = JSON.parse(canvas.dataset.values);
         const labels = rawLabels.map(label =>
@@ -353,6 +374,7 @@
     }
     initChart();
 </script>
+
 <script>
     let chartPercentType = null;
     function initPieChart() {
@@ -413,5 +435,75 @@
         window.chartPercentType = new Chart(canvasPie, pieConfig);
     }
     initPieChart();
+</script>
+
+<script>
+    let chartOrder = null;
+
+    function initLineChart() {
+        const canvasLineChart = document.getElementById("orderLineChart");
+        if (!canvasLineChart) return;
+
+        const rawLabelsLine = JSON.parse(canvasLineChart.dataset.labels);
+        const orderData = JSON.parse(canvasLineChart.dataset.values);
+
+        const type = document.getElementById("filter")?.value || 'day';
+
+        const orderLabels = rawLabelsLine.map(label =>
+            type === 'year' ? label : formatterDate(label)
+        );
+
+        const data = {
+            labels: orderLabels,
+            datasets: [
+                {
+                    label: 'Số lượng đơn hàng',
+                    data: orderData,
+                    fill: false,
+                    tension: 0.3,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }
+            ]
+        };
+
+        const lineConfig = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    datalabels: {
+                        align: 'top',
+                        anchor: 'end',
+                        formatter: (value) => value,
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+        if (window.chartOrder) {
+            window.chartOrder.destroy();
+        }
+
+        window.chartOrder = new Chart(canvasLineChart, lineConfig);
+    }
+    initLineChart();
 </script>
 </html>

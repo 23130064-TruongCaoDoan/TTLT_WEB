@@ -1,6 +1,7 @@
 package dao;
 
 import DTO.BookWithSoldDTO;
+import DTO.OrderDTOChart;
 import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
 import model.Book;
@@ -148,7 +149,8 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+            JOIN user u ON o.user_id = u.id
+            WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
             GROUP BY b.id
             ORDER BY totalSold DESC
             LIMIT 1
@@ -174,7 +176,8 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+            JOIN user u ON o.user_id = u.id
+            WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
             GROUP BY b.id
             ORDER BY totalSold DESC
             LIMIT 1
@@ -199,7 +202,8 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+            JOIN user u ON o.user_id = u.id
+            WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
             GROUP BY b.id
             ORDER BY totalSold ASC
             LIMIT 1
@@ -225,7 +229,8 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+            JOIN user u ON o.user_id = u.id
+            WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
             GROUP BY b.id
             ORDER BY totalSold ASC
             LIMIT 1
@@ -250,7 +255,8 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+            JOIN user u ON o.user_id = u.id
+            WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
             GROUP BY b.id
             ORDER BY totalSold DESC
             LIMIT 10
@@ -276,7 +282,8 @@ public class ThongKeDao extends BaseDao {
             FROM books b
             JOIN order_items oi ON oi.book_id = b.id
             JOIN orders o ON o.id = oi.order_id
-            WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+            JOIN user u ON o.user_id = u.id
+            WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
             GROUP BY b.id
             ORDER BY totalSold DESC
             LIMIT 10
@@ -312,10 +319,41 @@ public class ThongKeDao extends BaseDao {
                         WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
                         GROUP BY MONTH(o.order_date)
                         ORDER BY MONTH(o.order_date)
-                        LIMIT 30
                         """)
                         .bind("year", year)
                         .mapToBean(RevenueDTO.class)
+                        .list()
+        );
+    }
+    public List<OrderDTOChart> getOrderChart(LocalDate from, LocalDate to) {
+        return  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT DATE(o.order_date) AS label, COUNT(*) AS total
+                        FROM ORDERS o
+                        INNER JOIN USER u ON u.id = o.user_id
+                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
+                        GROUP BY DATE(o.order_date)
+                        ORDER BY DATE(o.order_date)
+                        LIMIT 30
+                        """)
+                        .bind("from",from)
+                        .bind("to", to)
+                        .mapToBean(OrderDTOChart.class)
+                        .list()
+        );
+    }
+    public List<OrderDTOChart> getOrderChart(String year) {
+        return  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT CONCAT('Tháng ', MONTH(o.order_date)) AS label, COUNT(*) AS total
+                        FROM ORDERS o
+                        INNER JOIN USER u ON u.id = o.user_id
+                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                        GROUP BY MONTH(o.order_date)
+                        ORDER BY MONTH(o.order_date)
+                        """)
+                        .bind("year", year)
+                        .mapToBean(OrderDTOChart.class)
                         .list()
         );
     }
@@ -488,8 +526,9 @@ public class ThongKeDao extends BaseDao {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
                         SELECT COUNT(*)
-                        FROM orders
-                        WHERE status = 'COMPLETED' AND order_date BETWEEN :from AND :to
+                        FROM orders o
+                        INNER JOIN USER u ON u.id = o.user_id
+                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
                         """)
                         .bind("from", from)
                         .bind("to", to)
@@ -501,8 +540,9 @@ public class ThongKeDao extends BaseDao {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
                         SELECT COUNT(*)
-                        FROM orders
-                        WHERE status = 'COMPLETED' AND YEAR(order_date)=:year
+                        FROM orders o
+                        INNER JOIN USER u ON u.id = o.user_id
+                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date)=:year
                         """)
                         .bind("year", year)
                         .mapTo(Integer.class)
@@ -538,6 +578,6 @@ public class ThongKeDao extends BaseDao {
     public static void main(String[] args) {
         ThongKeDao thongkeDao = new ThongKeDao();
         LocalDate now = LocalDate.now();
-        System.out.println(thongkeDao.getRevenueChart("2025"));
+        System.out.println(thongkeDao.getOrderChart("2026"));
     }
 }
