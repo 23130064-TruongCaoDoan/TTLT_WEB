@@ -121,4 +121,20 @@ public class Order {
     public String getPaymentStatus() {
         return paymentStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", orderDate='" + orderDate + '\'' +
+                ", status='" + status + '\'' +
+                ", totalAmount=" + totalAmount +
+                ", note='" + note + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", paymentStatus='" + paymentStatus + '\'' +
+                ", disVoucherId='" + disVoucherId + '\'' +
+                ", shipVoucherId='" + shipVoucherId + '\'' +
+                '}';
+    }
 }

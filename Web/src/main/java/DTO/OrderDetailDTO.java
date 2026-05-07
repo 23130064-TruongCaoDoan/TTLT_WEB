@@ -9,7 +9,6 @@ public class OrderDetailDTO {
 
     private Order order;
     private Shipping shipping;
-    private Address address;
     private List<OrderItemDTO> items;
 
     public Order getOrder() {
@@ -28,13 +27,6 @@ public class OrderDetailDTO {
         this.shipping = shipping;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
 
     public List<OrderItemDTO> getItems() {
         return items;
@@ -44,12 +36,12 @@ public class OrderDetailDTO {
         this.items = items;
     }
 
+
     @Override
     public String toString() {
         return "OrderDetailDTO{" +
-                "order=" + order +
-                ", shipping=" + shipping +
-                ", address=" + address +
+                "order=" + order.toString() +
+                ", shipping=" + shipping.toString() +
                 ", items=" + items +
                 '}';
     }
