@@ -69,11 +69,12 @@ public class OrderDao extends BaseDao {
                         o.id            AS id,
                         o.user_id       AS userId,
                         u.name     AS userName,
-                        d.phone         AS phone,
+                        s.phone         AS phone,
                         CONCAT_WS(', ',
-                                        d.specificAddress,
-                                        d.ward,
-                                        d.city
+                                        s.specificAddress,
+                                        s.ward,
+                                        s.districts,
+                                        s.city
                                     ) AS address,
                         o.order_date    AS orderDate,
                         o.status        AS status,
@@ -82,7 +83,6 @@ public class OrderDao extends BaseDao {
                     FROM orders o
                     JOIN `user` u ON o.user_id = u.id
                     JOIN shipping s ON o.id = s.order_id
-                    JOIN address d ON s.address_id = d.id
                     JOIN order_items oi ON o.id = oi.order_id
                     JOIN books b ON oi.book_id = b.id
                     ORDER BY o.order_date DESC
@@ -133,11 +133,12 @@ public class OrderDao extends BaseDao {
                             o.id            AS id,
                             o.user_id       AS userId,
                             u.name          AS userName,
-                            d.phone         AS phone,
+                            s.phone         AS phone,
                             CONCAT_WS(', ',
-                                d.specificAddress,
-                                d.ward,
-                                d.city
+                                s.specificAddress,
+                                s.ward,
+                                s.districts,
+                                s.city
                             ) AS address,
                             o.order_date    AS orderDate,
                             o.status        AS status,
@@ -146,7 +147,6 @@ public class OrderDao extends BaseDao {
                         FROM orders o
                         JOIN `user` u ON o.user_id = u.id
                         JOIN shipping s ON o.id = s.order_id
-                        JOIN address d ON s.address_id = d.id
                         WHERE 1=1
                     """);
 
@@ -250,11 +250,11 @@ public class OrderDao extends BaseDao {
                                 "    o.id AS id," +
                                 "    o.user_id AS userId," +
                                 "    u.name AS userName," +
-                                "    d.phone AS phone," +
+                                "    s.phone AS phone," +
                                 "    CONCAT_WS(', '," +
-                                "        d.specificAddress," +
-                                "        d.ward," +
-                                "        d.city" +
+                                "        s.specificAddress," +
+                                "        s.ward, s.districts," +
+                                "        s.city" +
                                 "    ) AS address," +
                                 "    o.order_date AS orderDate," +
                                 "    o.status AS status," +
@@ -268,11 +268,10 @@ public class OrderDao extends BaseDao {
                                 "JOIN order_items oi ON o.id = oi.order_id " +
                                 "JOIN books b ON oi.book_id = b.id " +
                                 "JOIN shipping s ON o.id = s.order_id " +
-                                "JOIN address d ON s.address_id = d.id " +
                                 "WHERE o.user_id = :id " +
                                 "GROUP BY " +
-                                "    o.id, o.user_id, u.name, d.phone," +
-                                "    d.specificAddress, d.ward, d.city," +
+                                "    o.id, o.user_id, u.name, s.phone," +
+                                "    s.specificAddress, s.ward, s.specificAddress, s.city," +
                                 "    o.order_date, o.status, o.payment_method," +
                                 "    o.total_amount, o.note " +
                                 "ORDER BY o.order_date DESC")

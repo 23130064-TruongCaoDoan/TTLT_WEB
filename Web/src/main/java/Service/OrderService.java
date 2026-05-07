@@ -7,6 +7,7 @@ import dao.OrderDao;
 import dao.OrderDetailDAO;
 import dao.OrderItemDao;
 import dao.ShippingDao;
+import model.Address;
 import model.OrderItemsView;
 import model.OrderView;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class OrderService {
     OrderDao orderDao;
+    AddressService addressService;
     ShippingDao shippingDao;
     NotificationService notificationService;
     OrderItemDao orderItemDao;
@@ -25,6 +27,7 @@ public class OrderService {
         this.shippingDao = new ShippingDao();
         this.notificationService = new NotificationService();
         this.orderItemDao = new OrderItemDao();
+        this.addressService = new AddressService();
     }
 
     public boolean addOrder(int userId, double totalAmount, String note, String paymentMethod, String paymentStatus,Integer dis, Integer ship, Integer address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
@@ -34,7 +37,8 @@ public class OrderService {
             bookService.updateStock(cart);
             orderItemDao.insertOrderItems(order_id, cart);
             notificationService.sendNoti(userId, "Bạn đã đặt đơn hàng: " + order_id, "Các sản phẩm bạn đặt: " + cart.getProductNamesAsString());
-            int ship_id = shippingDao.addShipping(order_id, address_id, shipping_type, shipping_cost, delivered_date);
+            Address address=addressService.getAddressById(address_id);
+            int ship_id = shippingDao.addShipping(order_id, address, shipping_type, shipping_cost, delivered_date);
         }
 
         return order_id != -1;
@@ -45,6 +49,12 @@ public class OrderService {
 
     public OrderDetailDTO getOrderDetail(int orderId) {
         return dao.findOrderDetailByOrderId(orderId);
+    }
+
+    public static void main(String[] args) {
+        OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+        OrderDetailDTO  orderDetailDTO = orderDetailDAO.findOrderDetailByOrderId(95);
+        System.out.println(orderDetailDTO.toString());
     }
 
     public List<OrderView> getAllOrders() {

@@ -78,13 +78,14 @@
                 <div class="order-info">
                     <div class="user-info">
                         <h3>Thông tin người nhận</h3>
-                        <p>${dto.address.name}</p>
-                        <p>SĐT: ${dto.address.phone}</p>
+                        <p>${dto.shipping.receiver}</p>
+                        <p>SĐT: ${dto.shipping.phone}</p>
                         <p>
                             Địa chỉ:
-                            ${dto.address.specificAddress},
-                            ${dto.address.ward},
-                            ${dto.address.city}
+                            ${dto.shipping.specificAddress},
+                            ${dto.shipping.ward},
+                            ${dto.shipping.districts}.
+                            ${dto.shipping.city}
                         </p>
                     </div>
                     <div class="payment-method">
