@@ -1,6 +1,7 @@
 package controler.admin;
 
 import DTO.BookWithSoldDTO;
+import DTO.OrderDTOChart;
 import DTO.RevenueDTO;
 import DTO.UserWithTotalSpentDTO;
 import Service.EventService;
@@ -36,6 +37,7 @@ public class ThongKeServlet extends HttpServlet {
         String year=request.getParameter("year");
         List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
         Map<String, Double> getPercentTypeChart=new HashMap<>();
+        List<OrderDTOChart>  getTotalOrderChart=new ArrayList<>();
         int totalSoldProducts=0;
         int totalOrders=0;
         int totalCancelledOrders=0;
@@ -85,6 +87,7 @@ public class ThongKeServlet extends HttpServlet {
             totalSoldProducts = thongKeService.getTotalSoldProducts(year);
             totalOrders = thongKeService.getTotalOrders(year);
             totalCancelledOrders = thongKeService.getTotalCanceledOrders(year);
+            getTotalOrderChart = thongKeService.getOrderChart(year);
         }else {
             totalRevenue = thongKeService.getTotalRevenue(from,to);
             getTop10Users = thongKeService.getTop10Users(from,to);
@@ -97,6 +100,7 @@ public class ThongKeServlet extends HttpServlet {
             totalSoldProducts = thongKeService.getTotalSoldProducts(from,to);
             totalOrders = thongKeService.getTotalOrders(from,to);
             totalCancelledOrders = thongKeService.getTotalCanceledOrders(from,to);
+            getTotalOrderChart = thongKeService.getOrderChart(from,to);
 
         }
         request.setAttribute("totalRevenue",totalRevenue);
@@ -111,6 +115,7 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("totalSoldProducts", totalSoldProducts);
         request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("totalCancelledOrders", totalCancelledOrders);
+        request.setAttribute("OrderChartData", getTotalOrderChart);
         request.setAttribute("type", type);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);

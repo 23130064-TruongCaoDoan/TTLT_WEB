@@ -102,16 +102,53 @@
                 <div class="chart-container">
                     <div class="chart">
                         <h2>Biểu đồ doanh thu</h2>
-                        <canvas id="revenueChart"></canvas>
+                        <canvas id="revenueChart"
+                                data-labels='[
+                                    <c:forEach var="l" items="${revenueChartData}" varStatus="s">
+                                        "${l.label}"<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'
+                                data-values='[
+                                    <c:forEach var="r" items="${revenueChartData}" varStatus="s">
+                                        ${r.revenue}<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'>
+                        </canvas>
+                    </div>
+                    <div class="chart">
+                        <h2>Biểu đồ thể hiện số lượng đơn hàng</h2>
+                        <canvas id="orderLineChart"
+                                data-labels='[
+                                    <c:forEach var="l" items="${OrderChartData}" varStatus="s">
+                                        "${l.label}"<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'
+                                data-values='[
+                                    <c:forEach var="r" items="${OrderChartData}" varStatus="s">
+                                        ${r.total}<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'>
+                        </canvas>
                     </div>
                     <div class="chart-row">
                         <div class="chart-pie">
                             <h2>Tỷ lệ bán của từng loại</h2>
-                            <canvas id="categoryPieChart"></canvas>
+                            <canvas id="categoryPieChart"
+                                    data-labels='[
+                                        <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
+                                            "${entry.key}"<c:if test="${!s.last}">,</c:if>
+                                        </c:forEach>
+                                    ]'
+                                    data-values='[
+                                        <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
+                                            ${entry.value}<c:if test="${!s.last}">,</c:if>
+                                        </c:forEach>
+                                    ]'>
+                            </canvas>
                         </div>
                         <div class="chart-line">
-                            <h2>Số lượng đơn hàng bị hủy</h2>
-                            <canvas id="orderCancelledLineChart"></canvas>
+                            <h2>Chưa có biểu đồ</h2>
+                            <canvas></canvas>
                         </div>
                     </div>
                 </div>
@@ -186,6 +223,7 @@
 
 </main>
 </body>
+
 <script>
     document.getElementById("fromDate").addEventListener("change", function (){
         document.getElementById("toDate").setAttribute("min", this.value);
@@ -194,6 +232,7 @@
         document.getElementById("fromDate").setAttribute("max", this.value);
     });
 </script>
+
 <script>
     document.addEventListener("click", function (e) {
 
@@ -235,18 +274,9 @@
                 document.querySelector("#top10-product-panel").innerHTML =
                     doc.querySelector("#top10-product-panel").innerHTML;
 
-                let scripts = doc.querySelectorAll("script");
-
-                scripts.forEach(s => {
-                    if (s.innerText) {
-                        eval(s.innerText);
-                    }
-                });
-
-                setTimeout(() => {
-                    initChart();
-                    initPieChart();
-                }, 0);
+                initChart();
+                initPieChart();
+                initLineChart();
 
             });
     }
@@ -279,7 +309,9 @@
 
     });
 </script>
+
 <script>
+    const type = document.getElementById("filter")?.value || 'day';
     function formatterDate(date) {
         let element = date.split('-');
         let y = element[0];
@@ -287,28 +319,15 @@
         let d = element[2];
         return d + "-" + m + "-" + y;
     }
-    let type = document.getElementById("filter").value;
     let chartInstance = null;
     function initChart() {
-        const labels = [
-            <c:forEach var="l" items="${revenueChartData}" varStatus="s">
-            <c:choose>
-                <c:when test="${type == 'year'}">
-                    "${l.label}"
-                </c:when>
-                <c:otherwise>
-                    formatterDate("${l.label}")
-                </c:otherwise>
-                </c:choose>
-            <c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
-
-        const revenueData = [
-            <c:forEach var="r" items="${revenueChartData}">
-            ${r.revenue},
-            </c:forEach>
-        ];
+        const canvas = document.getElementById("revenueChart");
+        if (!canvas) return;
+        const rawLabels = JSON.parse(canvas.dataset.labels);
+        const revenueData = JSON.parse(canvas.dataset.values);
+        const labels = rawLabels.map(label =>
+            type === 'year' ? label : formatterDate(label)
+        );
 
         const data = {
             labels: labels,
@@ -348,32 +367,23 @@
             },
             plugins: [ChartDataLabels]
         };
-        const canvas = document.getElementById("revenueChart");
-        if (!canvas) return;
-
-        if (chartInstance) {
-            chartInstance.destroy();
+        if (window.chartInstance) {
+            window.chartInstance.destroy();
         }
-        chartInstance = new Chart(canvas, config);
+        window.chartInstance = new Chart(canvas, config);
     }
     initChart();
 </script>
+
 <script>
     let chartPercentType = null;
     function initPieChart() {
-        const pieLabels = [
-            <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
-            "${entry.key}"
-            <c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
+        const canvasPie = document.getElementById("categoryPieChart");
+        if (!canvasPie) return;
 
-        const pieData = [
-            <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
-            ${entry.value}
-            <c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
+        const pieLabels = JSON.parse(canvasPie.dataset.labels);
+        const pieData = JSON.parse(canvasPie.dataset.values);
+
         const pieDataset = {
             labels: pieLabels,
             datasets: [{
@@ -403,20 +413,97 @@
                         text: 'Sách bán theo thể loại (%)'
                     },
                     datalabels: {
-                        formatter: (value) => value.toFixed(1) + '%',
-                        color: '#fff'
+                        formatter: (value) => value.toFixed(2) + '%',
+                        color: '#fff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
                     }
                 }
             },
+            plugins: [ChartDataLabels]
         };
-        const canvasPie = document.getElementById("categoryPieChart");
-        if (!canvasPie) return;
 
-        if (chartPercentType) {
-            chartPercentType.destroy();
+
+        if (window.chartPercentType) {
+            window.chartPercentType.destroy();
         }
-        chartPercentType = new Chart(canvasPie, pieConfig);
+
+        window.chartPercentType = new Chart(canvasPie, pieConfig);
     }
     initPieChart();
+</script>
+
+<script>
+    let chartOrder = null;
+
+    function initLineChart() {
+        const canvasLineChart = document.getElementById("orderLineChart");
+        if (!canvasLineChart) return;
+
+        const rawLabelsLine = JSON.parse(canvasLineChart.dataset.labels);
+        const orderData = JSON.parse(canvasLineChart.dataset.values);
+
+        const type = document.getElementById("filter")?.value || 'day';
+
+        const orderLabels = rawLabelsLine.map(label =>
+            type === 'year' ? label : formatterDate(label)
+        );
+
+        const data = {
+            labels: orderLabels,
+            datasets: [
+                {
+                    label: 'Số lượng đơn hàng',
+                    data: orderData,
+                    fill: false,
+                    tension: 0.3,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }
+            ]
+        };
+
+        const lineConfig = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    datalabels: {
+                        align: 'top',
+                        anchor: 'end',
+                        formatter: (value) => value,
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+        if (window.chartOrder) {
+            window.chartOrder.destroy();
+        }
+
+        window.chartOrder = new Chart(canvasLineChart, lineConfig);
+    }
+    initLineChart();
 </script>
 </html>
