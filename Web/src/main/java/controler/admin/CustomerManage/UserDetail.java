@@ -1,17 +1,11 @@
 package controler.admin.CustomerManage;
 
 import DTO.MyOrderDTO;
-import Service.AddressService;
-import Service.OrderService;
-import Service.UserService;
-import Service.VoucherService;
+import Service.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import model.Address;
-import model.OrderView;
-import model.User;
-import model.Voucher;
+import model.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +19,7 @@ public class UserDetail extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserService userService = new UserService();
         VoucherService voucherService = new VoucherService();
+        BookService bookService = new BookService();
         OrderService orderService = new OrderService();
         AddressService addressService = new AddressService();
         String id = request.getParameter("id");
@@ -34,6 +29,7 @@ public class UserDetail extends HttpServlet {
         List<Address> addresses=addressService.getAddressOfUser(uid);
         List<Voucher> voucherList=voucherService.getListVoucherOfUser(uid);
         List<Voucher> allVoucher=voucherService.getListVoucherStillValid();
+        List<Book> listBook=bookService.getAllBooks();
 
         Set<Integer> userVoucherIds = voucherList.stream()
                 .map(Voucher::getId)
@@ -52,6 +48,7 @@ public class UserDetail extends HttpServlet {
         request.setAttribute("totalOrder",totalOrder);
         request.setAttribute("totalAmount",totalAmount);
 
+        request.setAttribute("listBook",listBook);
         request.setAttribute("addresses",addresses);
         request.setAttribute("voucherList",voucherList);
         request.setAttribute("availableVoucher",availableVoucher);
