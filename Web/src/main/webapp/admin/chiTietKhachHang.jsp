@@ -399,18 +399,6 @@
         <div class="edit-order-form">
             <input type="hidden" id="editOrderId">
             <div class="form-group">
-                <label>Người nhận</label>
-                <input type="text" id="editReceiver" placeholder="Tên người nhận">
-            </div>
-            <div class="form-group">
-                <label>Số điện thoại</label>
-                <input type="text" id="editOrderPhone" placeholder="Số điện thoại">
-            </div>
-            <div class="form-group">
-                <label>Địa chỉ</label>
-                <input type="text" id="editOrderAddress" placeholder="Địa chỉ giao hàng">
-            </div>
-            <div class="form-group">
                 <label>Ghi chú</label>
                 <textarea id="editOrderNote" placeholder="Ghi chú..."></textarea>
             </div>
@@ -437,52 +425,128 @@
         </div>
     </div>
 
-    <div id="createOrderPopup" class="popup-box" style="width: 560px;">
+    <div id="createOrderPopup" class="popup-box popup-large">
         <button class="popup-close" onclick="closeAllPopups()">&times;</button>
-        <h3><i class="fa-solid fa-plus-circle"></i> Tạo đơn hàng mới</h3>
-        <div class="create-order-form">
-            <div class="form-group">
-                <label>Địa chỉ giao hàng</label>
-                <select id="createOrderAddress">
-                    <option value="">-- Tự nhập địa chỉ --</option>
-                    <c:forEach items="${addressList}" var="addr">
-                        <option value="${addr.id}">${addr.receiverName}
-                            - ${addr.specificAddress}, ${addr.ward}, ${addr.district}</option>
+
+        <h3><i class="fa-solid fa-cart-plus"></i> Tạo đơn hàng</h3>
+
+        <div class="popup-body">
+
+            <div class="form-card">
+                <div class="card-title"><i class="fa-solid fa-user"></i> Người nhận</div>
+
+                <div class="grid-2">
+                    <input type="text" id="receiverName" placeholder="Tên người nhận">
+                    <input type="text" id="receiverPhone" placeholder="Số điện thoại">
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="card-title"><i class="fa-solid fa-location-dot"></i> Địa chỉ giao hàng</div>
+
+                <div class="grid-3">
+                    <select id="provinceSelect" onchange="loadDistricts()">
+                        <option value="">-- Chọn tỉnh / thành --</option>
+                    </select>
+
+                    <select id="districtSelect" onchange="loadWards()">
+                        <option value="">-- Chọn quận / huyện --</option>
+                    </select>
+
+                    <select id="wardSelect" onchange="loadShippingFromForm()">
+                        <option value="">-- Chọn phường / xã --</option>
+                    </select>
+                </div>
+
+                <input type="text" id="specificAddress" placeholder="Số nhà, tên đường...">
+            </div>
+
+            <div class="form-card">
+                <div class="card-title"><i class="fa-solid fa-truck"></i> Vận chuyển</div>
+                <select id="createOrderShipping" onchange="updateTotal()"></select>
+            </div>
+
+            <div class="form-card">
+                <div class="card-title"><i class="fa-solid fa-box"></i> Sản phẩm</div>
+
+                <input type="text"
+                       id="createProductSearch"
+                       placeholder="Tìm sản phẩm..."
+                       oninput="searchProducts(this.value)">
+
+                <div id="createProductResults">
+                    <c:forEach items="${listBook}" var="book">
+
+                        <c:choose>
+                            <c:when test="${book.priceDiscounted > 0}">
+                                <div class="product-search-item"
+                                     data-name="${book.title}"
+                                     data-price="${book.priceDiscounted}"
+                                     data-stock="${book.stock}"
+                                     onclick="addProductToOrder(${book.id}, '${book.title}', ${book.priceDiscounted},${book.stock})">
+
+                                    <div class="pname"><b>${book.title}</b></div>
+                                    <div>
+                                        <span style="text-decoration: line-through; color: gray;">
+                                            ${book.price} đ
+                                        </span>
+                                        <span style="color: red; font-weight: bold;">
+                                            ${book.priceDiscounted} đ
+                                        </span>
+                                    </div>
+                                    <div>Tồn kho: ${book.stock}</div>
+                                </div>
+                            </c:when>
+
+                            <c:otherwise>
+                                <div class="product-search-item"
+                                     data-name="${book.title}"
+                                     data-price="${book.price}"
+                                     data-stock="${book.stock}"
+                                     onclick="addProductToOrder(${book.id}, '${book.title}', ${book.price},${book.stock})">
+
+                                    <div class="pname"><b>${book.title}</b></div>
+                                    <div>Giá: ${book.price} đ</div>
+                                    <div>Tồn kho: ${book.stock}</div>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+
                     </c:forEach>
-                </select>
+                </div>
+
+                <div class="spdc">Sản phẩm đã chọn</div>
+                <div id="createProductsList" class="selected-product-list">
+
+                </div>
             </div>
-            <div class="form-group" id="customAddressGroup">
-                <label>Hoặc nhập địa chỉ</label>
-                <input type="text" id="createOrderCustomAddress" placeholder="Địa chỉ cụ thể...">
+
+            <div class="form-card summary-card">
+                <div class="card-title"><i class="fa-solid fa-credit-card"></i> Thanh toán</div>
+
+                <div class="summary-row">
+                    <span>Tiền hàng</span>
+                    <b id="subTotal">0 đ</b>
+                </div>
+
+                <div class="summary-row">
+                    <span>Phí ship</span>
+                    <b id="shippingFee">0 đ</b>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Tổng cộng</span>
+                    <b id="grandTotal">0 đ</b>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Phương thức vận chuyển</label>
-                <select id="createOrderShipping">
-                    <option value="standard">Tiêu chuẩn</option>
-                    <option value="express">Nhanh</option>
-                    <option value="sameday">Hỏa tốc</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Tìm sản phẩm</label>
-                <input type="text" class="product-search-input" id="createProductSearch"
-                       placeholder="Tìm sách..." oninput="searchProducts(this.value, 'create')">
-                <div class="product-search-results" id="createProductResults"></div>
-            </div>
-            <div class="form-group">
-                <label>Sản phẩm đã chọn</label>
-                <div class="edit-products-list" id="createProductsList"></div>
-            </div>
-            <div class="form-group">
-                <label>Tổng số tiền (đ)</label>
-                <input type="number" id="createOrderTotal" placeholder="Tự động tính toán...">
-            </div>
-            <div class="popup-actions">
-                <button class="btn-secondary" onclick="closeAllPopups()">Hủy</button>
-                <button class="btn-primary" onclick="submitCreateOrder()">
-                    <i class="fa-solid fa-paper-plane"></i> Tạo đơn
-                </button>
-            </div>
+
+        </div>
+
+        <div class="popup-actions sticky-actions">
+            <button class="btn-secondary" onclick="closeAllPopups()">Hủy</button>
+            <button class="btn-primary" onclick="submitCreateOrder()">
+                <i class="fa-solid fa-check"></i> Tạo đơn
+            </button>
         </div>
     </div>
 
