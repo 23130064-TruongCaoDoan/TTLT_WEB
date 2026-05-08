@@ -488,7 +488,7 @@
                                     <div class="pname"><b>${book.title}</b></div>
                                     <div>
                                         <span style="text-decoration: line-through; color: gray;">
-                                            ${book.price} đ
+                                            ${book.priceDiscounted} đ
                                         </span>
                                         <span style="color: red; font-weight: bold;">
                                             ${book.priceDiscounted} đ

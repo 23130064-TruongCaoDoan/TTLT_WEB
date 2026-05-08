@@ -88,7 +88,7 @@ public class BookDao extends BaseDao {
     public List<Book> getAllBooks() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery(
-                                "SELECT b.id, b.book_code, b.title, a.name AS author, b.price, b.stock, b.type, b.age, b.cover_img_url FROM books b LEFT JOIN authors a ON b.author_id = a.id WHERE b.is_sell = 1")
+                                "SELECT b.id, b.book_code, b.title, a.name AS author, b.price, b.price_discounted AS priceDiscounted, b.stock, b.type, b.age, b.cover_img_url FROM books b LEFT JOIN authors a ON b.author_id = a.id WHERE b.is_sell = 1")
                         .mapToBean(Book.class)
                         .list()
         );
@@ -158,7 +158,6 @@ public class BookDao extends BaseDao {
                     .mapTo(int.class)
                     .one();
 
-            // ảnh chi tiết
             for (String img : detailImages) {
                 h.createUpdate(
                                 "INSERT INTO book_image_details (book_id, img_url) VALUES (:bookId, :img)"

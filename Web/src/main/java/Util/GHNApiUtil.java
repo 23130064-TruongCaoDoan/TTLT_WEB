@@ -259,4 +259,5 @@ public class GHNApiUtil {
 //
 //        System.out.println(calculateShippingFee(toDistrictId,toWardCode,300,53321));
     }
+
 }
