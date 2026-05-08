@@ -310,7 +310,7 @@
                                             <td>
                                                 <i class="fa-solid fa-pen icon-trash"
                                                    style="color:#3b7ddd;cursor:pointer;"
-                                                   onclick="openEditOrderPopup(${order.id})"></i>
+                                                   onclick="openEditOrderPopup(${order.id}, '${order.status}', ${order.totalAmount})"></i>
                                             </td>
                                             <td>
                                                 <i class="fa-solid fa-trash icon-trash"
@@ -393,29 +393,31 @@
         </div>
     </div>
 
-    <div id="editOrderPopup" class="popup-box" style="width: 580px;">
+    <div id="editOrderPopup" class="popup-box" style="width: 500px;">
         <button class="popup-close" onclick="closeAllPopups()">&times;</button>
+
         <h3><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa đơn hàng</h3>
+
         <div class="edit-order-form">
             <input type="hidden" id="editOrderId">
+
             <div class="form-group">
-                <label>Ghi chú</label>
-                <textarea id="editOrderNote" placeholder="Ghi chú..."></textarea>
+                <label>Trạng thái đơn hàng</label>
+                <select id="editOrderStatus">
+                    <option value="PENDING">Chờ xác nhận</option>
+                    <option value="PROCESSING">Đang xử lý</option>
+                    <option value="SHIPPING">Đang vận chuyển</option>
+                    <option value="COMPLETED">Đã giao</option>
+                    <option value="CANCELLED">Đã hủy</option>
+                    <option value="REFUNDED">Hoàn trả</option>
+                </select>
             </div>
+
             <div class="form-group">
-                <label>Tổng thanh toán (đ)</label>
+                <label>Tổng tiền</label>
                 <input type="number" id="editOrderTotal" placeholder="Tổng tiền">
             </div>
-            <div class="form-group">
-                <label>Thêm sản phẩm</label>
-                <input type="text" class="product-search-input" id="productSearchInput"
-                       placeholder="Tìm sách..." oninput="searchProducts(this.value, 'edit')">
-                <div class="product-search-results" id="productSearchResults"></div>
-            </div>
-            <div class="form-group">
-                <label>Sản phẩm trong đơn</label>
-                <div class="edit-products-list" id="editProductsList"></div>
-            </div>
+
             <div class="popup-actions">
                 <button class="btn-secondary" onclick="closeAllPopups()">Hủy</button>
                 <button class="btn-primary" onclick="saveEditOrder()">
