@@ -143,20 +143,18 @@ function confirmDelete() {
             .then(data => {
                 closeAllPopups();
                 if (data.success) {
-                    if (data.message.isEmpty()){
+                    if (data.message.isEmpty()) {
                         show("Thực hiện thành công");
-                    }
-                    else{
+                    } else {
                         show(data.message);
                     }
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
                 } else {
-                    if (data.message.isEmpty()){
+                    if (data.message.isEmpty()) {
                         show("Thực hiện thất bại");
-                    }
-                    else{
+                    } else {
                         show(data.message, false);
                     }
                 }
@@ -304,13 +302,13 @@ function startEdit(field, currentVal, type) {
 }
 
 function saveInline(field) {
-    const input= document.getElementById("edit-"+field);
+    const input = document.getElementById("edit-" + field);
     if (!input) return;
 
-    let value=input.value.trim();
+    let value = input.value.trim();
 
 
-    if(!value){
+    if (!value) {
         show("Không được để trống", false);
         input.focus();
         return;
@@ -332,24 +330,23 @@ function saveInline(field) {
         }
     }
 
-    fetch("UpdataUserServlet",{
+    fetch("UpdataUserServlet", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "userId="+encodeURIComponent(userId) +
-            "&field="+encodeURIComponent(field) +
-            "&value="+encodeURIComponent(value)
+        body: "userId=" + encodeURIComponent(userId) +
+            "&field=" + encodeURIComponent(field) +
+            "&value=" + encodeURIComponent(value)
     })
         .then(res => res.json())
         .then(data => {
-            if(data.success){
+            if (data.success) {
                 show("Cập nhật thành công");
                 setTimeout(() => location.reload(), 1500);
-            }
-            else{
+            } else {
                 show("Thất bại", false);
             }
         })
-        .catch( err=> {
+        .catch(err => {
             console.error(err)
             show("Lỗi", false);
         });
@@ -357,9 +354,15 @@ function saveInline(field) {
 }
 
 
-function openEditOrderPopup(orderId) {
-    editOrderProducts = [];
-    renderEditProducts();
+function openEditOrderPopup(orderId, status, totalAmount) {
+
+    document.getElementById("editOrderId").value = orderId;
+    const statusSelect = document.getElementById("editOrderStatus");
+    if (statusSelect) {
+        statusSelect.value = status;
+    }
+    document.getElementById("editOrderTotal").value = totalAmount;
+
     openPopup("editOrderPopup");
 }
 
@@ -383,8 +386,36 @@ function removeEditProduct(i) {
 }
 
 function saveEditOrder() {
-    alert("Đã lưu chỉnh sửa đơn hàng (demo UI)");
-    closeAllPopups();
+    const orderId = document.getElementById("editOrderId").value;
+    const status = document.getElementById("editOrderStatus").value;
+    const total = Number(document.getElementById("editOrderTotal").value);
+
+    if (!total || total <= 0 ||!Number.isInteger(total)) {
+        show("Tổng tiền không hợp lệ", false);
+        return;
+    }
+
+    fetch("UpdateOrderServlet", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body:
+            "orderId=" + encodeURIComponent(orderId) +
+            "&status=" + encodeURIComponent(status) +
+            "&totalAmount=" + encodeURIComponent(total)
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                show("Cập nhật đơn hàng thành công");
+                closeAllPopups();
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                show(data.message || "Cập nhật thất bại", false);
+            }
+        })
+        .catch(() => show("Lỗi hệ thống", false));
 }
 
 
@@ -507,7 +538,7 @@ function submitCreateOrder() {
 
     fetch("CreateOrderForCustomerServlet", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: params.toString()
     })
         .then(res => res.json())
@@ -615,6 +646,7 @@ function searchVouchers(keyword) {
     }
 
 }
+
 function startEditSelect(field, currentVal, options) {
     const row = document.querySelector("#field-" + field + " .info-value-row");
 
@@ -780,7 +812,7 @@ function searchProducts(keyword) {
     keyword = keyword.toLowerCase().trim();
 
 
-    const l=document.getElementById("createProductResults");
+    const l = document.getElementById("createProductResults");
 
     const items = document.querySelectorAll(".product-search-item");
 
@@ -810,7 +842,6 @@ function searchProducts(keyword) {
 }
 
 
-
 function addProductToOrder(id, name, price, stock) {
     const existing = createOrderProducts.find(p => p.id === id);
 
@@ -833,6 +864,7 @@ function addProductToOrder(id, name, price, stock) {
     renderCreateProducts();
     calculateSubTotal();
 }
+
 function changeQuantity(index, value) {
 
     const p = createOrderProducts[index];
