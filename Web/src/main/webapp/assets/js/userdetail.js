@@ -143,12 +143,22 @@ function confirmDelete() {
             .then(data => {
                 closeAllPopups();
                 if (data.success) {
-                    show(data.message);
+                    if (data.message.isEmpty()){
+                        show("Thực hiện thành công");
+                    }
+                    else{
+                        show(data.message);
+                    }
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
                 } else {
-                    show(data.message, false);
+                    if (data.message.isEmpty()){
+                        show("Thực hiện thất bại");
+                    }
+                    else{
+                        show(data.message, false);
+                    }
                 }
             })
             .catch(err => console.log(err));
@@ -424,7 +434,6 @@ function removeCreateProduct(i) {
 }
 
 function submitCreateOrder() {
-
     const receiverName = document.getElementById("receiverName");
     const receiverPhone = document.getElementById("receiverPhone");
     const province = document.getElementById("provinceSelect");
@@ -455,26 +464,22 @@ function submitCreateOrder() {
         show("Vui lòng chọn tỉnh / thành", false);
         return;
     }
-
     if (!district.value) {
         district.classList.add("input-error");
         show("Vui lòng chọn quận / huyện", false);
         return;
     }
-
     if (!ward.value) {
         ward.classList.add("input-error");
         show("Vui lòng chọn phường / xã", false);
         return;
     }
-
     if (!address.value.trim()) {
         address.classList.add("input-error");
         address.focus();
         show("Vui lòng nhập địa chỉ cụ thể", false);
         return;
     }
-
     if (createOrderProducts.length === 0) {
         show("Vui lòng chọn ít nhất 1 sản phẩm", false);
         return;
@@ -482,42 +487,40 @@ function submitCreateOrder() {
 
     const subTotalText = document.getElementById("subTotal").innerText;
     const subTotal = parseInt(subTotalText.replace(/\D/g, "")) || 0;
-
     if (subTotal <= 0) {
         show("Tổng tiền không hợp lệ", false);
         return;
     }
 
-    const formData = new FormData();
+    const productString = createOrderProducts.map(p => p.id + ":" + p.quantity).join(",");
 
-    formData.append("userId", userId);
-    formData.append("receiverName", document.getElementById("receiverName").value.trim());
-    formData.append("receiverPhone", document.getElementById("receiverPhone").value.trim());
-    formData.append("province", document.getElementById("provinceSelect").selectedOptions[0]?.text);
-    formData.append("district", document.getElementById("districtSelect").selectedOptions[0]?.text);
-    formData.append("ward", document.getElementById("wardSelect").selectedOptions[0]?.text);
-    formData.append("specificAddress", document.getElementById("specificAddress").value.trim());
-    formData.append("shippingServiceId", document.getElementById("createOrderShipping").value);
-    let productString = createOrderProducts
-        .map(p => p.id + ":" + p.quantity)
-        .join(",");
+    const params = new URLSearchParams();
+    params.append("userId", userId);
+    params.append("receiverName", receiverName.value.trim());
+    params.append("receiverPhone", receiverPhone.value.trim());
+    params.append("province", province.selectedOptions[0].text);
+    params.append("district", district.selectedOptions[0].text);
+    params.append("ward", ward.selectedOptions[0].text);
+    params.append("specificAddress", address.value.trim());
+    params.append("shippingServiceId", document.getElementById("createOrderShipping").value);
+    params.append("products", productString);
 
-    formData.append("products", productString);
     fetch("CreateOrderForCustomerServlet", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
     })
         .then(res => res.json())
         .then(data => {
-            if(data.success){
-                show("Tạo đơn thành công");
+            if (data.success) {
+                show(data.message);
                 closeAllPopups();
-            }
-            else{
+                setTimeout(() => location.reload(), 1500);
+            } else {
                 show(data.message, false);
             }
-        });
-
+        })
+        .catch(() => show("Lỗi kết nối", false));
 }
 
 

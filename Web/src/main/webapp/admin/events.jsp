@@ -527,10 +527,21 @@
             .then(data => {
                 closeDeletePopup();
                 if (data.success) {
+                    if (data.message.isEmpty()){
+                        show("Thực hiện thành công");
+                    }
+                    else{
                     show(data.message);
+                    }
+
                     setTimeout(() => location.reload(), 1200);
                 } else {
-                    show(data.message, false);
+                    if (data.message.isEmpty()){
+                        show("Thực hiện thất bại");
+                    }
+                    else{
+                        show(data.message, false);
+                    }
                 }
             });
     }
