@@ -12,6 +12,7 @@ public class DangXuat extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.removeAttribute("user");
+        session.setAttribute("logoutSuccess", "Đăng xuất thành công");
         response.sendRedirect("login");
     }
 

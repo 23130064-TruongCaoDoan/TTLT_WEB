@@ -44,6 +44,7 @@ public class LoginServlet extends HttpServlet {
            }
            HttpSession session = request.getSession();
            session.setAttribute("user",user);
+           session.setAttribute("loginSuccess", "Đăng nhập thành công");
 
            NotificationService notificationService = new NotificationService();
            int count = notificationService.countNotification((user.getId()));
