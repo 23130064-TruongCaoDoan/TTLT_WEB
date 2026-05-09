@@ -66,12 +66,34 @@
                         </tbody>
                     </table>
                 </div>
+                <c:if test="${totalPages > 1}">
+                    <div class="pagination-container">
+                        <ul class="pagination">
+                            <li class="${currentPage == 1 ? 'disabled' : ''}">
+                                <a href="?page=${currentPage - 1}&q=${param.q}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <li class="${currentPage == i ? 'active' : ''}">
+                                    <a href="?page=${i}&q=${param.q}">${i}</a>
+                                </li>
+                            </c:forEach>
+                            <li class="${currentPage == totalPages ? 'disabled' : ''}">
+                                <a href="?page=${currentPage + 1}&q=${param.q}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>
 
     <div id="overlay"></div>
 
+    <div id="custom-toast"></div>
     <form id="taoTacGiaForm" method="post" action="${pageContext.request.contextPath}/admin-add-author" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; z-index: 1000; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
         <h3>TẠO TÁC GIẢ MỚI</h3>
             <div class="errorAdd" style="color: red; text-align: center; margin-bottom: 15px; font-weight: bold;"></div>

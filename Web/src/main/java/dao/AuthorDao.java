@@ -59,4 +59,26 @@ public class AuthorDao extends BaseDao {
             return update.execute() > 0;
         });
     }
+
+    public int getTotalAuthors(String keyword) {
+        String queryKeyword = (keyword == null || keyword.trim().isEmpty()) ? "%" : "%" + keyword.trim() + "%";
+        return getJdbi().withHandle(h ->
+                h.createQuery("SELECT COUNT(id) FROM authors WHERE CAST(id AS CHAR) LIKE :kw OR name LIKE :kw")
+                        .bind("kw", queryKeyword)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    public List<Author> getAuthorsByPage(String keyword, int offset, int limit) {
+        String queryKeyword = (keyword == null || keyword.trim().isEmpty()) ? "%" : "%" + keyword.trim() + "%";
+        return getJdbi().withHandle(h ->
+                h.createQuery("SELECT id, name, bio, birthday FROM authors WHERE CAST(id AS CHAR) LIKE :kw OR name LIKE :kw ORDER BY id DESC LIMIT :limit OFFSET :offset")
+                        .bind("kw", queryKeyword)
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(Author.class)
+                        .list()
+        );
+    }
 }

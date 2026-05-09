@@ -51,10 +51,19 @@ public class AuthorService {
     public boolean isValidDate(String date) {
         if (date == null || date.trim().isEmpty()) return false;
         try {
-            LocalDate.parse(date.trim()); // Hàm parse của Java mặc định parse chuẩn YYYY-MM-DD
+            LocalDate.parse(date.trim());
             return true;
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    public int getTotalAuthors(String keyword) {
+        return authorDao.getTotalAuthors(keyword);
+    }
+
+    public List<Author> getAuthorsByPage(String keyword, int page, int recordsPerPage) {
+        int offset = (page - 1) * recordsPerPage; // Công thức tính vị trí bắt đầu
+        return authorDao.getAuthorsByPage(keyword, offset, recordsPerPage);
     }
 }

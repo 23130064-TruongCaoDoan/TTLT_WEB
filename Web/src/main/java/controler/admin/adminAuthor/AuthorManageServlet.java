@@ -15,8 +15,26 @@ public class AuthorManageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String keyword = request.getParameter("q");
-        List<Author> authors = authorService.searchAuthors(keyword);
+
+        int page = 1;
+        int recordsPerPage = 30;
+
+        if (request.getParameter("page") != null) {
+            try {
+                page = Integer.parseInt(request.getParameter("page"));
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        int noOfRecords = authorService.getTotalAuthors(keyword);
+        int totalPages = (int) Math.ceil((double) noOfRecords / recordsPerPage);
+
+
+        List<Author> authors = authorService.getAuthorsByPage(keyword, page, recordsPerPage);
         request.setAttribute("authors", authors);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
         request.getRequestDispatcher("/admin/author.jsp").forward(request, response);
     }
 

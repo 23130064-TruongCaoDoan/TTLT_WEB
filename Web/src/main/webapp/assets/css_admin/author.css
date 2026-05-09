@@ -206,3 +206,40 @@ input[type="text"]:focus, input[type="number"]:focus {
 #custom-toast.success {
     background-color: #28a745;
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+}
+.pagination {
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #0d3164;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+.pagination li.active a {
+    background-color: #0d3164;
+    color: white;
+    border-color: #0d3164;
+}
+.pagination li:hover:not(.disabled):not(.active) a {
+    background-color: #e9ecef;
+}
+.pagination li.disabled a {
+    color: #ccc;
+    pointer-events: none;
+    background-color: #f9f9f9;
+}
