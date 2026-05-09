@@ -1,6 +1,7 @@
 package controler.user.ThanhToan;
 
 import Cart.Cart;
+import Service.AddressService;
 import Service.BookService;
 import Service.OrderService;
 import Service.UserService;
@@ -67,6 +68,8 @@ public class VNPayPayment extends HttpServlet {
         OrderService orderService = new OrderService();
         UserService userService = new UserService();
 
+        AddressService addressService = new AddressService();
+
         boolean ok = orderService.addOrder(
                 user.getId(),
                 finalTotal,
@@ -75,7 +78,7 @@ public class VNPayPayment extends HttpServlet {
                 "PAID",
                 productVoucherId != null ? productVoucherId : 0,
                 shipVoucherId != null ? shipVoucherId : 0,
-                addressId,
+                addressService.getAddressById(addressId),
                 shipName,
                 shipFee,
                 deliveryRange,

@@ -7,13 +7,16 @@ import dao.OrderDao;
 import dao.OrderDetailDAO;
 import dao.OrderItemDao;
 import dao.ShippingDao;
+import model.Address;
 import model.OrderItemsView;
 import model.OrderView;
 
 import java.util.List;
+import java.util.Map;
 
 public class OrderService {
     OrderDao orderDao;
+    AddressService addressService;
     ShippingDao shippingDao;
     NotificationService notificationService;
     OrderItemDao orderItemDao;
@@ -25,9 +28,10 @@ public class OrderService {
         this.shippingDao = new ShippingDao();
         this.notificationService = new NotificationService();
         this.orderItemDao = new OrderItemDao();
+        this.addressService = new AddressService();
     }
 
-    public boolean addOrder(int userId, double totalAmount, String note, String paymentMethod, String paymentStatus,Integer dis, Integer ship, Integer address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
+    public boolean addOrder(int userId, double totalAmount, String note, String paymentMethod, String paymentStatus,Integer dis, Integer ship, Address address_id, String shipping_type, double shipping_cost, String delivered_date, Cart cart) {
         int order_id = orderDao.addOrder(userId, totalAmount, note, dis, ship,paymentMethod,paymentStatus);
         if (order_id != -1) {
             bookService.updateQuantity(cart);
@@ -45,6 +49,12 @@ public class OrderService {
 
     public OrderDetailDTO getOrderDetail(int orderId) {
         return dao.findOrderDetailByOrderId(orderId);
+    }
+
+    public static void main(String[] args) {
+        OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+        OrderDetailDTO  orderDetailDTO = orderDetailDAO.findOrderDetailByOrderId(95);
+        System.out.println(orderDetailDTO.toString());
     }
 
     public List<OrderView> getAllOrders() {
@@ -90,5 +100,18 @@ public class OrderService {
 
     public boolean deleteOrderOfUser(int userId, int id) {
         return orderDao.deleteOrderOfUser(userId,id);
+    }
+
+    public boolean addOrder(Integer uid, double finalTotal, String nopaid, String receiverName, String receiverPhone, String province, String district, String ward, String specificAddress, String shipName, double shipFee, String deliveryRange, Map<Integer, Integer> productMap) {
+        int order_id = orderDao.addOrder(uid, finalTotal, "", null, null,"COD",nopaid);
+        if (order_id != -1) {
+            bookService.updateQuantity(productMap);
+            bookService.updateStockk(productMap);
+            orderItemDao.insertOrderItems(order_id, productMap);
+            notificationService.sendNoti(uid,"Đơn hàng mới ("+order_id+") do admin tạo","Shop đã tạo cho bạn 1 đơn hàng mới do trụ trặc");
+            shippingDao.addShipping(order_id, receiverName,receiverPhone,province,district,ward,specificAddress, shipName, shipFee, deliveryRange);
+        }
+
+        return order_id != -1;
     }
 }

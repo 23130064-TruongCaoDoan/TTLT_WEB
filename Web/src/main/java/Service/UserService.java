@@ -41,6 +41,9 @@ public class UserService {
     public void addUser(String fullname, String email) {
         userDao.addUser(fullname, email);
     }
+    public void addUser(int id,String fullname) {
+        userDao.addUser(id,fullname);
+    }
 
     public void updatePass(String email, String password) {
         if (checkExit(email)) {
@@ -131,5 +134,17 @@ public class UserService {
 
     public boolean updateBirthDay(int userId, String value) {
         return userDao.updateBirthDay(userId,value);
+    }
+
+    public boolean checkExitByID(int id) {
+        if (findUserByID(id) != null) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public User findUserByID(int id) {
+        return userDao.findUserById(id);
     }
 }

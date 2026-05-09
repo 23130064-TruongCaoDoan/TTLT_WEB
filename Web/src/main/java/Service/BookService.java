@@ -6,7 +6,6 @@ import dao.AuthorDao;
 import dao.BookDao;
 import jakarta.servlet.http.Part;
 import model.Book;
-import Service.UploadService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -360,10 +359,29 @@ public class BookService {
             }
         }
     }
+    public void updateStockk(Map<Integer, Integer> map) {
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer id = entry.getKey();
+            Integer quantity = entry.getValue();
+            Book book=getBooksById(id);
+            hd.updateStock(book,quantity);
+            if (book.getStock()==quantity){
+                hd.setUpdatSeld(book.getId());
+            }
+        }
+    }
 
     public void updateQuantity(Cart cart) {
         for (CartItem item : cart.getItems()) {
             hd.updateQuantity(item.getBook(),item.getQuantity());
+        }
+    }
+    public void updateQuantity(Map<Integer, Integer> map) {
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer id = entry.getKey();
+            Integer quantity = entry.getValue();
+            Book book=getBooksById(id);
+            hd.updateQuantity(book,quantity);
         }
     }
 
@@ -451,4 +469,5 @@ public class BookService {
         if (stock != null && stock.isBlank()) stock = null;
         return hd.searchAndFilterPaginated(q, type, stock, limit, offset);
     }
+
 }

@@ -53,8 +53,12 @@ public class CalculateShippingServlet extends HttpServlet {
 
 
             JSONArray resultServices = new JSONArray();
-
             int weight = cart.getTotalWeight();
+
+            if(cart == null){
+                weight = 300;
+            }
+
 
             for (int i = 0; i < services.length(); i++) {
 

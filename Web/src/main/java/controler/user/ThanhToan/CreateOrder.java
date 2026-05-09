@@ -118,7 +118,7 @@ public class CreateOrder extends HttpServlet {
             shipFee = GHNApiUtil.calculateShippingFee(
                     toDistrictId,
                     toWardCode,
-                    500,
+                    cart.getTotalWeight(),
                     serviceId
             );
 
@@ -207,6 +207,7 @@ public class CreateOrder extends HttpServlet {
 
         OrderService orderService = new OrderService();
 
+
         String paymentStatus = "cod".equalsIgnoreCase(paymentMethod) ? "NOPAID" : "PAID";
 
         boolean ok = orderService.addOrder(
@@ -217,7 +218,7 @@ public class CreateOrder extends HttpServlet {
                 paymentStatus,
                 productVoucherId,
                 shipVoucherId,
-                addressId,
+                address,
                 shipName,
                 realShipFee,
                 deliveryRange,
