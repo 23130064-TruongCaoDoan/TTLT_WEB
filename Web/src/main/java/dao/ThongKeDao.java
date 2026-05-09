@@ -492,8 +492,8 @@ public class ThongKeDao extends BaseDao {
                                 rs.getDouble("total")
                         ))
                         .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                Map.Entry::getValue
+                                entry -> entry.getKey(),
+                                entry -> entry.getValue()
                         ))
         );
     }
@@ -517,8 +517,63 @@ public class ThongKeDao extends BaseDao {
                                 rs.getDouble("total")
                         ))
                         .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                Map.Entry::getValue
+                                entry -> entry.getKey(),
+                                entry -> entry.getValue()
+                        ))
+        );
+    }
+    public Map<String, Double> getPercentProfitByCategory(String year) {
+        double totalRevenue = getTotalRevenue(year);
+        if (totalRevenue == 0) {
+            return Collections.emptyMap();
+        }
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT b.type,
+                                        (SUM(oi.subtotal) * 100.0) / :totalRevenue AS total
+                                    FROM ORDERS o
+                                    INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
+                                    INNER JOIN BOOKS b ON b.id = oi.book_id
+                                    WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                                    GROUP BY b.type
+                                """)
+                        .bind("totalRevenue", totalRevenue)
+                        .bind("year", year)
+                        .map((rs, ctx) -> Map.entry(
+                                rs.getString("type"),
+                                rs.getDouble("total")
+                        ))
+                        .collect(Collectors.toMap(
+                                entry -> entry.getKey(),
+                                entry -> entry.getValue()
+                        ))
+        );
+    }
+    public Map<String, Double> getPercentProfitByCategory(LocalDate from, LocalDate to) {
+        double totalRevenue = getTotalRevenue(from, to);
+        if (totalRevenue == 0) {
+            return Collections.emptyMap();
+        }
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT b.type,
+                                        (SUM(oi.subtotal) * 100.0) / :totalRevenue AS total
+                                    FROM ORDERS o
+                                    INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
+                                    INNER JOIN BOOKS b ON b.id = oi.book_id
+                                    WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                                    GROUP BY b.type
+                                """)
+                        .bind("totalRevenue", totalRevenue)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .map((rs, ctx) -> Map.entry(
+                                rs.getString("type"),
+                                rs.getDouble("total")
+                        ))
+                        .collect(Collectors.toMap(
+                                entry -> entry.getKey(),
+                                entry -> entry.getValue()
                         ))
         );
     }
@@ -578,6 +633,5 @@ public class ThongKeDao extends BaseDao {
     public static void main(String[] args) {
         ThongKeDao thongkeDao = new ThongKeDao();
         LocalDate now = LocalDate.now();
-        System.out.println(thongkeDao.getOrderChart("2026"));
     }
 }

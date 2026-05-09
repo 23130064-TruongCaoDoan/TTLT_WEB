@@ -147,8 +147,19 @@
                             </canvas>
                         </div>
                         <div class="chart-line">
-                            <h2>Chưa có biểu đồ</h2>
-                            <canvas></canvas>
+                            <h2>Tỷ lệ doanh thu theo từng loại</h2>
+                            <canvas id="profitByCategoryPieChart"
+                                    data-labels='[
+                                        <c:forEach var="entry" items="${percentProfitByCategory}" varStatus="s">
+                                            "${entry.key}"<c:if test="${!s.last}">,</c:if>
+                                        </c:forEach>
+                                    ]'
+                                    data-values='[
+                                        <c:forEach var="entry" items="${percentProfitByCategory}" varStatus="s">
+                                            ${entry.value}<c:if test="${!s.last}">,</c:if>
+                                        </c:forEach>
+                                    ]'>
+                            </canvas>
                         </div>
                     </div>
                 </div>
@@ -277,6 +288,7 @@
                 initChart();
                 initPieChart();
                 initLineChart();
+                initPercentProfitTypeChart();
 
             });
     }
@@ -505,5 +517,67 @@
         window.chartOrder = new Chart(canvasLineChart, lineConfig);
     }
     initLineChart();
+</script>
+
+<script>
+    let chartPercentProfitType = null;
+    function initPercentProfitTypeChart() {
+        const canvasPBTPie = document.getElementById("profitByCategoryPieChart");
+        if (!canvasPBTPie) return;
+
+        const pieProfitByTypeLabels = JSON.parse(canvasPBTPie.dataset.labels);
+        const pieProfitByTypeData = JSON.parse(canvasPBTPie.dataset.values);
+
+        const piePBTDataset = {
+            labels: pieProfitByTypeLabels,
+            datasets: [{
+                label: 'Tỷ lệ (%)',
+                data: pieProfitByTypeData,
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40'
+                ]
+            }]
+        };
+        const piePBTConfig = {
+            type: 'pie',
+            data: piePBTDataset,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sách bán theo thể loại (%)'
+                    },
+                    datalabels: {
+                        formatter: (value) => value.toFixed(2) + '%',
+                        color: '#fff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+
+
+        if (window.chartPercentProfitType) {
+            window.chartPercentProfitType.destroy();
+        }
+
+        window.chartPercentProfitType = new Chart(canvasPBTPie, piePBTConfig);
+    }
+    initPercentProfitTypeChart();
 </script>
 </html>

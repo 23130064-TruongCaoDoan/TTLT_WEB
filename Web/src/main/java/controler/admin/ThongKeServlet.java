@@ -38,6 +38,8 @@ public class ThongKeServlet extends HttpServlet {
         List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
         Map<String, Double> getPercentTypeChart=new HashMap<>();
         List<OrderDTOChart>  getTotalOrderChart=new ArrayList<>();
+        Map<String, Double> getPercentProfitByCategory=new HashMap<>();
+
         int totalSoldProducts=0;
         int totalOrders=0;
         int totalCancelledOrders=0;
@@ -88,6 +90,7 @@ public class ThongKeServlet extends HttpServlet {
             totalOrders = thongKeService.getTotalOrders(year);
             totalCancelledOrders = thongKeService.getTotalCanceledOrders(year);
             getTotalOrderChart = thongKeService.getOrderChart(year);
+            getPercentProfitByCategory = thongKeService.getPercentProfitByCategory(year);
         }else {
             totalRevenue = thongKeService.getTotalRevenue(from,to);
             getTop10Users = thongKeService.getTop10Users(from,to);
@@ -101,6 +104,7 @@ public class ThongKeServlet extends HttpServlet {
             totalOrders = thongKeService.getTotalOrders(from,to);
             totalCancelledOrders = thongKeService.getTotalCanceledOrders(from,to);
             getTotalOrderChart = thongKeService.getOrderChart(from,to);
+            getPercentProfitByCategory = thongKeService.getPercentProfitByCategory(from,to);
 
         }
         request.setAttribute("totalRevenue",totalRevenue);
@@ -116,6 +120,7 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("totalCancelledOrders", totalCancelledOrders);
         request.setAttribute("OrderChartData", getTotalOrderChart);
+        request.setAttribute("percentProfitByCategory", getPercentProfitByCategory);
         request.setAttribute("type", type);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);

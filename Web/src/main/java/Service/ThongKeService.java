@@ -95,6 +95,12 @@ public class ThongKeService {
     public Map<String, Double> getPercentTypeSold(LocalDate from, LocalDate to) {
         return dao.getSoldByCategory(from,to);
     }
+    public Map<String, Double> getPercentProfitByCategory(LocalDate from, LocalDate to) {
+        return dao.getPercentProfitByCategory(from,to);
+    }
+    public Map<String, Double> getPercentProfitByCategory(String year) {
+        return dao.getPercentProfitByCategory(year);
+    }
     public int getTotalOrders(String year) {
         return dao.getTotalOrders(year);
     }
@@ -114,5 +120,6 @@ public class ThongKeService {
     public List<OrderDTOChart> getOrderChart(LocalDate from, LocalDate to) {
         return dao.getOrderChart(from,to);
     }
+
 
 }
