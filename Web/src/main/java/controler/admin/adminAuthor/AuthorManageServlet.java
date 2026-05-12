@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "AuthorManageServlet", urlPatterns = {"/author-manage", "/admin-add-author", "/admin-edit-author"})
+@WebServlet(name = "AuthorManageServlet", urlPatterns = {"/author-manage", "/admin-add-author", "/admin-edit-author", "/admin-delete-author"})
 public class AuthorManageServlet extends HttpServlet {
     private AuthorService authorService = new AuthorService();
 
@@ -42,6 +42,12 @@ public class AuthorManageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getServletPath();
+
+        if ("/admin-delete-author".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            boolean success = authorService.deleteAuthor(id);
+            response.sendRedirect(request.getContextPath() + "/author-manage?" + (success ? "success=delete" : "error=delete_failed"));
+        }
 
         if ("/admin-add-author".equals(action)) {
             String name = request.getParameter("name");

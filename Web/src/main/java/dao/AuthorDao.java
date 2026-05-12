@@ -63,7 +63,7 @@ public class AuthorDao extends BaseDao {
     public int getTotalAuthors(String keyword) {
         String queryKeyword = (keyword == null || keyword.trim().isEmpty()) ? "%" : "%" + keyword.trim() + "%";
         return getJdbi().withHandle(h ->
-                h.createQuery("SELECT COUNT(id) FROM authors WHERE CAST(id AS CHAR) LIKE :kw OR name LIKE :kw")
+                h.createQuery("SELECT COUNT(id) FROM authors WHERE (CAST(id AS CHAR) LIKE :kw OR name LIKE :kw) AND is_deleted = 0 ")
                         .bind("kw", queryKeyword)
                         .mapTo(Integer.class)
                         .one()
@@ -73,12 +73,20 @@ public class AuthorDao extends BaseDao {
     public List<Author> getAuthorsByPage(String keyword, int offset, int limit) {
         String queryKeyword = (keyword == null || keyword.trim().isEmpty()) ? "%" : "%" + keyword.trim() + "%";
         return getJdbi().withHandle(h ->
-                h.createQuery("SELECT id, name, bio, birthday FROM authors WHERE CAST(id AS CHAR) LIKE :kw OR name LIKE :kw ORDER BY id DESC LIMIT :limit OFFSET :offset")
+                h.createQuery("SELECT id, name, bio, birthday FROM authors WHERE (CAST(id AS CHAR) LIKE :kw OR name LIKE :kw) AND is_deleted = 0 ORDER BY id DESC LIMIT :limit OFFSET :offset")
                         .bind("kw", queryKeyword)
                         .bind("limit", limit)
                         .bind("offset", offset)
                         .mapToBean(Author.class)
                         .list()
+        );
+    }
+
+    public boolean softDelete(int id) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("UPDATE authors SET is_deleted = 1 WHERE id = :id")
+                        .bind("id", id)
+                        .execute() > 0
         );
     }
 }

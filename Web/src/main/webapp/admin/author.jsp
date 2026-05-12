@@ -60,6 +60,10 @@
                                             style="background-color: #ffc107; color: #000; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
                                         <i class="fas fa-edit"></i> Sửa
                                     </button>
+                                    <button type="button" class="btn-delete" onclick="confirmDelete('${a.id}', '${a.name}')"
+                                        style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: 5px;">
+                                            <i class="fas fa-trash"></i> Xóa
+                                    </button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -94,6 +98,9 @@
     <div id="overlay"></div>
 
     <div id="custom-toast"></div>
+    <form id="deleteAuthorForm" method="post" action="${pageContext.request.contextPath}/admin-delete-author" style="display:none;">
+        <input type="hidden" name="id" id="deleteId">
+    </form>
     <form id="taoTacGiaForm" method="post" action="${pageContext.request.contextPath}/admin-add-author" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; z-index: 1000; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
         <h3>TẠO TÁC GIẢ MỚI</h3>
             <div class="errorAdd" style="color: red; text-align: center; margin-bottom: 15px; font-weight: bold;"></div>
@@ -160,11 +167,21 @@
             <c:if test="${param.success == 'edit'}">
                 msg = "Cập nhật tác giả thành công!"; type = "success";
             </c:if>
+            <c:if test="${param.success == 'delete'}">
+                msg = "Đã xóa tác giả thành công!"; type = "success";
+            </c:if>
 
             if (msg !== "") {
                 showToast(msg, type);
             }
     });
+
+    function confirmDelete(id, name) {
+        if (confirm("Bạn có chắc chắn muốn xóa tác giả '" + name + "' không?")) {
+            document.getElementById("deleteId").value = id;
+            document.getElementById("deleteAuthorForm").submit();
+        }
+    }
 
     addAuthorBtn.addEventListener("click", () => {
         overlay.style.display = "block";

@@ -63,7 +63,11 @@ public class AuthorService {
     }
 
     public List<Author> getAuthorsByPage(String keyword, int page, int recordsPerPage) {
-        int offset = (page - 1) * recordsPerPage; // Công thức tính vị trí bắt đầu
+        int offset = (page - 1) * recordsPerPage;
         return authorDao.getAuthorsByPage(keyword, offset, recordsPerPage);
     }
+    public boolean deleteAuthor(int id) {
+        return authorDao.softDelete(id);
+    }
+
 }
