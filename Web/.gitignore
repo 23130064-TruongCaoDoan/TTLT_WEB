@@ -44,3 +44,4 @@ db.properties
 google.properties
 vnpay.properties
 GHN.properties
+build.gradle
