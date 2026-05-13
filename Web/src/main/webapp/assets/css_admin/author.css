@@ -1,0 +1,245 @@
+.Menu .menfunction .qltacgia {
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+
+.author {
+    flex: 5;
+    align-items: flex-start;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.author h2 {
+    color: #0d3164;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.author .function {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.author .function .but {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.author .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.author .timkiem {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.author .timkiem button {
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.author .timkiem input {
+    width: 20vw;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.author-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.author-list th,
+.author-list td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.author-list thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f5f5f5;
+    z-index: 2;
+}
+
+.author-list .table-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-edit {
+    transition: background-color 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #e0a800 !important;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}
+
+#taoTacGiaForm, #suaTacGiaForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 101;
+    display: none;
+    box-sizing: border-box;
+    width: 40vw;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#taoTacGiaForm h3, #suaTacGiaForm h3 {
+    margin-top: 0;
+    color: #0d3164;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #0d3164;
+}
+
+.confirm {
+    display: block;
+    margin: 0 auto;
+    background-color: #0d3164;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.confirm:hover {
+    background-color: #0a254b !important;
+}
+
+
+.errorAdd, .errorEdit {
+    font-size: 14px;
+}
+
+#custom-toast {
+    visibility: hidden;
+    min-width: 300px;
+    margin-left: -150px;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 15px;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.4s, top 0.4s;
+}
+#custom-toast.show {
+    visibility: visible;
+    opacity: 1;
+    top: 30px;
+}
+#custom-toast.error {
+    background-color: #dc3545;
+}
+#custom-toast.success {
+    background-color: #28a745;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+}
+.pagination {
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #0d3164;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+.pagination li.active a {
+    background-color: #0d3164;
+    color: white;
+    border-color: #0d3164;
+}
+.pagination li:hover:not(.disabled):not(.active) a {
+    background-color: #e9ecef;
+}
+.pagination li.disabled a {
+    color: #ccc;
+    pointer-events: none;
+    background-color: #f9f9f9;
+}
