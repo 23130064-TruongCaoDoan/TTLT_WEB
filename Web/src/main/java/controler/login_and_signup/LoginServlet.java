@@ -31,19 +31,22 @@ public class LoginServlet extends HttpServlet {
         UserService userService = new UserService();
         User user = userService.findUser(username);
 
-        if(!user.isStatus()){
-            request.setAttribute("username",username);
-            request.setAttribute("password",password);
-            request.setAttribute("error","Tài khoản bạn đã bị khóa");
-            request.getRequestDispatcher("user/login.jsp").forward(request, response);
-        }
        if(user!=null&&userService.checkPass(user, password)){
            HttpSession oldSession = request.getSession(false);
            if (oldSession != null) {
                oldSession.invalidate();
            }
+
+           if(!user.isStatus()){
+               request.setAttribute("username",username);
+               request.setAttribute("password",password);
+               request.setAttribute("error","Tài khoản bạn đã bị khóa");
+               request.getRequestDispatcher("user/login.jsp").forward(request, response);
+           }
+
            HttpSession session = request.getSession();
            session.setAttribute("user",user);
+           session.setAttribute("loginSuccess", "Đăng nhập thành công");
 
            NotificationService notificationService = new NotificationService();
            int count = notificationService.countNotification((user.getId()));
