@@ -19,6 +19,9 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("home");
             return;
         }
+        String redirect = request.getParameter("redirect");
+        request.setAttribute("redirect", redirect);
+
         request.setAttribute("fbClientId", FacebookOAuthUltis.getAppId());
 
         request.getRequestDispatcher("user/login.jsp").forward(request, response);
@@ -52,6 +55,13 @@ public class LoginServlet extends HttpServlet {
            int count = notificationService.countNotification((user.getId()));
            session.setAttribute("numNotiFy", count);
 
+
+           String redirect = request.getParameter("redirect");
+
+           if (redirect != null && redirect.startsWith("/")) {
+               response.sendRedirect(redirect);
+               return;
+           }
            if(userService.checkRole(user)){
                response.sendRedirect("ThongKe");
            }

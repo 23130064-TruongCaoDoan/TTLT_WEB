@@ -22,10 +22,10 @@ public class MyOrdersServlet extends HttpServlet {
         if (status == null) {
             status = "ALL";
         }
-        if (user == null) {
-            response.sendRedirect("login");
-            return;
-        }
+//        if (user == null) {
+//            response.sendRedirect("login");
+//            return;
+//        }
         String sort = request.getParameter("sort");
 
 

@@ -19,16 +19,16 @@ public class ViVoucher extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
+//        if (session == null) {
+//            response.sendRedirect(request.getContextPath() + "/login");
+//            return;
+//        }
 
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
+//        if (user == null) {
+//            response.sendRedirect(request.getContextPath() + "/login");
+//            return;
+//        }
 
         int userId = user.getId();
         System.out.println("ViVoucher servlet called, userId = " + userId);
