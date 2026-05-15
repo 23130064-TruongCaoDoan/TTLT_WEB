@@ -24,6 +24,7 @@
             </div>
         </c:if>
         <form action="login" method="post" class="login">
+            <input type="hidden" name="redirect" value="${redirect}">
             <div class="title">Đăng nhập</div>
             <div class="inputIfor">
                 <div class="khung user"><input value="${username}" type="text" id="iUser" name="user"

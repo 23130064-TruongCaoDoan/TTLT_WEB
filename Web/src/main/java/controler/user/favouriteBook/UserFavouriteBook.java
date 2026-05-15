@@ -22,10 +22,10 @@ public class UserFavouriteBook extends HttpServlet {
         eventService.updatBookPriceForEvent();
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
+//        if (session == null || session.getAttribute("user") == null) {
+//            response.sendRedirect(request.getContextPath() + "/login");
+//            return;
+//        }
 
         User user = (User) session.getAttribute("user");
         int userId = user.getId();
