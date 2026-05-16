@@ -3,9 +3,11 @@ package controler.admin.adminEvent;
 import Service.EventService;
 import Service.UserService;
 import Service.VoucherService;
+import dao.AdminLogDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -200,6 +202,14 @@ public class addEvent extends HttpServlet {
                 if (specialVoucherParam != null) {
                     voucherService.tangVoucher(listUPoint, specialVoucherParam);
                 }
+
+                HttpSession session = request.getSession(false);
+                if (session != null && session.getAttribute("user") != null) {
+                    User user = (User) session.getAttribute("user");
+                    AdminLogDAO logDAO = new AdminLogDAO();
+                    logDAO.insertLog(user.getId(), "THÊM", "Bạn đã thêm sự kiện: " + title.trim());
+                }
+
                 response.getWriter().write("{\"success\":true,\"message\":\"Thêm sự kiện thành công\"}");
             } else {
                 writeError(response, "Thêm sự kiện thất bại");

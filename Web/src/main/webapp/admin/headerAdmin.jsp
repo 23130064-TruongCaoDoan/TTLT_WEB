@@ -8,6 +8,9 @@
 <header>
     <div class="logo left"><img src="assets/img/logo/logoChinh.png" alt="logo"></div>
     <div class="right">
+        <div class="notification-wrapper" style="position: relative; margin-right: 20px; cursor: pointer;" onclick="window.location.href='myHistory'">
+            <i class="fa-solid fa-bell notification-icon"></i>
+        </div>
         <i class="fa-solid fa-user"></i>
         <div class="ten">
             <c:if test="${not empty user}">
@@ -22,6 +25,19 @@
 </header>
 <div id="toast" class="toast"></div>
 <style>
+    .notification-wrapper .badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
     .toast {
         position: fixed;
         top: 90px;

@@ -100,6 +100,7 @@
     <div id="custom-toast"></div>
     <form id="deleteAuthorForm" method="post" action="${pageContext.request.contextPath}/admin-delete-author" style="display:none;">
         <input type="hidden" name="id" id="deleteId">
+        <input type="hidden" name="authorName" id="deleteAuthorName">
     </form>
     <form id="taoTacGiaForm" method="post" action="${pageContext.request.contextPath}/admin-add-author" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; z-index: 1000; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
         <h3>TẠO TÁC GIẢ MỚI</h3>
@@ -179,6 +180,7 @@
     function confirmDelete(id, name) {
         if (confirm("Bạn có chắc chắn muốn xóa tác giả '" + name + "' không?")) {
             document.getElementById("deleteId").value = id;
+            document.getElementById("deleteAuthorName").value = name;
             document.getElementById("deleteAuthorForm").submit();
         }
     }
