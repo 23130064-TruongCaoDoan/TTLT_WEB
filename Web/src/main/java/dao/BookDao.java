@@ -126,11 +126,11 @@ public class BookDao extends BaseDao {
 
             int bookId = h.createUpdate(
                             "INSERT INTO books (" +
-                                    "book_code, title, author_id, price, price_discounted, type, age, " +
+                                    "book_code, title, author_id, price, price_discounted,price_import, type, age, " +
                                     "cover_img_url, description, publisher, provider, published_date, " +
                                     "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
                                     ") VALUES (" +
-                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :type, :age, " +
+                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :price_import,:type, :age, " +
                                     ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
                                     ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
                                     ")"
@@ -140,6 +140,7 @@ public class BookDao extends BaseDao {
                     .bind("authorId", book.getAuthorId())
                     .bind("price", book.getPrice())
                     .bind("priceDiscounted", book.getPriceDiscounted())
+                    .bind("priceImport",book.getPriceImport())
                     .bind("type", book.getType())
                     .bind("age", book.getAge())
                     .bind("coverImgUrl", book.getCoverImgUrl())
@@ -335,6 +336,7 @@ public class BookDao extends BaseDao {
                                         author_id = :authorId,
                                         price = :price,
                                         price_discounted = :priceDiscounted,
+                                        price_import =  :priceImport,
                                         type = :type,
                                         age = :age,
                                         cover_img_url = :cover,
@@ -355,6 +357,7 @@ public class BookDao extends BaseDao {
                         .bind("authorId", book.getAuthorId())
                         .bind("price", book.getPrice())
                         .bind("priceDiscounted", book.getPriceDiscounted())
+                        .bind("priceImport", book.getPriceImport())
                         .bind("type", book.getType())
                         .bind("age", book.getAge())
                         .bind("cover", book.getCoverImgUrl())
