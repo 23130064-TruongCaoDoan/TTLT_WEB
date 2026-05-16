@@ -22,7 +22,6 @@ public class ThanhToan extends HttpServlet {
         String mode = request.getParameter("mode");
 
 
-
         Cart cart;
         if ("buynow".equals(mode)) {
             cart = (Cart) request.getSession().getAttribute("buyNowCart");
@@ -35,10 +34,16 @@ public class ThanhToan extends HttpServlet {
         VoucherService voucherService = new VoucherService();
 
 
-        if (user == null) {
-            response.sendRedirect("login");
-            return;
-        }
+//        if (user == null) {
+//            String currentUrl = request.getRequestURI();
+//            String queryString = request.getQueryString();
+//            if (queryString != null) {
+//                currentUrl += "?" + queryString;
+//            }
+//            response.sendRedirect(request.getContextPath()
+//                    + "/login?redirect=" + currentUrl);
+//            return;
+//        }
         if (cart == null || cart.getItems().isEmpty()) {
             response.sendRedirect("ShoppingCart");
             return;

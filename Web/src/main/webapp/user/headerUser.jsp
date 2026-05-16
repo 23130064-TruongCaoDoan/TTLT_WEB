@@ -87,6 +87,35 @@
     </div>
 </div>
 <div id="toast" class="toast"></div>
+<script>
+    const toast = document.getElementById("toast");
+
+    <c:choose>
+        <c:when test="${not empty sessionScope.loginSuccess}">
+            sessionStorage.setItem("toastMessage", "${sessionScope.loginSuccess}");
+            <c:remove var="loginSuccess" scope="session"/>
+        </c:when>
+
+        <c:when test="${not empty sessionScope.logoutSuccess}">
+            sessionStorage.setItem("toastMessage", "${sessionScope.logoutSuccess}");
+            <c:remove var="logoutSuccess" scope="session"/>
+        </c:when>
+    </c:choose>
+
+    window.addEventListener("load", function () {
+        const message = sessionStorage.getItem("toastMessage");
+
+        if (message && toast) {
+            toast.innerText = message;
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+                sessionStorage.removeItem("toastMessage");
+            }, 3000);
+        }
+    });
+</script>
 <script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 </body>
 </html>

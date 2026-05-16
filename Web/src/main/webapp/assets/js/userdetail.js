@@ -110,7 +110,7 @@ function submitGiftVoucher() {
                 show(data.message);
                 setTimeout(() => {
                     location.reload();
-                }, 3000);
+                }, 1500);
             } else {
                 show(data.message, false);
             }
@@ -143,20 +143,13 @@ function confirmDelete() {
             .then(data => {
                 closeAllPopups();
                 if (data.success) {
-                    if (data.message.isEmpty()) {
-                        show("Thực hiện thành công");
-                    } else {
-                        show(data.message);
-                    }
+                    show("Thực hiện thành công");
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
                 } else {
-                    if (data.message.isEmpty()) {
-                        show("Thực hiện thất bại");
-                    } else {
-                        show(data.message, false);
-                    }
+
+                    show(data.message, false);
                 }
             })
             .catch(err => console.log(err));
@@ -199,7 +192,7 @@ function confirmDelete() {
             .then(data => {
                 closeAllPopups();
                 if (data.success) {
-                    show(data.message);
+                    show("Xóa địa chỉ thành công");
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
@@ -390,7 +383,7 @@ function saveEditOrder() {
     const status = document.getElementById("editOrderStatus").value;
     const total = Number(document.getElementById("editOrderTotal").value);
 
-    if (!total || total <= 0 ||!Number.isInteger(total)) {
+    if (!total || total <= 0 || !Number.isInteger(total)) {
         show("Tổng tiền không hợp lệ", false);
         return;
     }
