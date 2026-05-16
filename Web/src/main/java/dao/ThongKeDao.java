@@ -561,7 +561,7 @@ public class ThongKeDao extends BaseDao {
                                     FROM ORDERS o
                                     INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
                                     INNER JOIN BOOKS b ON b.id = oi.book_id
-                                    WHERE o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                                    WHERE o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
                                     GROUP BY b.type
                                 """)
                         .bind("totalRevenue", totalRevenue)

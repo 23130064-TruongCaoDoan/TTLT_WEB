@@ -11,6 +11,7 @@ public class Book {
     private String author;
     private int price;
     private int priceDiscounted;
+    private int priceImport;
     private String type;
     private int age;
     private String coverImgUrl;
@@ -87,6 +88,8 @@ public class Book {
 
     public int getPriceDiscounted() { return priceDiscounted; }
     public void setPriceDiscounted(int priceDiscounted) { this.priceDiscounted = priceDiscounted; }
+    public int getPriceImport() { return priceImport; }
+    public void setPriceImport(int priceImport) { this.priceImport = priceImport; }
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
