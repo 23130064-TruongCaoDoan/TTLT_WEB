@@ -68,6 +68,7 @@ public class BookService {
         int age = Integer.parseInt(params.get("age")[0]);
 
         int price = Integer.parseInt(params.get("price")[0]);
+        int priceImport = Integer.parseInt(params.get("price_import")[0]);
 
         String priceDiscountStr = params.get("price_discounted")[0];
         int priceDiscounted = (priceDiscountStr == null || priceDiscountStr.isBlank()) ? price : Integer.parseInt(priceDiscountStr);
@@ -164,6 +165,9 @@ public class BookService {
         if (old.getAuthorId() != incoming.getAuthorId())
             old.setAuthorId(incoming.getAuthorId());
 
+        if (old.getPriceImport() != incoming.getPriceImport())
+            old.setPriceImport(incoming.getPriceImport());
+
         if (old.getPrice() != incoming.getPrice())
             old.setPrice(incoming.getPrice());
 
@@ -225,7 +229,7 @@ public class BookService {
         book.setTitle(p.get("title")[0]);
         book.setAuthorId(Integer.parseInt(p.get("author_id")[0]));
         book.setPrice(Integer.parseInt(p.get("price")[0]));
-
+        book.setPriceImport(Integer.parseInt(p.get("price_import")[0]));
         String pd = p.get("price_discounted")[0];
         book.setPriceDiscounted(
                 (pd == null || pd.isBlank())

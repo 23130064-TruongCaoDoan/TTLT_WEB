@@ -121,6 +121,7 @@
                                    data-code="${p.bookCode}"
                                    data-title="${p.title}"
                                    data-author="${p.authorId}"
+                                   data-price-import="${p.priceImport}"
                                    data-price="${p.price}"
                                    data-price-discounted="${p.priceDiscounted}"
                                    data-age="${p.age}"
@@ -169,6 +170,7 @@
         </div>
     </div>
 </main>
+
 <div id="overlay"></div>
     <form id="bookForm" method="post" action="${pageContext.request.contextPath}/product-manage"
           enctype="multipart/form-data">
@@ -191,9 +193,12 @@
                     </c:forEach>
                 </select>
             </div>
-
             <div class="form-group">
-                <label>Giá gốc</label>
+                <label>Giá nhập</label>
+                <input type="number" name="price_import" placeholder="VD: 40000" required>
+            </div>
+            <div class="form-group">
+                <label>Giá bán</label>
                 <input type="number" name="price" placeholder="VD: 50000" required>
             </div>
             <div class="form-group">
@@ -295,6 +300,7 @@
                 </div>
             </div>
     </div>
+
     <div id="unsold-panel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 9999;">
         <div id="unsold-container" style="background: #fff; padding: 25px; height: 80%; border-radius: 12px; width: 80%; overflow-y: auto;">
             <h2 style="color: #0d3164; text-align: center; margin-bottom: 20px;">Danh sách sản phẩm không bán được</h2>
@@ -327,6 +333,7 @@
                 </div>
         </div>
     </div>
+
 <script>
 
     const overlay = document.getElementById("overlay");
@@ -348,6 +355,7 @@
             document.getElementById("code").value = btn.dataset.code;
             document.getElementById("title").value = btn.dataset.title;
             document.querySelector("select[name='author_id']").value = btn.dataset.author;
+            document.querySelector("input[name='price_import']").value = btn.dataset.priceImport;
             document.querySelector("input[name='price']").value = btn.dataset.price;
             document.querySelector("input[name='price_discounted']").value = btn.dataset.priceDiscounted;
             document.querySelector("input[name='age']").value = btn.dataset.age;
