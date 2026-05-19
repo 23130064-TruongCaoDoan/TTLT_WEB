@@ -2,8 +2,11 @@ package dao;
 
 import model.Book;
 import model.CommentView;
+import model.RatingStartView;
+import org.jdbi.v3.core.Handle;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
 public class BookDao extends BaseDao {
@@ -121,16 +124,28 @@ public class BookDao extends BaseDao {
     }
 
 
-    public void insert(Book book, List<String> detailImages) {
-        getJdbi().useHandle(h -> {
-
+    public void insert(Book book, List<String> detailImages, int employeeId) {
+        Integer bookIdOld = findBookByBookCode(book.getBookCode());
+        getJdbi().useTransaction(h -> {
+            if(bookIdOld!=null){
+                h.createUpdate("""
+                        UPDATE books
+                        SET stock = stock + :quantity
+                        WHERE id = :bookId
+                        """)
+                        .bind("quantity", book.getStock())
+                        .bind("bookId", bookIdOld)
+                        .execute();
+                insertHistoryBookImport(h,bookIdOld,book, employeeId);
+                return;
+            }
             int bookId = h.createUpdate(
                             "INSERT INTO books (" +
                                     "book_code, title, author_id, price, price_discounted,price_import, type, age, " +
                                     "cover_img_url, description, publisher, provider, published_date, " +
                                     "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
                                     ") VALUES (" +
-                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :price_import,:type, :age, " +
+                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
                                     ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
                                     ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
                                     ")"
@@ -167,6 +182,7 @@ public class BookDao extends BaseDao {
                         .bind("img", "assets/img/books/" + img)
                         .execute();
             }
+            insertHistoryBookImport(h,bookId,book, employeeId);
         });
     }
 
@@ -810,5 +826,45 @@ public class BookDao extends BaseDao {
             return query.mapToBean(Book.class).list();
         });
     }
-
+    public void insertHistoryBookImport(Handle handle,int bookId, Book book, int employeeId) {
+           int subtotal = book.getPriceImport()*book.getStock();
+            int importOrderId = handle.createUpdate("""
+                INSERT INTO import_orders(provider, import_date, total_amount, note, employee_id_import)
+                VALUES(:provider, NOW(), :totalAmount, :note, :employeeIdImport)
+                """)
+                    .bind("provider", book.getProvider())
+                    .bind("totalAmount", book.getPriceImport() * book.getStock())
+                    .bind("note", "sách mới về")
+                    .bind("employeeIdImport", employeeId)
+                    .executeAndReturnGeneratedKeys("id")
+                    .mapTo(int.class)
+                    .one();
+            handle.createUpdate("""
+                INSERT INTO import_order_details(import_order_id,book_id,quantity, price_import,subtotal)
+                VALUES(:importOrderId,:bookId,:quantity,:priceImport,:subtotal)
+                """)
+                    .bind("importOrderId", importOrderId)
+                    .bind("bookId", bookId)
+                    .bind("quantity", book.getStock())
+                    .bind("priceImport", book.getPriceImport())
+                    .bind("subtotal", subtotal)
+                    .execute();
+    }
+    public Integer findBookByBookCode(String bookCode) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                    SELECT id
+                    FROM books
+                    WHERE book_code = :bookCode
+                    """)
+                        .bind("bookCode", bookCode)
+                        .mapTo(Integer.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+    public static void main(String[] args) {
+        BookDao dao = new BookDao();
+        System.out.println(dao.findBookByBookCode("8935074134141"));
+    }
 }

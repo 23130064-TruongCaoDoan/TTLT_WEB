@@ -51,7 +51,7 @@ public class BookService {
         return hd.countBooks();
     }
 
-    public void addBook(Map<String, String[]> params, Part mainImage, List<Part> detailImages) throws Exception {
+    public void addBook(Map<String, String[]> params, Part mainImage, List<Part> detailImages, int employeeId) throws Exception {
 
         String code = params.get("code")[0];
         String title = params.get("title")[0];
@@ -104,7 +104,7 @@ public class BookService {
         book.setAge(age);
         book.setIsSell(true);
 
-        hd.insert(book, detailImgUrls);
+        hd.insert(book, detailImgUrls, employeeId);
     }
 
 

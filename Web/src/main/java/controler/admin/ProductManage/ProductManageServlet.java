@@ -89,9 +89,13 @@ public class ProductManageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        User user = (User) session.getAttribute("user");
         try {
 
             Part mainImage = request.getPart("img-main");
@@ -107,7 +111,7 @@ public class ProductManageServlet extends HttpServlet {
                 bookService.addBook(
                         request.getParameterMap(),
                         mainImage,
-                        detailImages);
+                        detailImages,user.getId());
             }
 
             response.sendRedirect(request.getContextPath() + "/product-manage");
