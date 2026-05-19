@@ -249,7 +249,7 @@
             <div class="form-group-inline">
                 <div>
                     <label>Ngày xuất bản</label>
-                    <input type="date" id="start_date" name="startDate">
+                    <input type="date" id="start_date" name="startDate" required>
                 </div>
             </div>
             <div class="form-group">
