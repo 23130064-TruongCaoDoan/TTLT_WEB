@@ -139,50 +139,52 @@ public class BookDao extends BaseDao {
                 insertHistoryBookImport(h,bookIdOld,book, employeeId);
                 return;
             }
-            int bookId = h.createUpdate(
-                            "INSERT INTO books (" +
-                                    "book_code, title, author_id, price, price_discounted,price_import, type, age, " +
-                                    "cover_img_url, description, publisher, provider, published_date, " +
-                                    "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
-                                    ") VALUES (" +
-                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
-                                    ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
-                                    ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
-                                    ")"
-                    )
-                    .bind("bookCode", book.getBookCode())
-                    .bind("title", book.getTitle())
-                    .bind("authorId", book.getAuthorId())
-                    .bind("price", book.getPrice())
-                    .bind("priceDiscounted", book.getPriceDiscounted())
-                    .bind("priceImport",book.getPriceImport())
-                    .bind("type", book.getType())
-                    .bind("age", book.getAge())
-                    .bind("coverImgUrl", book.getCoverImgUrl())
-                    .bind("description", book.getDescription())
-                    .bind("publisher", book.getPublisher())
-                    .bind("provider", book.getProvider())
-                    .bind("publishedDate", book.getPublishedDate())
-                    .bind("weight", book.getWeight())
-                    .bind("bookSize", book.getBookSize())
-                    .bind("pagesNumber", book.getPagesNumber())
-                    .bind("format", book.getFormat())
-                    .bind("isSell", book.getIsSell())          // 0 / 1
-                    .bind("quantitySold", book.getQuantitySold())
-                    .bind("stock", book.getStock())
-                    .executeAndReturnGeneratedKeys("id")
-                    .mapTo(int.class)
-                    .one();
-
-            for (String img : detailImages) {
-                h.createUpdate(
-                                "INSERT INTO book_image_details (book_id, img_url) VALUES (:bookId, :img)"
+            else{
+                int bookId = h.createUpdate(
+                                "INSERT INTO books (" +
+                                        "book_code, title, author_id, price, price_discounted,price_import, type, age, " +
+                                        "cover_img_url, description, publisher, provider, published_date, " +
+                                        "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
+                                        ") VALUES (" +
+                                        ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
+                                        ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
+                                        ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
+                                        ")"
                         )
-                        .bind("bookId", bookId)
-                        .bind("img", "assets/img/books/" + img)
-                        .execute();
+                        .bind("bookCode", book.getBookCode())
+                        .bind("title", book.getTitle())
+                        .bind("authorId", book.getAuthorId())
+                        .bind("price", book.getPrice())
+                        .bind("priceDiscounted", book.getPriceDiscounted())
+                        .bind("priceImport",book.getPriceImport())
+                        .bind("type", book.getType())
+                        .bind("age", book.getAge())
+                        .bind("coverImgUrl", book.getCoverImgUrl())
+                        .bind("description", book.getDescription())
+                        .bind("publisher", book.getPublisher())
+                        .bind("provider", book.getProvider())
+                        .bind("publishedDate", book.getPublishedDate())
+                        .bind("weight", book.getWeight())
+                        .bind("bookSize", book.getBookSize())
+                        .bind("pagesNumber", book.getPagesNumber())
+                        .bind("format", book.getFormat())
+                        .bind("isSell", book.getIsSell())          // 0 / 1
+                        .bind("quantitySold", book.getQuantitySold())
+                        .bind("stock", book.getStock())
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class)
+                        .one();
+
+                for (String img : detailImages) {
+                    h.createUpdate(
+                                    "INSERT INTO book_image_details (book_id, img_url) VALUES (:bookId, :img)"
+                            )
+                            .bind("bookId", bookId)
+                            .bind("img", "assets/img/books/" + img)
+                            .execute();
+                }
+                insertHistoryBookImport(h,bookId,book, employeeId);
             }
-            insertHistoryBookImport(h,bookId,book, employeeId);
         });
     }
 
