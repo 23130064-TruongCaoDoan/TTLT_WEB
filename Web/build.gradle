@@ -16,6 +16,9 @@ task deployToTomcat(type: Copy) {
     from('build/libs/Web.war')
     into('D:/Program File/apache-tomcat-10.1.48/webapps')
 }
+processResources {
+    from 'src/main/resources'
+}
 repositories {
     mavenCentral()
 }
@@ -71,7 +74,6 @@ task docker_deploy {
     tasks.getByName('docker_app_start').mustRunAfter docker_upload_file_to_server
 }
 dependencies {
-
     providedCompile 'jakarta.servlet:jakarta.servlet-api:6.1.0'
 
     implementation 'com.cloudinary:cloudinary-http44:1.38.0'
