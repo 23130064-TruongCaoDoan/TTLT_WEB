@@ -23,57 +23,110 @@ public class ShoppingCart extends HttpServlet {
 
         VoucherService voucherService = new VoucherService();
         HttpSession session = request.getSession();
-
-        Cart cart = (Cart) session.getAttribute("cart");
         User user = (User) session.getAttribute("user");
-
-        int userId = user == null ? 0 : user.getId();
-        double cartTotal = cart == null ? 0 : cart.getTotalBill();
-
-
-        Voucher applied = (Voucher) session.getAttribute("appliedDiscountVoucher");
-
-        if (applied != null) {
-            boolean valid = voucherService.isVoucherValid( cart,applied);
-            if (!valid) {
-                session.removeAttribute("appliedDiscountVoucher");
-                applied = null;
-                Integer numApplyVoucher= (Integer) session.getAttribute("numApplyVoucher");
-                numApplyVoucher--;
-                session.setAttribute("numApplyVoucher", numApplyVoucher);
-            }
-        }
+        if (user == null) {
+            Cart cart = (Cart) session.getAttribute("cart");
+            int userId = user == null ? 0 : user.getId();
+            double cartTotal = cart == null ? 0 : cart.getTotalBill();
 
 
-        double finalTotal = cartTotal;
+            Voucher applied = (Voucher) session.getAttribute("appliedDiscountVoucher");
 
-        if (applied != null && "discount".equals(applied.getType())) {
-            double value = applied.getValuee();
-
-            if (value > 0) {
-                if (value < 1) {
-                    finalTotal -= cartTotal * value;
-                } else {
-                    finalTotal -= value;
+            if (applied != null) {
+                boolean valid = voucherService.isVoucherValid( cart,applied);
+                if (!valid) {
+                    session.removeAttribute("appliedDiscountVoucher");
+                    applied = null;
+                    Integer numApplyVoucher= (Integer) session.getAttribute("numApplyVoucher");
+                    numApplyVoucher--;
+                    session.setAttribute("numApplyVoucher", numApplyVoucher);
                 }
             }
-            if (finalTotal < 0) finalTotal = 0;
+
+
+            double finalTotal = cartTotal;
+
+            if (applied != null && "discount".equals(applied.getType())) {
+                double value = applied.getValuee();
+
+                if (value > 0) {
+                    if (value < 1) {
+                        finalTotal -= cartTotal * value;
+                    } else {
+                        finalTotal -= value;
+                    }
+                }
+                if (finalTotal < 0) finalTotal = 0;
+            }
+
+            request.setAttribute("finalTotal", finalTotal);
+
+
+            List<Voucher> listVoucherDiscount = voucherService.listVoucherDiscountUser(userId);
+            List<Voucher> listVoucherShip = voucherService.listVoucherShipUser(userId);
+
+            listVoucherDiscount = voucherService.filterVoucherValid(cart, cartTotal, listVoucherDiscount);
+            listVoucherShip = voucherService.filterVoucherValid(cart, cartTotal, listVoucherShip);
+
+            request.setAttribute("listVoucherDiscount", listVoucherDiscount);
+            request.setAttribute("listVoucherShip", listVoucherShip);
+
+            request.getRequestDispatcher("user/shoppingCart.jsp")
+                    .forward(request, response);
+        }
+        else{
+            model.Cart cart= (model.Cart) session.getAttribute("cart");
+            int userId = user == null ? 0 : user.getId();
+            double cartTotal = cart == null ? 0 : cart.getTotalBill();
+
+
+            Voucher applied = (Voucher) session.getAttribute("appliedDiscountVoucher");
+
+            if (applied != null) {
+                boolean valid = voucherService.isVoucherValid(cart,applied);
+                if (!valid) {
+                    session.removeAttribute("appliedDiscountVoucher");
+                    applied = null;
+                    Integer numApplyVoucher= (Integer) session.getAttribute("numApplyVoucher");
+                    numApplyVoucher--;
+                    session.setAttribute("numApplyVoucher", numApplyVoucher);
+                }
+            }
+
+
+            double finalTotal = cartTotal;
+
+            if (applied != null && "discount".equals(applied.getType())) {
+                double value = applied.getValuee();
+
+                if (value > 0) {
+                    if (value < 1) {
+                        finalTotal -= cartTotal * value;
+                    } else {
+                        finalTotal -= value;
+                    }
+                }
+                if (finalTotal < 0) finalTotal = 0;
+            }
+
+            request.setAttribute("finalTotal", finalTotal);
+
+
+            List<Voucher> listVoucherDiscount = voucherService.listVoucherDiscountUser(userId);
+            List<Voucher> listVoucherShip = voucherService.listVoucherShipUser(userId);
+
+            listVoucherDiscount = voucherService.filterVoucherValid(cart, cartTotal, listVoucherDiscount);
+            listVoucherShip = voucherService.filterVoucherValid(cart, cartTotal, listVoucherShip);
+
+            request.setAttribute("listVoucherDiscount", listVoucherDiscount);
+            request.setAttribute("listVoucherShip", listVoucherShip);
+
+            request.getRequestDispatcher("user/shoppingCart.jsp")
+                    .forward(request, response);
         }
 
-        request.setAttribute("finalTotal", finalTotal);
 
 
-        List<Voucher> listVoucherDiscount = voucherService.listVoucherDiscountUser(userId);
-        List<Voucher> listVoucherShip = voucherService.listVoucherShipUser(userId);
-
-        listVoucherDiscount = voucherService.filterVoucherValid(cart, cartTotal, listVoucherDiscount);
-        listVoucherShip = voucherService.filterVoucherValid(cart, cartTotal, listVoucherShip);
-
-        request.setAttribute("listVoucherDiscount", listVoucherDiscount);
-        request.setAttribute("listVoucherShip", listVoucherShip);
-
-        request.getRequestDispatcher("user/shoppingCart.jsp")
-                .forward(request, response);
     }
 
     @Override
