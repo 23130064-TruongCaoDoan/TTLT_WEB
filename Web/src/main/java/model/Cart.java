@@ -66,5 +66,26 @@ public class Cart {
                 ? data.get(bookId).getQuantity()
                 : 0;
     }
+    public int getTotalWeight() {
+        int total = 0;
+        for (CartItem item : data.values()) {
+            total += item.getBook().getWeight() * item.getQuantity();
+        }
+        return total;
+    }
+    public String getProductNamesAsString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (CartItem item : data.values()) {
+            if (item.getBook() != null) {
+                sb.append(item.getBook().getTitle()).append(". ");
+            }
+        }
+        if (sb.length() >= 2) {
+            sb.setLength(sb.length() - 2);
+        }
+
+        return sb.toString();
+    }
 
 }

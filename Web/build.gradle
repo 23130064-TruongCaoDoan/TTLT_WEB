@@ -18,6 +18,7 @@ task deployToTomcat(type: Copy) {
 }
 processResources {
     from 'src/main/resources'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 repositories {
     mavenCentral()

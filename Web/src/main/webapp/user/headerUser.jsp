@@ -87,6 +87,7 @@
     </div>
 </div>
 <div id="toast" class="toast"></div>
+
 <script>
     const toast = document.getElementById("toast");
 
@@ -102,6 +103,12 @@
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3000);
     <c:remove var="logoutSuccess" scope="session"/>
+    </c:if>
+
+    <c:if test="${not empty toastMessage}">
+    toast.innerText = "${toastMessage}";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
     </c:if>
 
     window.addEventListener("load", function () {

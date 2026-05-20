@@ -1,12 +1,9 @@
 package Service;
 
-import Cart.Cart;
+import cart.Cart;
 import DTO.MyOrderDTO;
 import DTO.OrderDetailDTO;
-import dao.OrderDao;
-import dao.OrderDetailDAO;
-import dao.OrderItemDao;
-import dao.ShippingDao;
+import dao.*;
 import model.Address;
 import model.OrderItemsView;
 import model.OrderView;
@@ -39,6 +36,20 @@ public class OrderService {
             orderItemDao.insertOrderItems(order_id, cart);
             notificationService.sendNoti(userId, "Bạn đã đặt đơn hàng: " + order_id, "Các sản phẩm bạn đặt: " + cart.getProductNamesAsString());
             int ship_id = shippingDao.addShipping(order_id, address_id, shipping_type, shipping_cost, delivered_date);
+        }
+
+        return order_id != -1;
+    }
+    public boolean addOrderdb(int userId, double totalAmount, String note, String paymentMethod, String paymentStatus,Integer dis, Integer ship, Address address_id, String shipping_type, double shipping_cost, String delivered_date, model.Cart cart) {
+        int order_id = orderDao.addOrder(userId, totalAmount, note, dis, ship,paymentMethod,paymentStatus);
+        if (order_id != -1) {
+            bookService.updateQuantity(cart);
+            bookService.updateStock(cart);
+            orderItemDao.insertOrderItems(order_id, cart);
+            notificationService.sendNoti(userId, "Bạn đã đặt đơn hàng: " + order_id, "Các sản phẩm bạn đặt: " + cart.getProductNamesAsString());
+            int ship_id = shippingDao.addShipping(order_id, address_id, shipping_type, shipping_cost, delivered_date);
+            CartDao cartDao=new CartDao();
+            cartDao.removeAllItems(cart.getId());
         }
 
         return order_id != -1;

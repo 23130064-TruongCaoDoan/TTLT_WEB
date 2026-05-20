@@ -1,18 +1,15 @@
 package controler.user.Cart;
 
-import Cart.Cart;
+import cart.Cart;
 import Service.BookService;
 import Service.CartSerive;
-import Service.CommentService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.Book;
-import model.CommentView;
 import model.User;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "addItemShopping", value = "/addItemShopping")
 public class addItemShopping extends HttpServlet {
