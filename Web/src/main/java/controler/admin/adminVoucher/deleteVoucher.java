@@ -25,8 +25,8 @@ public class deleteVoucher extends HttpServlet {
         String userCodes = request.getParameter("userId");
         boolean success;
 
-        if (userCodes.isEmpty()){
-            success= voucherService.deleteVoucher(id);
+        if (userCodes == null || userCodes.trim().isEmpty()) {
+            success = voucherService.deleteVoucher(id);
         }
         else{
             int userId = Integer.parseInt(userCodes);
@@ -35,6 +35,12 @@ public class deleteVoucher extends HttpServlet {
 
         String json;
         if (success) {
+            HttpSession session = request.getSession(false);
+            if (session != null && session.getAttribute("user") != null) {
+                model.User user = (model.User) session.getAttribute("user");
+                dao.AdminLogDAO logDAO = new dao.AdminLogDAO();
+                logDAO.insertLog(user.getId(), "XÓA", "Bạn đã xóa voucher có ID: " + id);
+            }
             json = "{\"success\":true,\"message\":\"Xóa voucher thành công\"}";
         } else {
             json = "{\"success\":false,\"message\":\"Xóa voucher thất bại do tồn tai\"}";

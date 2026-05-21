@@ -27,7 +27,7 @@ public class AdminLogFilter implements Filter {
         String method = request.getMethod();
         String uri = request.getRequestURI().toLowerCase();
 
-        if (uri.contains("event")) {
+        if (uri.contains("event") || uri.contains("voucher")) {
             chain.doFilter(request, response);
             return;
         }
