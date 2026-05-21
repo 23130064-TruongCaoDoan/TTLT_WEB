@@ -99,7 +99,7 @@
 
 
                                     <i class="fa-solid fa-trash xoa"
-                                       onclick="deleteEvent(${event.id})">
+                                       onclick="deleteEvent(${event.id}, '${fn:escapeXml(event.title)}')">
                                     </i>
                                 </td>
 
@@ -506,9 +506,11 @@
 
 
     let deleteId = null;
+    let deleteEventName = "";
 
-    function deleteEvent(id) {
+    function deleteEvent(id, name) {
         deleteId = id;
+        deleteEventName = name;
         overlay.style.display = "block";
         document.getElementById("deletePopup").style.display = "block";
     }
@@ -522,7 +524,7 @@
     function confirmDelete() {
         if (!deleteId) return;
 
-        fetch("deleteEvent?id=" + deleteId)
+        fetch("deleteEvent?id=" + deleteId + "&eventName=" + encodeURIComponent(deleteEventName))
             .then(res => res.json())
             .then(data => {
                 closeDeletePopup();
