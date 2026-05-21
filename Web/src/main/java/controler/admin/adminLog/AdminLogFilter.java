@@ -40,23 +40,31 @@ public class AdminLogFilter implements Filter {
                 action = "ĐĂNG NHẬP";
                 logContent = "Bạn đã đăng nhập thành công";
             }
-            else if (uri.contains("add") || uri.contains("create") || uri.contains("insert")) {
+            else if (uri.contains("add") || uri.contains("create") || uri.contains("insert")
+                    || (uri.contains("product-manage") && (request.getParameter("id") == null || request.getParameter("id").isBlank()))) {
                 action = "THÊM";
                 if (uri.contains("author") || uri.contains("tacgia") || uri.contains("admin-add-author")) {
                     String authorName = request.getParameter("name");
                     logContent = "Bạn đã thêm tác giả: " + (authorName != null ? authorName : "");
-                } else if (uri.contains("book") || uri.contains("sach")) {
+                } else if (uri.contains("book") || uri.contains("sach") || uri.contains("product-manage")) {
                     String bookTitle = request.getParameter("title");
+                    String bookCode = request.getParameter("bookCode");
+                    if (bookCode == null) bookCode = request.getParameter("book_code");
                     logContent = "Bạn đã thêm sách: " + (bookTitle != null ? bookTitle : "");
                 } else {
                     logContent = "Bạn đã thêm dữ liệu mới";
                 }
             }
-            else if (uri.contains("update") || uri.contains("edit") || uri.contains("admin-edit-author")) {
+            else if (uri.contains("update") || uri.contains("edit") || uri.contains("admin-edit-author")
+                    || (uri.contains("product-manage") && request.getParameter("id") != null && !request.getParameter("id").isBlank())) {
                 action = "SỬA";
                 if (uri.contains("author") || uri.contains("tacgia") || uri.contains("admin-edit-author")) {
                     String authorName = request.getParameter("name");
                     logContent = "Bạn đã cập nhật thông tin tác giả: " + (authorName != null ? authorName : "");
+                } else if (uri.contains("book") || uri.contains("sach") || uri.contains("product-manage")) {
+                    String bookTitle = request.getParameter("title");
+                    String bookId = request.getParameter("id");
+                    logContent = "Bạn đã cập nhật thông tin sách: " + (bookTitle != null ? bookTitle : "");
                 } else {
                     logContent = "Bạn đã chỉnh sửa dữ liệu";
                 }

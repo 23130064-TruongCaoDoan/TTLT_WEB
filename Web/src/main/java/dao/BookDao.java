@@ -130,7 +130,7 @@ public class BookDao extends BaseDao {
                                     "cover_img_url, description, publisher, provider, published_date, " +
                                     "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
                                     ") VALUES (" +
-                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :price_import,:type, :age, " +
+                                    ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
                                     ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
                                     ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
                                     ")"

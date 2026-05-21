@@ -9,7 +9,7 @@
     <div class="logo left"><img src="assets/img/logo/logoChinh.png" alt="logo"></div>
     <div class="right">
         <div class="notification-wrapper" style="position: relative; margin-right: 20px; cursor: pointer;" onclick="window.location.href='myHistory'">
-            <i class="fa-solid fa-bell notification-icon"></i>
+            <i class="fa-solid fa-clock-rotate-left notification-icon"></i>
         </div>
         <i class="fa-solid fa-user"></i>
         <div class="ten">
