@@ -101,12 +101,7 @@ public class updateVoucher extends HttpServlet {
         );
 
         if (success) {
-            HttpSession session = request.getSession(false);
-            if (session != null && session.getAttribute("user") != null) {
-                model.User user = (model.User) session.getAttribute("user");
-                dao.AdminLogDAO logDAO = new dao.AdminLogDAO();
-                logDAO.insertLog(user.getId(), "SỬA", "Bạn đã cập nhật mã voucher: " + code);
-            }
+            request.setAttribute("logSuccess", true);
             response.getWriter().write(
                     "{\"success\":true,\"message\":\"Cập nhật voucher thành công\"}"
             );

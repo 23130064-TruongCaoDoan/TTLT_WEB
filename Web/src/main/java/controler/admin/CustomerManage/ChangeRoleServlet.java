@@ -38,6 +38,7 @@ public class ChangeRoleServlet extends HttpServlet {
         }
 
         userService.updateRole(userId, newRole);
+        request.setAttribute("logSuccess", true);
 
         response.sendRedirect("user-manage");
     }

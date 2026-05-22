@@ -27,7 +27,7 @@ public class AdminLogFilter implements Filter {
         String method = request.getMethod();
         String uri = request.getRequestURI().toLowerCase();
 
-        if (uri.contains("event") || uri.contains("voucher")) {
+        if (uri.contains("event")) {
             chain.doFilter(request, response);
             return;
         }
@@ -39,6 +39,109 @@ public class AdminLogFilter implements Filter {
             if (uri.contains("login") || uri.contains("dangnhap")) {
                 action = "ĐĂNG NHẬP";
                 logContent = "Bạn đã đăng nhập thành công";
+            }
+            else if (uri.contains("admin-add-user")) {
+                action = "TẠO TÀI KHOẢN";
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                logContent = "Bạn đã tạo tài khoản mới: " + (name != null ? name : "") + " (" + (email != null ? email : "") + ")";
+            }
+            else if (uri.contains("giftvoucher") || uri.contains("gift-voucher")) {
+                action = "TẶNG VOUCHER";
+                if (uri.contains("gift-voucher")) {
+                    String target = request.getParameter("chon");
+                    String code = request.getParameter("voucherCode");
+                    if ("all".equals(target)) {
+                        logContent = "Bạn đã tặng voucher [" + code + "] cho tất cả khách hàng";
+                    } else {
+                        String userIds = request.getParameter("userIds");
+                        logContent = "Bạn đã tặng voucher [" + code + "] cho khách hàng có ID: " + userIds;
+                    }
+                } else {
+                    String userId = request.getParameter("userId");
+                    String voucherIds = request.getParameter("voucherIds");
+                    logContent = "Bạn đã tặng các Voucher ID [" + voucherIds + "] cho khách hàng có ID: " + userId;
+                }
+            }
+            else if (uri.contains("notify")) {
+                action = "TẠO THÔNG BÁO";
+                String title = request.getParameter("title");
+                if (uri.contains("notify-user")) { // Gửi nhiều người cùng lúc (NotifyUserServlet)
+                    String[] userIds = request.getParameterValues("userIds");
+                    int count = (userIds != null) ? userIds.length : 0;
+                    logContent = "Bạn đã gửi thông báo '" + title + "' đến " + count + " khách hàng";
+                } else {
+                    String userId = request.getParameter("userIds");
+                    logContent = "Bạn đã gửi thông báo '" + title + "' đến khách hàng có ID: " + userId;
+                }
+            }
+            else if (uri.contains("change-role")) {
+                action = "THAY ĐỔI QUYỀN";
+                String userId = request.getParameter("userId");
+                String roleParam = request.getParameter("role");
+                String roleName = "1".equals(roleParam) ? "Admin" : "User";
+                logContent = "Bạn đã thay đổi quyền của khách hàng ID " + userId + " thành [" + roleName + "]";
+            }
+            else if (uri.contains("change-status") || (uri.contains("updatauserservlet") && "status".equals(request.getParameter("field")))) {
+                action = "THAY ĐỔI TRẠNG THÁI";
+                String userId = request.getParameter("userId");
+                String statusParam = request.getParameter("status");
+                if (statusParam == null) {
+                    statusParam = request.getParameter("value");
+                }
+                String statusName = "1".equals(statusParam) ? "Mở" : "Khóa";
+                logContent = "Bạn đã thay đổi trạng thái của khách hàng ID " + userId + " thành [" + statusName + "]";
+            }
+            else if (uri.contains("createorderforcustomer")) {
+                action = "TẠO ĐƠN HỘ";
+                String receiverName = request.getParameter("receiverName");
+                String finalTotal = request.getParameter("finalTotal"); // hoặc lấy các thông tin cần thiết
+                logContent = "Bạn đã tạo hộ đơn hàng cho khách: " + (receiverName != null ? receiverName : "") + " từ trang quản trị";
+            }
+            else if (uri.contains("addvoucher")) {
+                action = "THÊM VOUCHER";
+                String code = request.getParameter("code");
+                logContent = "Bạn đã thêm mã voucher mới : " + (code != null ? code : "");
+            }
+            else if (uri.contains("updatevoucher")) {
+                action = "SỬA VOUCHER";
+                String code = request.getParameter("code");
+                logContent = "Bạn đã cập nhật thông tin mã voucher: " + (code != null ? code : "");
+            }
+            else if (uri.contains("deletevoucher")) {
+                action = "XÓA VOUCHER";
+                String id = request.getParameter("id");
+                String userCodes = request.getParameter("userId");
+                if (userCodes == null || userCodes.trim().isEmpty()) {
+                    logContent = "Bạn đã xóa cấu  voucher có ID " + id;
+                } else {
+                    logContent = "Bạn đã gỡ bỏ voucher ID " + id + " khỏi khách hàng có ID " + userCodes;
+                }
+            }
+            else if (uri.contains("updatauserservlet")) {
+                String field = request.getParameter("field");
+                String value = request.getParameter("value");
+                String userId = request.getParameter("userId");
+
+                action = "CẬP NHẬT THÔNG TIN";
+                String fieldName = "";
+                if ("name".equals(field)) fieldName = "Tên";
+                else if ("email".equals(field)) fieldName = "Email";
+                else if ("phone".equals(field)) fieldName = "Số điện thoại";
+                else if ("birthYear".equals(field)) fieldName = "Năm sinh";
+
+                logContent = "Bạn đã cập nhật trường [" + fieldName + "] của khách hàng ID " + userId + " thành: " + value;
+            }
+            else if (uri.contains("updateavatarservlet")) {
+                action = "CẬP NHẬT AVATAR";
+                String userId = request.getParameter("userId");
+                logContent = "Bạn đã cập nhật ảnh đại diện mới cho khách hàng ID: " + userId;
+            }
+            else if (uri.contains("updateorderservlet")) {
+                action = "CẬP NHẬT ĐƠN HÀNG";
+                String orderId = request.getParameter("orderId");
+                String status = request.getParameter("status");
+                logContent = "Bạn đã chỉnh sửa đơn hàng ID " + orderId + ", trạng thái mới: [" + status + "]";
             }
             else if (uri.contains("add") || uri.contains("create") || uri.contains("insert")
                     || (uri.contains("product-manage") && (request.getParameter("id") == null || request.getParameter("id").isBlank()))) {
@@ -107,8 +210,12 @@ public class AdminLogFilter implements Filter {
                 }
             }
         }
+        Boolean isSuccess = (Boolean) request.getAttribute("logSuccess");
+        if ("ĐĂNG NHẬP".equals(action) && finalUser != null) {
+            isSuccess = true;
+        }
 
-        if (finalUser != null && !action.isEmpty() && !logContent.isEmpty()) {
+        if (Boolean.TRUE.equals(isSuccess) && finalUser != null && !action.isEmpty() && !logContent.isEmpty()) {
             AdminLogDAO logDAO = new AdminLogDAO();
             logDAO.insertLog(finalUser.getId(), action, logContent);
         }

@@ -181,6 +181,7 @@ public class CreateOrderForCustomerServlet extends HttpServlet {
                 productMap
         );
         if (ok) {
+            request.setAttribute("logSuccess", true);
             response.getWriter().write("{\"success\":true,\"message\": \"Tạo đơn thành công\"}");
             return;
         }

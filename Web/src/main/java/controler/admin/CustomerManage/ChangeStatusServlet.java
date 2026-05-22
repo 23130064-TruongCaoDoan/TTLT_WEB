@@ -35,6 +35,7 @@ public class ChangeStatusServlet extends HttpServlet {
         }
 
         userService.updateStatus(userId, newStatus);
+        request.setAttribute("logSuccess", true);
 
         response.sendRedirect("user-manage");
     }

@@ -35,6 +35,7 @@ public class AddUserAdminServlet extends HttpServlet {
         String hashPassword = passwordUtil.hashPassword(password);
 
         userService.addUserByAdmin(name, email, hashPassword, role, status);
+        request.setAttribute("logSuccess", true);
 
         response.sendRedirect(request.getContextPath() + "/user-manage?success=add_user");
     }

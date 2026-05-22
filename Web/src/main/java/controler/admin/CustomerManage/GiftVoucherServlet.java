@@ -30,6 +30,7 @@ public class GiftVoucherServlet extends HttpServlet {
 
         if ("all".equals(target)) {
             vs.insertVoucherForAll(code);
+            request.setAttribute("logSuccess", true);
 
         } else if ("selected".equals(target)) {
 
@@ -38,6 +39,7 @@ public class GiftVoucherServlet extends HttpServlet {
                 return;
             }
             vs.insertVoucherForUsers(code, userIds);
+            request.setAttribute("logSuccess", true);
 
         } else {
             response.sendRedirect("user-manage?error=invalid_target");
