@@ -5,8 +5,8 @@ plugins {
     id 'war'
 }
 task undeploy(type: Delete) {
-    delete 'D:/Program File/apache-tomcat-10.1.48/webapps/Web'
-    delete 'D:/Program File/apache-tomcat-10.1.48/webapps/Web.war'
+    delete 'D:/tomcat/apache-tomcat-10.1.48/webapps/Web_war_exploded'
+    delete 'D:/tomcat/apache-tomcat-10.1.48/webapps/Web_war_exploded.war'
 }
 
 task deployToTomcat(type: Copy) {
@@ -14,7 +14,7 @@ task deployToTomcat(type: Copy) {
     dependsOn build
 
     from('build/libs/Web.war')
-    into('D:/Program File/apache-tomcat-10.1.48/webapps')
+    into('D:/tomcat/apache-tomcat-10.1.48/webapps')
 }
 processResources {
     from 'src/main/resources'

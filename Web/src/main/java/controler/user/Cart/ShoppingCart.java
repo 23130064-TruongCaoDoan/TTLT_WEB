@@ -1,5 +1,6 @@
 package controler.user.Cart;
 
+import Service.CartSerive;
 import cart.Cart;
 import Service.EventService;
 import Service.VoucherService;
@@ -73,7 +74,9 @@ public class ShoppingCart extends HttpServlet {
                     .forward(request, response);
         }
         else{
-            model.Cart cart= (model.Cart) session.getAttribute("cart");
+            CartSerive cartSerive = new CartSerive();
+            model.Cart cart= (model.Cart) cartSerive.getCart(user.getId());
+            session.setAttribute("cart", cart);
             int userId = user == null ? 0 : user.getId();
             double cartTotal = cart == null ? 0 : cart.getTotalBill();
 

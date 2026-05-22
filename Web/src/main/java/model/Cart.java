@@ -88,4 +88,11 @@ public class Cart {
         return sb.toString();
     }
 
+    public HashMap<Integer, CartItem> getData() {
+        return data;
+    }
+
+    public void setData(HashMap<Integer, CartItem> data) {
+        this.data = data;
+    }
 }

@@ -2,11 +2,14 @@ package Service;
 
 import dao.BookDao;
 import dao.CartDao;
+import model.Book;
 import model.Cart;
 import model.CartItem;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CartSerive {
     private CartDao cartDao;
@@ -94,5 +97,38 @@ public class CartSerive {
             }
         }
         return allValid;
+    }
+
+    public void mergerCart(cart.Cart cart, int id) {
+        Cart c= cartDao.getCart(id);
+        if (c == null) {
+            cartDao.createCart(id);
+            c = cartDao.getCart(id);
+        }
+        List<CartItem> items1 = new ArrayList<>(c.getItems());
+
+        List<cart.CartItem> items = new ArrayList<>(cart.getItems());
+        for (cart.CartItem item : items) {
+            boolean valid = true;
+            for (CartItem item1 : items1) {
+                if (item.getBook().getId() == item1.getBook().getId()) {
+                    valid = false;
+                    bookDao=new BookDao();
+                    Book book = bookDao.getBookById(item1.getBook().getId());
+                    if(item.getQuantity() + item1.getQuantity() >book.getStock()){
+                        cartDao.updateItem(c.getId(), item1.getBook().getId(), book.getStock());
+                        break;
+                    }
+                    else{
+                        cartDao.addToCart(c.getId(), item1.getBook().getId(), item.getQuantity());
+                        break;
+                    }
+
+                }
+            }
+            if (valid) {
+                cartDao.addToCart(c.getId(), item.getBook().getId(), item.getQuantity());
+            }
+        }
     }
 }
