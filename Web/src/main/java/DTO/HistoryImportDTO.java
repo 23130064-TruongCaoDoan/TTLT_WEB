@@ -2,6 +2,7 @@ package DTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class HistoryImportDTO {
     private int id;
@@ -34,6 +35,9 @@ public class HistoryImportDTO {
 
     public void setImportDate(LocalDateTime importDate) {
         this.importDate = importDate;
+    }
+    public String getFormattedImportDate() {
+        return getImportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public int getTotalAmount() {

@@ -16,7 +16,6 @@
 </head>
 
 <body>
-
 <main>
 
     <c:import url="headerAdmin.jsp"></c:import>
@@ -47,144 +46,76 @@
                         <button type="submit" class="buttonSearch">
                             Tìm kiếm
                         </button>
-
                     </form>
-
                 </div>
-
             </div>
-
             <div class="order-list">
-
                 <div class="title">
-
                     <h3>Danh sách phiếu nhập</h3>
-
                 </div>
-
                 <div class="table-wrapper">
-
                     <table>
-
                         <thead>
-
                         <tr>
-
                             <th>Mã phiếu nhập</th>
-
                             <th>Nhà cung cấp</th>
-
                             <th>Ngày nhập</th>
-
                             <th>Tổng tiền</th>
-
                             <th>Nhân viên nhập</th>
-
                             <th>Ghi chú</th>
-
                             <th>Chi tiết</th>
-
                         </tr>
-
                         </thead>
-
                         <tbody>
-
                         <c:forEach var="o" items="${historyImportDTOList}">
-
                             <tr>
-
                                 <td>${o.id}</td>
-
                                 <td>${o.provider}</td>
-
-                                <td>${o.importDate}</td>
-
+                                <td>${o.formattedImportDate}</td>
                                 <td>
-
                                     <fmt:formatNumber value="${o.totalAmount}" type="number" groupingUsed="true" maxFractionDigits="0"/>đ
                                 </td>
-
                                 <td>${o.employeeName}</td>
-
                                 <td>${o.note}</td>
-
                                 <td>
-
-                                    <button class="btn-detail xemchitiet"
-                                            data-id="${o.id}">
-
+                                    <button class="btn-detail btnDetail" data-id="${o.id}">
                                         Xem chi tiết
-
                                     </button>
-
                                 </td>
-
                             </tr>
-
                         </c:forEach>
-
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </main>
-
-
 <div id="overlay"></div>
-
 <div id="import-detail-popup">
-
     <div class="popup-header">
-
         <h3>Chi tiết phiếu nhập</h3>
-
         <button id="closePopup">
-
             <i class="fa-solid fa-xmark"></i>
-
         </button>
-
     </div>
-
     <div class="table-wrapper">
-
         <table>
-
             <thead>
-
             <tr>
-
                 <th>Mã sách</th>
-
                 <th>Tên sách</th>
-
+                <th>Ảnh bìa</th>
                 <th>Số lượng</th>
-
                 <th>Giá nhập</th>
-
                 <th>Thành tiền</th>
-
             </tr>
-
             </thead>
-
             <tbody id="import-detail-body">
 
             </tbody>
-
         </table>
-
     </div>
-
 </div>
 <script>
 
@@ -192,17 +123,19 @@
 
     const popup = document.getElementById("import-detail-popup");
 
-    document.querySelectorAll(".xemchitiet")
+    document.querySelectorAll(".btnDetail")
         .forEach(btn => {
 
             btn.addEventListener("click", () => {
-                overlay.style.display = "block";
-                popup.style.display = "block";
                 const importId = btn.dataset.id;
-                console.log(importId);
-
+                fetch("${pageContext.request.contextPath}/OrderImportDetail?id=" + importId)
+                    .then(request => request.text())
+                    .then(html => {
+                        document.getElementById("import-detail-body").innerHTML = html
+                        overlay.style.display = "block";
+                        popup.style.display = "block";
+                    });
             });
-
         });
 
     document.getElementById("closePopup").addEventListener("click", () => {

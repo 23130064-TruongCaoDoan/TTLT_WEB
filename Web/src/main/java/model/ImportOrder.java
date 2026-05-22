@@ -1,11 +1,13 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class importOrder {
+public class ImportOrder {
     private int id;
     private String provider;
-    private LocalDate importDate;
+    private LocalDateTime importDate;
     private int totalAmount;
     private String note;
     private int employeeId;
@@ -34,12 +36,15 @@ public class importOrder {
         this.totalAmount = totalAmount;
     }
 
-    public LocalDate getImportDate() {
+    public LocalDateTime getImportDate() {
         return importDate;
     }
 
-    public void setImportDate(LocalDate importDate) {
+    public void setImportDate(LocalDateTime importDate) {
         this.importDate = importDate;
+    }
+    public String getFormattedImportDate() {
+        return getImportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public String getProvider() {
