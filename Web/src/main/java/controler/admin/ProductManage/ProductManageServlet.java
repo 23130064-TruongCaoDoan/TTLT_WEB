@@ -11,6 +11,7 @@ import model.Book;
 import model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ProductManageServlet", value = "/product-manage")
@@ -77,6 +78,7 @@ public class ProductManageServlet extends HttpServlet {
         List<Book> outOfStockBooks = thongKeService.getOutOfStockBooks();
         int unsoldBooksCount = thongKeService.getUnsoldBooksCount();
         List<Book> unsoldBooks = thongKeService.getUnsoldBooks();
+        List<String> listBookCode = bookService.getListBookCode();
 
         request.setAttribute("totalSoldProducts", totalSoldProducts);
         request.setAttribute("totalStock", totalStock);
@@ -84,6 +86,7 @@ public class ProductManageServlet extends HttpServlet {
         request.setAttribute("outOfStockBooks", outOfStockBooks);
         request.setAttribute("unsoldBooksCount", unsoldBooksCount);
         request.setAttribute("unsoldBooks", unsoldBooks);
+        request.setAttribute("listBookCode", listBookCode);
 
         request.getRequestDispatcher("admin/ManageProduct.jsp").forward(request, response);
     }

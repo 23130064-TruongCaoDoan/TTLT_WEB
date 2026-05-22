@@ -76,7 +76,6 @@
                             </option>
                         </select>
 
-                        <!-- FILTER TYPE  -->
                         <select class="filter-sp" name="type" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
                             <c:forEach var="t" items="${types}">
@@ -180,12 +179,12 @@
                 <input type="text" id="code" name="code" placeholder="Nhập mã sách" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Tên sách</label>
                 <input type="text" id="title" name="title" placeholder="Nhập tên sách">
             </div>
 
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist" >
                 <label>Tác giả</label>
                 <select name="author_id" required>
                     <c:forEach var="a" items="${authors}">
@@ -197,67 +196,67 @@
                 <label>Giá nhập</label>
                 <input type="number" name="price_import" placeholder="VD: 40000" required>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Giá bán</label>
                 <input type="number" name="price" placeholder="VD: 50000" required>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Giá khuyến mãi</label>
                 <input type="number" name="price_discounted" placeholder="VD: 45000">
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Độ tuổi</label>
                 <input type="number" name="age" placeholder="VD: 6" required>
             </div>
             <div class="form-group">
-                <label>Nhà phát hành</label>
-                <input type="text" name="provider" placeholder="VD: Kim Đồng">
+                <label>Nhà cung cấp</label>
+                <input type="text" name="provider" placeholder="VD: Tên nhà cung cấp">
             </div>
 
-            <div class="form-group">
+            <div class="form-group ">
                 <label>Số lượng</label>
                 <input type="number" id="quantity" name="stock" placeholder="VD: 50" required>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Ảnh bìa</label>
                 <input type="file" id="img-main" name="img-main" accept="image/*" placeholder="link ảnh">
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Hình ảnh chi tiết</label>
                 <input type="file" name="imgDetail" multiple>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Loại sách</label>
                 <input type="text" id="type" name="type" placeholder="Truyện tranh, sách ảnh...." required>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Nhà xuất bản</label>
                 <input type="text" id="publisher" name="publisher" placeholder="Tên nhà xuất bản" required>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Trọng lượng sách</label>
                 <input type="number" id="weight" name="weight" placeholder="VD: 10 gram">
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Kích thước</label>
                 <input type="text" id="size" name="size" placeholder="VD: 17x14">
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Số Trang</label>
                 <input type="number" id="page_number" name="pageNumber" placeholder="VD: 30">
             </div>
-            <div class="form-group-inline">
+            <div class="form-group-inline hiddenWhenCodeExist" >
                 <div>
                     <label>Ngày xuất bản</label>
                     <input type="date" id="start_date" name="startDate" required>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenCodeExist">
                 <label>Định dạng</label>
                 <input type="text" name="format" placeholder="Bìa mềm / Bìa cứng" required>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group hiddenWhenCodeExist">
             <label>Mô tả</label>
             <textarea name="description" id="description" cols="10" rows="4" placeholder="mô tả về sách"></textarea>
         </div>
@@ -398,6 +397,29 @@
             }
         });
 
+</script>
+<script>
+    const existing = [];
+
+    <c:forEach var="bookCode" items="${listBookCode}">
+        existing.push("${bookCode}".trim());
+    </c:forEach>
+
+    const bookCodeInput = document.getElementById("code");
+    bookCodeInput.addEventListener("input", ()=>{
+        const code = bookCodeInput.value.trim().toLowerCase();
+        const isExist = existing.some(c => c.toLowerCase() === code);
+        const hiddenFields = document.querySelectorAll(".hiddenWhenCodeExist");
+        hiddenFields.forEach(field =>{
+            field.style.display = isExist? "none":"";
+            const inputs = field.querySelectorAll("input, select, textarea");
+            inputs.forEach(input => {
+                input.required = !isExist;
+            });
+        });
+        document.querySelector(".btn-save").innerText =
+            isExist ? "Nhập thêm hàng" : "Thêm sản phẩm";
+    });
 </script>
 <script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 </body>

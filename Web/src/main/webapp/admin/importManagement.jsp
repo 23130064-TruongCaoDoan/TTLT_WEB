@@ -7,17 +7,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <meta charset="UTF-8">
-
     <title>Lịch sử nhập kho</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/mProduct.css">
     <link rel="stylesheet" href="assets/css_admin/importManagement.css">
-
-
 </head>
 
 <body>

@@ -10,6 +10,9 @@ import model.Book;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static Util.CheckNullParams.getDouble;
+import static Util.CheckNullParams.getInt;
+
 public class BookService {
     private BookDao hd = new BookDao();
     private AuthorDao ad = new AuthorDao();
@@ -62,22 +65,19 @@ public class BookService {
         String description = params.get("description")[0];
         String provider = params.get("provider")[0];
 
-        int authorId = Integer.parseInt(params.get("author_id")[0]);
-        int stock = Integer.parseInt(params.get("stock")[0]);
-        int pagesNumber = Integer.parseInt(params.get("pageNumber")[0]);
-        int age = Integer.parseInt(params.get("age")[0]);
+        int authorId = getInt(params, "author_id", 0);
+        int stock = getInt(params, "stock", 0);
+        int pagesNumber = getInt(params, "pageNumber", 0);
+        int age = getInt(params, "age", 0);
 
-        int price = Integer.parseInt(params.get("price")[0]);
-        int priceImport = Integer.parseInt(params.get("price_import")[0]);
+        int price = getInt(params, "price", 0);
+        int priceImport = getInt(params, "price_import", 0);
+        int priceDiscounted = getInt(params, "price_discounted", price);
 
-        String priceDiscountStr = params.get("price_discounted")[0];
-        int priceDiscounted = (priceDiscountStr == null || priceDiscountStr.isBlank()) ? price : Integer.parseInt(priceDiscountStr);
+        double weight = getDouble(params, "weight", 0);
 
-        String weightStr = params.get("weight")[0];
-        double weight = (weightStr == null || weightStr.isBlank()) ? 0 : Double.parseDouble(weightStr);
-
-        String startDate = params.get("startDate")[0];
-        int publishedYear = Integer.parseInt(startDate.substring(0, 4));
+        String startDate = params.get("startDate")[0]==null?"":params.get("startDate")[0];
+        int publishedYear = startDate.isBlank()?0:Integer.parseInt(startDate.substring(0, 4));
 
 
         String coverImgUrl = uploadService.upload(mainImage, "books/main");
@@ -473,6 +473,9 @@ public class BookService {
         if (type != null && type.isBlank()) type = null;
         if (stock != null && stock.isBlank()) stock = null;
         return hd.searchAndFilterPaginated(q, type, stock, limit, offset);
+    }
+    public List<String> getListBookCode(){
+        return hd.getListBookCode();
     }
 
 }

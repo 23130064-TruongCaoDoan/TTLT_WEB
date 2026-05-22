@@ -865,6 +865,15 @@ public class BookDao extends BaseDao {
                         .orElse(null)
         );
     }
+    public List<String> getListBookCode(){
+        return getJdbi().withHandle(handle ->
+            handle.createQuery("""
+                    SELECT book_code FROM BOOKS
+                    """)
+                    .mapTo(String.class)
+                    .list()
+        );
+    }
     public static void main(String[] args) {
         BookDao dao = new BookDao();
         System.out.println(dao.findBookByBookCode("8935074134141"));
