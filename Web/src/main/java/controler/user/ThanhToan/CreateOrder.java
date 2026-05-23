@@ -1,9 +1,9 @@
 package controler.user.ThanhToan;
 
-import Cart.Cart;
-import Cart.CartItem;
+import Service.CartSerive;
+import cart.Cart;
+import cart.CartItem;
 import Service.AddressService;
-import Service.BookService;
 import Service.OrderService;
 import Service.UserService;
 import Util.GHNApiUtil;
@@ -63,17 +63,30 @@ public class CreateOrder extends HttpServlet {
         String mode = request.getParameter("mode");
         String paymentMethod = request.getParameter("payment");
 
+        Cart cartGuest = null;
+        model.Cart cartDb = null;
+        boolean isDbCart = false;
+        CartSerive cartSerive = new CartSerive();
 
-        Cart cart;
         if ("buynow".equals(mode)) {
-            cart = (Cart) request.getSession().getAttribute("buyNowCart");
+            cartGuest = (Cart) request.getSession().getAttribute("buyNowCart");
         } else if ("rebuy".equals(mode)) {
-            cart = (Cart) request.getSession().getAttribute("rebuyCart");
+            cartGuest = (Cart) request.getSession().getAttribute("rebuyCart");
         } else {
-            cart = (Cart) request.getSession().getAttribute("cart");
+            if(user != null){
+                cartDb = cartSerive.getCart(user.getId());
+                session.setAttribute("cart", cartDb);
+                isDbCart = true;
+            }
+            else {
+                cartGuest = (Cart) request.getSession().getAttribute("cart");
+            }
         }
 
-        if (cart == null || cart.getItems().isEmpty()) {
+        boolean isEmpty = isDbCart
+                ? (cartDb == null || cartDb.getItems().isEmpty())
+                : (cartGuest == null || cartGuest.getItems().isEmpty());
+        if (isEmpty) {
             request.setAttribute("error", "Giỏ hàng trống");
             request.getRequestDispatcher("ThanhToan").forward(request, response);
             return;
@@ -115,12 +128,22 @@ public class CreateOrder extends HttpServlet {
              toDistrictId = GHNApiUtil.getDistrictIdByName(address.getDistricts(), toProvinceId);
              toWardCode = GHNApiUtil.getWardCodeByName(address.getWard(), toDistrictId);
 
-            shipFee = GHNApiUtil.calculateShippingFee(
-                    toDistrictId,
-                    toWardCode,
-                    cart.getTotalWeight(),
-                    serviceId
-            );
+             if(isDbCart) {
+                 shipFee = GHNApiUtil.calculateShippingFee(
+                         toDistrictId,
+                         toWardCode,
+                         cartDb.getTotalWeight(),
+                         serviceId
+                 );
+             }
+             else{
+                shipFee = GHNApiUtil.calculateShippingFee(
+                        toDistrictId,
+                        toWardCode,
+                        cartGuest.getTotalWeight(),
+                        serviceId
+                );
+            }
 
             long leadTime = GHNApiUtil.getLeadTime(toDistrictId, toWardCode, serviceId);
 
@@ -147,13 +170,24 @@ public class CreateOrder extends HttpServlet {
                 request.getRequestDispatcher("ThanhToan").forward(request, response);
                 return;
             }
-
-            pointUsed = (int) Math.min(user.getPoint(), cart.getTotalBill());
+            if(isDbCart) {
+                pointUsed = (int) Math.min(user.getPoint(), cartDb.getTotalBill());
+            }
+            else{
+                pointUsed = (int) Math.min(user.getPoint(), cartGuest.getTotalBill());
+            }
         }
 
         double cartTotal = 0;
-        for (CartItem item : cart.getItems()) {
-            cartTotal += item.getPrice() * item.getQuantity();
+        if(isDbCart) {
+            for (model.CartItem item : cartDb.getItems()) {
+                cartTotal += item.getPrice() * item.getQuantity();
+            }
+        }
+        else{
+            for (CartItem item : cartGuest.getItems()) {
+                cartTotal += item.getPrice() * item.getQuantity();
+            }
         }
 
 
@@ -210,20 +244,40 @@ public class CreateOrder extends HttpServlet {
 
         String paymentStatus = "cod".equalsIgnoreCase(paymentMethod) ? "NOPAID" : "PAID";
 
-        boolean ok = orderService.addOrder(
-                user.getId(),
-                finalTotal,
-                request.getParameter("orderNote"),
-                paymentMethod,
-                paymentStatus,
-                productVoucherId,
-                shipVoucherId,
-                address,
-                shipName,
-                realShipFee,
-                deliveryRange,
-                cart
-        );
+        boolean ok;
+        if(isDbCart) {
+            ok = orderService.addOrderdb(
+                    user.getId(),
+                    finalTotal,
+                    request.getParameter("orderNote"),
+                    paymentMethod,
+                    paymentStatus,
+                    productVoucherId,
+                    shipVoucherId,
+                    address,
+                    shipName,
+                    realShipFee,
+                    deliveryRange,
+                    cartDb
+            );
+        }
+        else{
+            ok = orderService.addOrder(
+                    user.getId(),
+                    finalTotal,
+                    request.getParameter("orderNote"),
+                    paymentMethod,
+                    paymentStatus,
+                    productVoucherId,
+                    shipVoucherId,
+                    address,
+                    shipName,
+                    realShipFee,
+                    deliveryRange,
+                    cartGuest
+            );
+        }
+
 
         if (!ok) {
             request.setAttribute("error", "Tạo đơn hàng thất bại");

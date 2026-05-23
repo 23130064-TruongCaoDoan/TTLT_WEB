@@ -1,7 +1,8 @@
 package controler.user.ThanhToan;
 
-import Cart.Cart;
+import cart.Cart;
 import Service.AddressService;
+import Service.CartSerive;
 import Service.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -21,14 +22,39 @@ public class ThanhToan extends HttpServlet {
         User user = (User) session.getAttribute("user");
         String mode = request.getParameter("mode");
 
+        Cart cartGuest = null;
+        model.Cart cartDb = null;
 
-        Cart cart;
+        boolean isDbCart = false;
+        CartSerive cartSerive = new CartSerive();
+
         if ("buynow".equals(mode)) {
-            cart = (Cart) request.getSession().getAttribute("buyNowCart");
+            cartGuest = (Cart) request.getSession().getAttribute("buyNowCart");
         } else if ("rebuy".equals(mode)) {
-            cart = (Cart) request.getSession().getAttribute("rebuyCart");
+            cartGuest = (Cart) request.getSession().getAttribute("rebuyCart");
         } else {
-            cart = (Cart) request.getSession().getAttribute("cart");
+            if(user != null){
+                cartDb = cartSerive.getCart(user.getId());
+                session.setAttribute("cart", cartDb);
+                isDbCart = true;
+            }
+            else {
+                cartGuest = (Cart) request.getSession().getAttribute("cart");
+            }
+        }
+        if(isDbCart){
+            if(!cartSerive.checkCart(cartDb)){
+                request.setAttribute("toastMessage", "Một số sản phẩm trong giỏ hàng không hợp lệ đã bị xóa");
+                request.getRequestDispatcher("/home").forward(request, response);
+                return;
+            }
+        }
+        else {
+            if (!cartSerive.checkCart(cartGuest)) {
+                request.setAttribute("toastMessage", "Một số sản phẩm trong giỏ hàng không hợp lệ đã bị xóa");
+                request.getRequestDispatcher("/home").forward(request, response);
+                return;
+            }
         }
 
         VoucherService voucherService = new VoucherService();
@@ -44,7 +70,11 @@ public class ThanhToan extends HttpServlet {
 //                    + "/login?redirect=" + currentUrl);
 //            return;
 //        }
-        if (cart == null || cart.getItems().isEmpty()) {
+
+        boolean isEmpty = isDbCart
+                ? (cartDb == null || cartDb.getItems().isEmpty())
+                : (cartGuest == null || cartGuest.getItems().isEmpty());
+        if (isEmpty) {
             response.sendRedirect("ShoppingCart");
             return;
         }
@@ -73,24 +103,25 @@ public class ThanhToan extends HttpServlet {
             }
         }
 
-        double totalBill = cart.getTotalBill();
+        double totalBill = isDbCart ? cartDb.getTotalBill() : cartGuest.getTotalBill();
 
         Voucher voucherDis = (Voucher) session.getAttribute("appliedDiscountVoucher");
         Voucher voucherShip = (Voucher) session.getAttribute("appliedShipVoucher");
-
-        if (voucherDis != null) {
-            boolean valid = voucherService.isVoucherValid(cart, voucherDis);
-            if (!valid) {
-                session.removeAttribute("appliedDiscountVoucher");
-                voucherDis = null;
-                Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
-                numApplyVoucher--;
-                session.setAttribute("numApplyVoucher", numApplyVoucher);
+        if (isDbCart) {
+            if (voucherDis != null) {
+                boolean valid = voucherService.isVoucherValid(cartDb, voucherDis);
+                if (!valid) {
+                    session.removeAttribute("appliedDiscountVoucher");
+                    voucherDis = null;
+                    Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
+                    numApplyVoucher--;
+                    session.setAttribute("numApplyVoucher", numApplyVoucher);
+                }
             }
         }
 
         if (voucherShip != null) {
-            boolean valid = voucherService.isVoucherValid(cart, voucherShip);
+            boolean valid = voucherService.isVoucherValid(cartDb, voucherShip);
             if (!valid) {
                 session.removeAttribute("appliedShipVoucher");
                 voucherShip = null;
@@ -112,12 +143,11 @@ public class ThanhToan extends HttpServlet {
 
         double finalTotal = totalBill  - discountMoney;
         if (finalTotal < 0) finalTotal = 0;
-
-
-
-
-
-        request.setAttribute("cart", cart);
+        if (isDbCart) {
+            request.setAttribute("cart", cartDb);
+        } else {
+            request.setAttribute("cart", cartGuest);
+        }
         request.setAttribute("totalBill", totalBill);
         request.setAttribute("discountMoney", discountMoney);
         request.setAttribute("finalTotal", finalTotal);
@@ -126,9 +156,9 @@ public class ThanhToan extends HttpServlet {
 
         int userId = user.getId();
 
-        request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cart, totalBill, voucherService.listVoucherDiscountUser(userId)));
+        request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherDiscountUser(userId)));
 
-        request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cart, totalBill, voucherService.listVoucherShipUser(userId)));
+        request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherShipUser(userId)));
 
         request.getRequestDispatcher("user/ThanhToan.jsp").forward(request, response);
     }
