@@ -199,7 +199,6 @@
                 </tr>
                 </thead>
                 <tbody id="productTableBody">
-
                 </tbody>
             </table>
         </div>
