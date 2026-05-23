@@ -5,15 +5,8 @@ plugins {
     id 'war'
 }
 task undeploy(type: Delete) {
-    delete 'D:/TTLTWeb/apache-tomcat-10.1.48 (2)/apache-tomcat-10.1.48/apache-tomcat-10.1.48/webapps/Web'
-    delete 'D:/TTLTWeb/apache-tomcat-10.1.48 (2)/apache-tomcat-10.1.48/apache-tomcat-10.1.48/webapps/Web.war'
-}
-sourceSets {
-    main {
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
+    delete 'D:/tomcat/apache-tomcat-10.1.48/webapps/Web_war_exploded'
+    delete 'D:/tomcat/apache-tomcat-10.1.48/webapps/Web_war_exploded.war'
 }
 
 task deployToTomcat(type: Copy) {
@@ -21,10 +14,11 @@ task deployToTomcat(type: Copy) {
     dependsOn build
 
     from('build/libs/Web.war')
-    into('D:/TTLTWeb/apache-tomcat-10.1.48 (2)/apache-tomcat-10.1.48/apache-tomcat-10.1.48/webapps')
+    into('D:/tomcat/apache-tomcat-10.1.48/webapps')
 }
 processResources {
     from 'src/main/resources'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 repositories {
     mavenCentral()

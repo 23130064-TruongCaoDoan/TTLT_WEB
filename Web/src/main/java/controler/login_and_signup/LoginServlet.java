@@ -1,8 +1,10 @@
 package controler.login_and_signup;
 
+import Service.CartSerive;
 import Service.UserService;
 import Service.NotificationService;
 import Util.FacebookOAuthUltis;
+import cart.Cart;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -34,46 +36,55 @@ public class LoginServlet extends HttpServlet {
         UserService userService = new UserService();
         User user = userService.findUser(username);
 
-       if(user!=null&&userService.checkPass(user, password)){
-           HttpSession oldSession = request.getSession(false);
-           if (oldSession != null) {
-               oldSession.invalidate();
-           }
+        if (user != null && userService.checkPass(user, password)) {
+            HttpSession oldSession = request.getSession(false);
+            Cart cart = null;
 
-           if(!user.isStatus()){
-               request.setAttribute("username",username);
-               request.setAttribute("password",password);
-               request.setAttribute("error","Tài khoản bạn đã bị khóa");
-               request.getRequestDispatcher("user/login.jsp").forward(request, response);
-           }
+            if (oldSession != null) {
+                cart = (Cart) oldSession.getAttribute("cart");
+                oldSession.invalidate();
+            }
 
-           HttpSession session = request.getSession();
-           session.setAttribute("user",user);
-           session.setAttribute("loginSuccess", "Đăng nhập thành công");
+            if (!user.isStatus()) {
+                request.setAttribute("username", username);
+                request.setAttribute("password", password);
+                request.setAttribute("error", "Tài khoản bạn đã bị khóa");
+                request.getRequestDispatcher("user/login.jsp").forward(request, response);
+                return;
+            }
 
-           NotificationService notificationService = new NotificationService();
-           int count = notificationService.countNotification((user.getId()));
-           session.setAttribute("numNotiFy", count);
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            session.setAttribute("loginSuccess", "Đăng nhập thành công");
+
+            NotificationService notificationService = new NotificationService();
+            int count = notificationService.countNotification((user.getId()));
+            session.setAttribute("numNotiFy", count);
 
 
-           String redirect = request.getParameter("redirect");
+            String redirect = request.getParameter("redirect");
 
-           if (redirect != null && redirect.startsWith("/")) {
-               response.sendRedirect(redirect);
-               return;
-           }
-           if(userService.checkRole(user)){
-               response.sendRedirect("ThongKe");
-           }
-           else {
-               response.sendRedirect("home");
-           }
-       }
-       else{
-           request.setAttribute("username",username);
-           request.setAttribute("password",password);
-           request.setAttribute("error","Vui lòng kiểm tra lại tên đăng nhập hoặc mật khẩu");
-           request.getRequestDispatcher("user/login.jsp").forward(request, response);
-       }
+            if (redirect != null && redirect.startsWith("/")) {
+                response.sendRedirect(redirect);
+                return;
+            }
+            if (userService.checkRole(user)) {
+                response.sendRedirect("ThongKe");
+            } else {
+                CartSerive cartSerive = new CartSerive();
+                if (cart != null && cart.getItems() != null && cart.getItems().size() > 0) {
+                    cartSerive.mergerCart(cart, user.getId());
+                }
+                model.Cart cartModel = cartSerive.getCart(user.getId());
+                session.setAttribute("cart", cartModel);
+                response.sendRedirect("home");
+
+            }
+        } else {
+            request.setAttribute("username", username);
+            request.setAttribute("password", password);
+            request.setAttribute("error", "Vui lòng kiểm tra lại tên đăng nhập hoặc mật khẩu");
+            request.getRequestDispatcher("user/login.jsp").forward(request, response);
+        }
     }
 }

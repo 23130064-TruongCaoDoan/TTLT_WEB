@@ -11,6 +11,7 @@ import model.Book;
 import model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ProductManageServlet", value = "/product-manage")
@@ -77,6 +78,7 @@ public class ProductManageServlet extends HttpServlet {
         List<Book> outOfStockBooks = thongKeService.getOutOfStockBooks();
         int unsoldBooksCount = thongKeService.getUnsoldBooksCount();
         List<Book> unsoldBooks = thongKeService.getUnsoldBooks();
+        List<String> listBookCode = bookService.getListBookCode();
 
         request.setAttribute("totalSoldProducts", totalSoldProducts);
         request.setAttribute("totalStock", totalStock);
@@ -84,14 +86,19 @@ public class ProductManageServlet extends HttpServlet {
         request.setAttribute("outOfStockBooks", outOfStockBooks);
         request.setAttribute("unsoldBooksCount", unsoldBooksCount);
         request.setAttribute("unsoldBooks", unsoldBooks);
+        request.setAttribute("listBookCode", listBookCode);
 
         request.getRequestDispatcher("admin/ManageProduct.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        User user = (User) session.getAttribute("user");
         try {
 
             Part mainImage = request.getPart("img-main");
@@ -107,7 +114,7 @@ public class ProductManageServlet extends HttpServlet {
                 bookService.addBook(
                         request.getParameterMap(),
                         mainImage,
-                        detailImages);
+                        detailImages,user.getId());
             }
 
             response.sendRedirect(request.getContextPath() + "/product-manage");

@@ -18,6 +18,7 @@
         <a href="<c:url value="/KhoVoucher" />" class="function storeVoucher">Kho Voucher</a>
         <a href="<c:url value="/Event" />" class="function event">Sự kiện</a>
         <a href="<c:url value="/Rate" />" class="function rating">Đánh giá</a>
+        <a href="<c:url value="/history-import" />" class="function import">Lịch sử nhập kho</a>
     </div>
 </div>
 </body>

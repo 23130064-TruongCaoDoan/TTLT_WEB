@@ -1,12 +1,14 @@
 package controler.user.ThanhToan;
 
-import Cart.Cart;
+import Service.CartSerive;
+import cart.Cart;
 import Service.AddressService;
 import Util.GHNApiUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.Address;
+import model.User;
 import org.cloudinary.json.JSONArray;
 import org.cloudinary.json.JSONObject;
 
@@ -42,20 +44,41 @@ public class CalculateShippingServlet extends HttpServlet {
 
             String mode = request.getParameter("mode");
 
-            Cart cart;
+            Cart cartGuest = null;
+            model.Cart cartDb = null;
+            boolean isDbCart = false;
+            CartSerive cartSerive = new CartSerive();
+            User user = (User) request.getSession().getAttribute("user");
+            HttpSession session = request.getSession();
+
             if ("buynow".equals(mode)) {
-                cart = (Cart) request.getSession().getAttribute("buyNowCart");
+                cartGuest = (Cart) request.getSession().getAttribute("buyNowCart");
             } else if ("rebuy".equals(mode)) {
-                cart = (Cart) request.getSession().getAttribute("rebuyCart");
+                cartGuest = (Cart) request.getSession().getAttribute("rebuyCart");
             } else {
-                cart = (Cart) request.getSession().getAttribute("cart");
+                if(user != null){
+                    cartDb = cartSerive.getCart(user.getId());
+                    session.setAttribute("cart", cartDb);
+                    isDbCart = true;
+                }
+                else {
+                    cartGuest = (Cart) request.getSession().getAttribute("cart");
+                }
             }
 
 
             JSONArray resultServices = new JSONArray();
-            int weight = cart.getTotalWeight();
-
-            if(cart == null){
+            int weight;
+            if(isDbCart){
+                weight = cartDb.getTotalWeight();
+            }
+            else {
+                weight = cartGuest.getTotalWeight();
+            }
+            boolean isEmpty = isDbCart
+                    ? (cartDb == null || cartDb.getItems().isEmpty())
+                    : (cartGuest == null || cartGuest.getItems().isEmpty());
+            if(isEmpty){
                 weight = 300;
             }
 

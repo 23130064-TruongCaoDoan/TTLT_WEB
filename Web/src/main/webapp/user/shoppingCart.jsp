@@ -361,8 +361,14 @@
                 document.getElementById("totalItem").innerText = data.total;
                 if (!data.success) {
                     show("Không thể thêm quá số lượng tồn kho");
+                    setTimeout(()=>{
+                            location.reload()
+                        },1500
+                    );
                 }
-                location.reload();
+                else {
+                    location.reload();
+                }
             })
             .catch(err => console.log(err));
 
