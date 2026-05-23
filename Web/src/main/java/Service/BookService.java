@@ -477,5 +477,8 @@ public class BookService {
     public List<String> getListBookCode(){
         return hd.getListBookCode();
     }
+    public double salesPercentageTheMostRecentImport(int bookId){
+        return hd.salesPercentageTheMostRecentImport(bookId);
+    }
 
 }

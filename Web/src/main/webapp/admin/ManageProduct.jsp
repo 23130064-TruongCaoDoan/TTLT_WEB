@@ -97,6 +97,7 @@
                         <th>Tác giả</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
+                        <th>Tỷ lệ bán</th>
                         <th>Loại sách</th>
                         <th>Độ tuổi</th>
                         <th>Hình ảnh</th>
@@ -112,6 +113,7 @@
                             <td style="white-space: nowrap;" ><p><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"
                                                   maxFractionDigits="0"/> đ</p></td>
                             <td>${p.stock}</td>
+                            <td>${p.salesPercentage}%</td>
                             <td>${p.type}</td>
                             <td>${p.age}+</td>
                             <td><img src="${p.coverImgUrl}" width="60"></td>

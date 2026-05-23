@@ -7,6 +7,7 @@ import org.jdbi.v3.core.Handle;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BookDao extends BaseDao {
@@ -53,7 +54,7 @@ public class BookDao extends BaseDao {
                 handle.createQuery("""
                                     SELECT b.*
                                     FROM BOOKS b
-                                    LEFT JOIN comments r 
+                                    LEFT JOIN comments r
                                            ON b.id = r.book_id 
                                           AND r.is_active = 1
                                     WHERE b.is_sell = 1
@@ -873,6 +874,49 @@ public class BookDao extends BaseDao {
                     .mapTo(String.class)
                     .list()
         );
+    }
+    public double salesPercentageTheMostRecentImport(int bookId){
+        return getJdbi().withHandle(handle -> {
+            LocalDateTime latestRecentImportDate = handle.createQuery("""
+                    SELECT O.import_date
+                    FROM IMPORT_ORDERS o
+                    INNER JOIN IMPORT_ORDER_DETAILS od ON o.id = od.import_order_id
+                    WHERE od.book_id = :bookId
+                    ORDER BY o.import_date DESC
+                    LIMIT 1
+                    """)
+                    .bind("bookId", bookId)
+                    .mapTo(LocalDateTime.class)
+                    .findOne()
+                    .orElse(null);
+            if(latestRecentImportDate == null) return 0.0;
+
+            Integer importedQuantity = handle.createQuery("""
+                    SELECT COALESCE(SUM(od.quantity),0)
+                    FROM IMPORT_ORDERS o
+                    INNER JOIN IMPORT_ORDER_DETAILS od ON o.id = od.import_order_id
+                    WHERE od.book_id = :bookId AND o.import_date = :importDate
+                    """)
+                    .bind("bookId", bookId)
+                    .bind("importDate", latestRecentImportDate)
+                    .mapTo(Integer.class)
+                    .one();
+
+            if (importedQuantity == 0) return 0.0;
+
+            Integer soldQuantity = handle.createQuery("""
+                        SELECT COALESCE(SUM(oi.quantity), 0)
+                        FROM ORDERS o
+                        INNER JOIN ORDER_ITEMS oi ON o.id = oi.order_id
+                        WHERE oi.book_id = :bookId AND o.order_date >= :importDate AND o.status = 'COMPLETED'
+                        """)
+                            .bind("bookId", bookId)
+                            .bind("importDate", latestRecentImportDate)
+                            .mapTo(Integer.class)
+                            .one();
+            return ((double)soldQuantity/importedQuantity)*100 ;
+        });
+
     }
     public static void main(String[] args) {
         BookDao dao = new BookDao();
