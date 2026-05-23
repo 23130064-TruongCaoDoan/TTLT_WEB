@@ -1,7 +1,7 @@
 package Service;
 
-import Cart.Cart;
-import Cart.CartItem;
+import cart.Cart;
+import cart.CartItem;
 import dao.VoucherDao;
 import model.Book;
 import model.Voucher;
@@ -137,6 +137,44 @@ public class VoucherService {
         }
         return result;
     }
+    public List<Voucher> filterVoucherValid(model.Cart cart, double cartTotal, List<Voucher> listVoucher) {
+        List<Voucher> result = new ArrayList<>();
+        if (cart == null || listVoucher == null) return result;
+
+        for (Voucher v : listVoucher) {
+
+            if (cartTotal < v.getConditionPrice()) continue;
+            if (v.getUsage_limit() <= 0) continue;
+
+            boolean hasConditionBook =
+                    v.getConditionBook() != null && !v.getConditionBook().trim().isEmpty();
+            boolean hasConditionPublisher =
+                    v.getConditionPublisher() != null && !v.getConditionPublisher().trim().isEmpty();
+
+            boolean valid = true;
+
+            for (model.CartItem item : cart.getItems()) {
+                Book b = item.getBook();
+
+                if (hasConditionBook &&
+                        !matchCondition(v.getConditionBook(), b.getType())) {
+                    valid = false;
+                    break;
+                }
+
+                if (hasConditionPublisher &&
+                        !matchCondition(v.getConditionPublisher(), b.getPublisher())) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (valid) {
+                result.add(v);
+            }
+        }
+        return result;
+    }
 
 
     private boolean matchCondition(String condition, String value) {
@@ -179,6 +217,32 @@ public class VoucherService {
                 v.getConditionPublisher() != null && !v.getConditionPublisher().trim().isEmpty();
 
         for (CartItem item : cart.getItems()) {
+            Book b = item.getBook();
+
+            if (hasBookCond &&
+                    !matchCondition(v.getConditionBook(), b.getType())) {
+                return false;
+            }
+
+            if (hasPubCond &&
+                    !matchCondition(v.getConditionPublisher(), b.getPublisher())) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean isVoucherValid(model.Cart cart, Voucher v) {
+        if (cart == null || v == null) return false;
+
+        if (cart.getTotalBill() < v.getConditionPrice()) return false;
+        if (v.getUsage_limit() <= 0) return false;
+
+        boolean hasBookCond =
+                v.getConditionBook() != null && !v.getConditionBook().trim().isEmpty();
+        boolean hasPubCond =
+                v.getConditionPublisher() != null && !v.getConditionPublisher().trim().isEmpty();
+
+        for (model.CartItem item : cart.getItems()) {
             Book b = item.getBook();
 
             if (hasBookCond &&

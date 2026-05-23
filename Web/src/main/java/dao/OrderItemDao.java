@@ -1,7 +1,7 @@
 package dao;
 
-import Cart.Cart;
-import Cart.CartItem;
+import cart.Cart;
+import cart.CartItem;
 import model.Book;
 
 import java.util.Map;
@@ -21,6 +21,27 @@ public class OrderItemDao extends BaseDao {
                     """);
 
             for (CartItem item : cart.getItems()) {
+                batch
+                        .bind("order_id", orderId)
+                        .bind("book_id", item.getBook().getId())
+                        .bind("quantity", item.getQuantity())
+                        .bind("subtotal", item.getPrice() * item.getQuantity())
+                        .add();
+            }
+            batch.execute();
+        });
+    }
+    public void insertOrderItems(int orderId, model.Cart cart) {
+        if (cart == null || cart.getItems().isEmpty()) return;
+
+        getJdbi().useHandle(handle -> {
+            var batch = handle.prepareBatch("""
+                        INSERT INTO order_items
+                        (order_id, book_id, quantity, subtotal)
+                        VALUES (:order_id, :book_id, :quantity, :subtotal)
+                    """);
+
+            for (model.CartItem item : cart.getItems()) {
                 batch
                         .bind("order_id", orderId)
                         .bind("book_id", item.getBook().getId())

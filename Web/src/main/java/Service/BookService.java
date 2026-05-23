@@ -1,7 +1,7 @@
 package Service;
 
-import Cart.Cart;
-import Cart.CartItem;
+import cart.Cart;
+import cart.CartItem;
 import dao.AuthorDao;
 import dao.BookDao;
 import jakarta.servlet.http.Part;
@@ -364,6 +364,14 @@ public class BookService {
             }
         }
     }
+    public void updateStock(model.Cart cart) {
+        for (model.CartItem item : cart.getItems()) {
+            hd.updateStock(item.getBook(),item.getQuantity());
+            if (item.getBook().getStock()==item.getQuantity()){
+                hd.setUpdatSeld(item.getBook().getId());
+            }
+        }
+    }
     public void updateStockk(Map<Integer, Integer> map) {
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer id = entry.getKey();
@@ -378,6 +386,11 @@ public class BookService {
 
     public void updateQuantity(Cart cart) {
         for (CartItem item : cart.getItems()) {
+            hd.updateQuantity(item.getBook(),item.getQuantity());
+        }
+    }
+    public void updateQuantity(model.Cart cart) {
+        for (model.CartItem item : cart.getItems()) {
             hd.updateQuantity(item.getBook(),item.getQuantity());
         }
     }

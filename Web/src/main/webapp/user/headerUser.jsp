@@ -87,20 +87,29 @@
     </div>
 </div>
 <div id="toast" class="toast"></div>
+
 <script>
     const toast = document.getElementById("toast");
 
-    <c:choose>
-        <c:when test="${not empty sessionScope.loginSuccess}">
-            sessionStorage.setItem("toastMessage", "${sessionScope.loginSuccess}");
-            <c:remove var="loginSuccess" scope="session"/>
-        </c:when>
+    <c:if test="${not empty sessionScope.loginSuccess}">
+    toast.innerText = "${sessionScope.loginSuccess}";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+    <c:remove var="loginSuccess" scope="session"/>
+    </c:if>
 
-        <c:when test="${not empty sessionScope.logoutSuccess}">
-            sessionStorage.setItem("toastMessage", "${sessionScope.logoutSuccess}");
-            <c:remove var="logoutSuccess" scope="session"/>
-        </c:when>
-    </c:choose>
+    <c:if test="${not empty sessionScope.logoutSuccess}">
+    toast.innerText = "${sessionScope.logoutSuccess}";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+    <c:remove var="logoutSuccess" scope="session"/>
+    </c:if>
+
+    <c:if test="${not empty toastMessage}">
+    toast.innerText = "${toastMessage}";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+    </c:if>
 
     window.addEventListener("load", function () {
         const message = sessionStorage.getItem("toastMessage");

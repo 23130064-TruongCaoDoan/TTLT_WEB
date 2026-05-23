@@ -1,6 +1,6 @@
 package controler.user.ThanhToan;
 
-import Cart.Cart;
+import cart.Cart;
 import Service.BookService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -29,8 +29,13 @@ public class MuaNgay extends HttpServlet {
         int bookId = Integer.parseInt(request.getParameter("bookId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+
         BookService bookService = new BookService();
         Book book = bookService.getBooksById(bookId);
+        if (quantity >book.getStock()) {
+            request.setAttribute("toastMessage", "Số lượng không hợp lệ");
+            request.getRequestDispatcher("user/home").forward(request, response);
+        }
 
         Cart buyNowCart = new Cart();
         buyNowCart.addItem(book, quantity);
