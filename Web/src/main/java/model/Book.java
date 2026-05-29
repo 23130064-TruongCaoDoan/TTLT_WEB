@@ -27,6 +27,7 @@ public class Book {
     private String add_date;
     private int quantitySold;
     private int stock;
+    private double salesPercentage;
 
 
     public Book() {
@@ -135,6 +136,8 @@ public class Book {
 
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
+    public double getSalesPercentage() { return salesPercentage; }
+    public void setSalesPercentage(double salesPercentage) { this.salesPercentage = salesPercentage; }
 
 
     @Override

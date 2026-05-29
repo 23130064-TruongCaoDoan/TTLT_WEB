@@ -63,6 +63,9 @@ public class ProductManageServlet extends HttpServlet {
             offset = 0;
         }
         List<Book> lsBook = bookService.searchAndFilterPaginated(q, type, stock, pageSize, offset);
+        for (Book book : lsBook) {
+            book.setSalesPercentage(bookService.salesPercentageTheMostRecentImport(book.getId()));
+        }
 
         request.setAttribute("types", bookService.getAllBookTypes());
         //List<Book> lsBook = bookService.searchAndFilter(q, type, stock);
