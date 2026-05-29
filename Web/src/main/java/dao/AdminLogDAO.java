@@ -24,4 +24,21 @@ public class AdminLogDAO extends BaseDao {
                         .list()
         );
     }
+
+    public int getUnreadCount(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("SELECT COUNT(*) FROM account_history WHERE user_id = :userId AND is_read = 0")
+                        .bind("userId", userId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    public void markAllAsRead(int userId) {
+        getJdbi().useHandle(h -> {
+            h.createUpdate("UPDATE account_history SET is_read = 1 WHERE user_id = :userId AND is_read = 0")
+                    .bind("userId", userId)
+                    .execute();
+        });
+    }
 }

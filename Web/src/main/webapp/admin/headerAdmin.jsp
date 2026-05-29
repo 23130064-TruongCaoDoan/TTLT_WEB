@@ -10,6 +10,9 @@
     <div class="right">
         <div class="notification-wrapper" style="position: relative; margin-right: 20px; cursor: pointer;" onclick="window.location.href='myHistory'">
             <i class="fa-solid fa-clock-rotate-left notification-icon"></i>
+            <c:if test="${unreadLogCount != null && unreadLogCount > 0}">
+                <span class="badge">${unreadLogCount}</span>
+            </c:if>
         </div>
         <i class="fa-solid fa-user"></i>
         <div class="ten">

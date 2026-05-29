@@ -26,6 +26,8 @@ public class MyHistoryServlet extends HttpServlet {
         User currentUser = (User) session.getAttribute("user");
 
         AdminLogDAO logDAO = new AdminLogDAO();
+        logDAO.markAllAsRead(currentUser.getId());
+        request.setAttribute("unreadLogCount", 0);
         request.setAttribute("histories", logDAO.getHistoryByUserId(currentUser.getId()));
         request.getRequestDispatcher("/admin/myHistory.jsp").forward(request, response);
     }

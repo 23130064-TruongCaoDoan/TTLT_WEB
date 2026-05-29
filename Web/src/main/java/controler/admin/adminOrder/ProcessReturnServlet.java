@@ -48,6 +48,7 @@ public class ProcessReturnServlet extends HttpServlet {
 
             notiService.sendNoti(returnReq.getUserId(), "Trả hàng thành công", "Yêu cầu trả hàng cho đơn #" + returnReq.getOrderId() + " đã được duyệt. Tiền sẽ được hoàn lại sớm nhất!");
 
+            request.setAttribute("logSuccess", true);
             response.getWriter().write("{\"success\":true,\"message\":\"Đã duyệt trả hàng & hoàn kho.\"}");
 
         } else if (action.equalsIgnoreCase("REJECT")) {
@@ -55,6 +56,7 @@ public class ProcessReturnServlet extends HttpServlet {
 
             notiService.sendNoti(returnReq.getUserId(), "Trả hàng thất bại", "Yêu cầu trả hàng đơn #" + returnReq.getOrderId() + " bị từ chối. Lý do: " + rejectReason);
 
+            request.setAttribute("logSuccess", true);
             response.getWriter().write("{\"success\":true,\"message\":\"Đã từ chối yêu cầu trả hàng.\"}");
         }
     }

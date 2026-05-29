@@ -40,6 +40,41 @@ public class AdminLogFilter implements Filter {
                 action = "ĐĂNG NHẬP";
                 logContent = "Bạn đã đăng nhập thành công";
             }
+            else if (uri.contains("updateorderstatus")) {
+                action = "CẬP NHẬT TRẠNG THÁI ĐƠN";
+                String orderId = request.getParameter("orderId");
+                String status = request.getParameter("orderStatus");
+                logContent = "Bạn đã chuyển trạng thái đơn hàng ID " + orderId + " sang: [" + status + "]";
+            }
+            else if (uri.contains("updateorder") && !uri.contains("updateorderstatus")) {
+                action = "SỬA ĐƠN HÀNG";
+                String orderId = request.getParameter("id");
+                String status = request.getParameter("status");
+                String total = request.getParameter("total");
+                logContent = "Bạn đã chỉnh sửa đơn hàng ID " + orderId + " (Trạng thái: " + status + ", Tổng tiền: " + total + ")";
+            }
+            else if (uri.contains("deleteorderservlet")) {
+                action = "XÓA ĐƠN HÀNG";
+                String idRaw = request.getParameter("id");
+                String userCodes = request.getParameter("userId");
+                if (userCodes == null || userCodes.trim().isEmpty()) {
+                    logContent = "Bạn đã xóa đơn hàng ID " + idRaw;
+                } else {
+                    logContent = "Bạn đã xóa đơn hàng ID " + idRaw + " của khách hàng ID " + userCodes;
+                }
+            }
+            else if (uri.contains("process-return")) {
+                action = "XỬ LÝ TRẢ HÀNG";
+                String returnAction = request.getParameter("action");
+                String requestId = request.getParameter("requestId");
+
+                if ("APPROVE".equalsIgnoreCase(returnAction)) {
+                    logContent = "Bạn đã DUYỆT yêu cầu trả hàng ID: " + requestId;
+                } else if ("REJECT".equalsIgnoreCase(returnAction)) {
+                    String rejectReason = request.getParameter("rejectReason");
+                    logContent = "Bạn đã TỪ CHỐI yêu cầu trả hàng ID: " + requestId + " với lý do: " + (rejectReason != null ? rejectReason : "");
+                }
+            }
             else if (uri.contains("admin-add-user")) {
                 action = "TẠO TÀI KHOẢN";
                 String name = request.getParameter("name");
@@ -113,7 +148,7 @@ public class AdminLogFilter implements Filter {
                 String id = request.getParameter("id");
                 String userCodes = request.getParameter("userId");
                 if (userCodes == null || userCodes.trim().isEmpty()) {
-                    logContent = "Bạn đã xóa cấu  voucher có ID " + id;
+                    logContent = "Bạn đã xóa voucher có ID " + id;
                 } else {
                     logContent = "Bạn đã gỡ bỏ voucher ID " + id + " khỏi khách hàng có ID " + userCodes;
                 }
@@ -195,6 +230,12 @@ public class AdminLogFilter implements Filter {
                     logContent = "Bạn đã xóa dữ liệu có ID: " + (id != null ? id : "");
                 }
             }
+        }
+
+        if (userBefore != null) {
+            AdminLogDAO dao = new AdminLogDAO();
+            int unreadCount = dao.getUnreadCount(userBefore.getId());
+            request.setAttribute("unreadLogCount", unreadCount);
         }
 
         chain.doFilter(request, response);
