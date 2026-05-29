@@ -1,6 +1,7 @@
 package controler.admin.adminOrder;
 
 import Service.BookService;
+import Service.NotificationService;
 import Service.OrderService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Order;
 import model.OrderView;
 import model.User;
 
@@ -41,6 +43,32 @@ public class UpdateOrderStatus extends HttpServlet {
 
         OrderService orderService = new OrderService();
         orderService.updateOrderStatus(orderId, orderStatus);
+
+        try {
+            Order order = orderService.getOrderDetail(orderId).getOrder();
+            if (order != null) {
+                int customerId = order.getUserId();
+
+                String statusVN = "";
+                switch (orderStatus.toUpperCase()) {
+                    case "PENDING": statusVN = "Chờ xử lý"; break;
+                    case "PROCESSING": statusVN = "Đang chuẩn bị hàng"; break;
+                    case "SHIPPING": statusVN = "Đang giao hàng"; break;
+                    case "COMPLETED": statusVN = "Giao hàng thành công"; break;
+                    case "REFUNDED": statusVN = "Đã hoàn tiền"; break;
+                    case "CANCELLED": statusVN = "Đã bị hủy"; break;
+                    default: statusVN = orderStatus;
+                }
+
+                String title = "Cập nhật đơn hàng";
+                String content = "Đơn hàng #" + orderId + " của bạn đã được chuyển sang trạng thái: " + statusVN;
+
+                NotificationService notiService = new NotificationService();
+                notiService.sendNoti(customerId, title, content);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi gửi thông báo cập nhật đơn hàng: " + e.getMessage());
+        }
 
         request.setAttribute("logSuccess", true);
         String q = request.getParameter("q");

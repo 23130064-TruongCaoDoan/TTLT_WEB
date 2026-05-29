@@ -49,8 +49,8 @@ public class NotificationService {
         notificationDAO.markAsRead(userId);
     }
 
-    public void markReadById(int id){
-        notificationDAO.markReadById(id);
+    public boolean markReadById(int id){
+        return notificationDAO.markReadById(id);
     }
 }
 

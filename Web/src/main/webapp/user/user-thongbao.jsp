@@ -103,32 +103,30 @@
                 overlay.style.display = "block";
                 popup.style.display = "block";
 
-                item.classList.remove("noti-new");
-                item.classList.add("noti-old");
+                const isNew = item.classList.contains("noti-new");
+
+                if (isNew) {
+                    item.classList.remove("noti-new");
+                    item.classList.add("noti-old");
 
                 fetch("${pageContext.request.contextPath}/read-notification?id=" + id)
                 .then(() => {
-
                     const badge = document.getElementById("noti-badge");
-
-                    if (badge) {
-                        let count = parseInt(badge.innerText);
-
-                        if (count > 0) {
-                            count--;
-                            badge.innerText = count;
-
-                            if (count === 0) {
-                                badge.style.display = "none";
-                            }
+                        if (badge) {
+                            let count = parseInt(badge.innerText);
+                                if (!isNaN(count) && count > 0) {
+                                    count--;
+                                    badge.innerText = count;
+                                        if (count === 0) {
+                                            badge.style.display = "none";
+                                        }
+                                }
                         }
-                    }
-
                 })
                 .catch(err => console.log(err));
-            });
+            }
         });
-
+   });
         function closePopup() {
             overlay.style.display = "none";
             popup.style.display = "none";

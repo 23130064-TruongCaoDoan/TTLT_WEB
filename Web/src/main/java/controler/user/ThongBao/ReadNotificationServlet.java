@@ -20,15 +20,16 @@ public class ReadNotificationServlet extends HttpServlet {
 
         int id = Integer.parseInt(req.getParameter("id"));
 
-        service.markReadById(id);
+        boolean isNewRead = service.markReadById(id);
 
         HttpSession session = req.getSession();
         Integer count = (Integer) session.getAttribute("numNotiFy");
 
-        if (count != null && count > 0) {
-            session.setAttribute("numNotiFy", count - 1);
+        if (isNewRead && count != null && count > 0) {
+            count = count - 1;
+            session.setAttribute("numNotiFy", count);
         }
 
-        resp.getWriter().write("ok");
+        resp.getWriter().write(count != null ? String.valueOf(count) : "0");
     }
 }
