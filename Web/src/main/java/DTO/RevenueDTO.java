@@ -28,6 +28,9 @@ public class RevenueDTO {
     public void setProfit(double profit) {
         this.profit = profit;
     }
+    public double getNetProfit() {
+        return revenue-profit;
+    }
 
     @Override
     public String toString() {

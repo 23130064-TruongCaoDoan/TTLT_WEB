@@ -126,12 +126,6 @@ public class ThongKeService {
     public double getProfit(LocalDate from, LocalDate to) {
         return dao.getProfit(from,to);
     }
-    public List<RevenueDTO> getProfitChart(String year) {
-        return dao.getProfitChart(year);
-    }
-    public List<RevenueDTO> getProfitChart(LocalDate from, LocalDate to) {
-       return dao.getProfitChart(from,to);
-    }
 
 
 }

@@ -294,16 +294,34 @@ public class ThongKeDao extends BaseDao {
                         .list()
         );
     }
+
     public List<RevenueDTO> getRevenueChart(LocalDate from, LocalDate to) {
         return  getJdbi().withHandle(handle ->
                 handle.createQuery("""
-                        SELECT DATE(o.order_date) AS label, SUM(o.total_amount) AS revenue
-                        FROM ORDERS o
-                        INNER JOIN USER u ON u.id = o.user_id
-                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND o.order_date BETWEEN :from AND :to
-                        GROUP BY DATE(o.order_date)
-                        ORDER BY DATE(o.order_date)
-                        LIMIT 30
+                        WITH RECURSIVE dates AS (
+                            SELECT :from AS dt
+                            UNION ALL
+                            SELECT DATE_ADD(dt, INTERVAL 1 DAY)
+                            FROM dates
+                            WHERE dt < :to
+                        )
+                        SELECT DATE(d.dt) AS label, COALESCE(r.revenue, 0) AS revenue,
+                               COALESCE(p.profit, 0) AS profit
+                        FROM dates d
+                        LEFT JOIN (
+                            SELECT DATE(o.order_date) AS dt, SUM(o.total_amount) AS revenue
+                            FROM orders o
+                            INNER JOIN user u ON u.id = o.user_id
+                            WHERE u.role = 0 AND o.status = 'COMPLETED' AND DATE(order_date) BETWEEN :from AND :to
+                            GROUP BY DATE(order_date)
+                        ) r ON d.dt = r.dt
+                        LEFT JOIN (
+                            SELECT DATE(io.import_date) AS dt,SUM(io.total_amount) AS profit
+                            FROM import_orders io
+                            WHERE DATE(io.import_date) BETWEEN :from AND :to
+                            GROUP BY DATE(io.import_date)
+                        ) p ON d.dt = p.dt
+                        ORDER BY d.dt
                         """)
                         .bind("from",from)
                         .bind("to", to)
@@ -314,12 +332,30 @@ public class ThongKeDao extends BaseDao {
     public List<RevenueDTO> getRevenueChart(String year) {
         return  getJdbi().withHandle(handle ->
                 handle.createQuery("""
-                        SELECT CONCAT('Tháng ', MONTH(o.order_date)) AS label, SUM(total_amount) AS revenue
-                        FROM ORDERS o
-                        INNER JOIN USER u ON u.id = o.user_id
-                        WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
-                        GROUP BY MONTH(o.order_date)
-                        ORDER BY MONTH(o.order_date)
+                        WITH RECURSIVE months AS (
+                            SELECT 1 AS month
+                            UNION ALL
+                            SELECT month + 1
+                            FROM months
+                            WHERE month < 12
+                        )
+                        SELECT CONCAT('Tháng ', m.month) AS label, COALESCE(r.revenue, 0) AS revenue,
+                               COALESCE(p.profit, 0) AS profit
+                        FROM months m
+                        LEFT JOIN(
+                            SELECT (MONTH(o.order_date)) AS month, SUM(o.total_amount) AS revenue
+                            FROM ORDERS o
+                            INNER JOIN USER u ON u.id = o.user_id
+                            WHERE u.role = 0 AND o.status = 'COMPLETED' AND YEAR(o.order_date) = :year
+                            GROUP BY MONTH(o.order_date)
+                        ) r ON r.month = m.month
+                        LEFT JOIN(
+                            SELECT MONTH(io.import_date) AS month ,SUM(io.total_amount) AS profit
+                            FROM import_orders io
+                            WHERE YEAR(io.import_date) = :year
+                            GROUP BY MONTH(io.import_date)
+                        ) p ON p.month = m.month
+                        ORDER BY m.month
                         """)
                         .bind("year", year)
                         .mapToBean(RevenueDTO.class)
@@ -670,46 +706,6 @@ public class ThongKeDao extends BaseDao {
             totalBuy = 0.0;
         }
         return totalRevenue - totalBuy;
-    }
-    public List<RevenueDTO> getProfitChart(LocalDate from, LocalDate to) {
-        List<RevenueDTO> listRevenue = getRevenueChart(from, to);
-        List<RevenueDTO> listProfitDTO =  getJdbi().withHandle(handle ->
-                handle.createQuery("""
-                        SELECT DATE(import_date) AS label, SUM(total_amount) AS profit
-                        FROM import_orders
-                        WHERE DATE(import_date) BETWEEN :from AND :to
-                        GROUP BY DATE(import_date)
-                        ORDER BY DATE(import_date)
-                        LIMIT 30
-                        """)
-                        .bind("from",from)
-                        .bind("to", to)
-                        .mapToBean(RevenueDTO.class)
-                        .list()
-        );
-        for (int i = 0; i < listRevenue.size(); i++) {
-            listProfitDTO.get(i).setRevenue(listRevenue.get(i).getRevenue());
-        }
-        return listProfitDTO;
-    }
-    public List<RevenueDTO> getProfitChart(String year) {
-        List<RevenueDTO> listRevenue = getRevenueChart(year);
-        List<RevenueDTO> listProfitDTO =  getJdbi().withHandle(handle ->
-                handle.createQuery("""
-                        SELECT DATE(import_date) AS label, SUM(total_amount) AS profit
-                        FROM import_orders
-                        WHERE DATE(import_date) = :year
-                        GROUP BY MONTH(import_date)
-                        ORDER BY MONTH(import_date)
-                        """)
-                        .bind("year", year)
-                        .mapToBean(RevenueDTO.class)
-                        .list()
-        );
-        for (int i = 0; i < listRevenue.size(); i++) {
-            listProfitDTO.get(i).setRevenue(listRevenue.get(i).getRevenue());
-        }
-        return listProfitDTO;
     }
 
     public static void main(String[] args) {

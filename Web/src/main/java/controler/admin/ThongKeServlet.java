@@ -40,6 +40,7 @@ public class ThongKeServlet extends HttpServlet {
         Map<String, Double> getPercentTypeChart=new HashMap<>();
         List<OrderDTOChart>  getTotalOrderChart=new ArrayList<>();
         Map<String, Double> getPercentProfitByCategory=new HashMap<>();
+        List<RevenueDTO> getProfitChart=new ArrayList<>();
 
         int totalSoldProducts=0;
         int totalOrders=0;
