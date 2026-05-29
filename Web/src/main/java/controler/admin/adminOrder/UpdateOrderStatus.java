@@ -56,7 +56,7 @@ public class UpdateOrderStatus extends HttpServlet {
         Map<String, List<String>> transitions = Map.of(
                 "PENDING", List.of("PROCESSING", "CANCELLED"),
                 "PROCESSING", List.of("SHIPPING", "CANCELLED"),
-                "SHIPPING", List.of("COMPLETED"),
+                "SHIPPING", List.of("COMPLETED","CANCELLED"),
                 "COMPLETED", List.of("REFUNDED"),
                 "REFUNDED", List.of(),
                 "CANCELLED", List.of()

@@ -7,6 +7,7 @@ import DTO.UserWithTotalSpentDTO;
 import model.Book;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -628,6 +629,87 @@ public class ThongKeDao extends BaseDao {
                         .mapTo(Integer.class)
                         .findFirst()
                         .orElse(0));
+    }
+    public double getProfit(LocalDate from, LocalDate to) {
+        Double totalRevenue = getTotalRevenue(from, to);
+        if (totalRevenue == null) {
+            totalRevenue = 0.0;
+        }
+        Double totalBuy = getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT SUM(total_amount)
+                        FROM import_orders
+                        WHERE DATE(import_date) BETWEEN :from AND :to
+                        """)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .mapTo(Double.class)
+                        .one()
+        );
+        if (totalBuy == null) {
+            totalBuy = 0.0;
+        }
+        return totalRevenue - totalBuy;
+    }
+    public double getProfit(String year) {
+        Double totalRevenue = getTotalRevenue(year);
+        if (totalRevenue == null) {
+            totalRevenue = 0.0;
+        }
+        Double totalBuy = getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT SUM(total_amount)
+                        FROM import_orders
+                        WHERE YEAR(import_date) = :year
+                        """)
+                        .bind("year", year)
+                        .mapTo(Double.class)
+                        .one()
+        );
+        if (totalBuy == null) {
+            totalBuy = 0.0;
+        }
+        return totalRevenue - totalBuy;
+    }
+    public List<RevenueDTO> getProfitChart(LocalDate from, LocalDate to) {
+        List<RevenueDTO> listRevenue = getRevenueChart(from, to);
+        List<RevenueDTO> listProfitDTO =  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT DATE(import_date) AS label, SUM(total_amount) AS profit
+                        FROM import_orders
+                        WHERE DATE(import_date) BETWEEN :from AND :to
+                        GROUP BY DATE(import_date)
+                        ORDER BY DATE(import_date)
+                        LIMIT 30
+                        """)
+                        .bind("from",from)
+                        .bind("to", to)
+                        .mapToBean(RevenueDTO.class)
+                        .list()
+        );
+        for (int i = 0; i < listRevenue.size(); i++) {
+            listProfitDTO.get(i).setRevenue(listRevenue.get(i).getRevenue());
+        }
+        return listProfitDTO;
+    }
+    public List<RevenueDTO> getProfitChart(String year) {
+        List<RevenueDTO> listRevenue = getRevenueChart(year);
+        List<RevenueDTO> listProfitDTO =  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT DATE(import_date) AS label, SUM(total_amount) AS profit
+                        FROM import_orders
+                        WHERE DATE(import_date) = :year
+                        GROUP BY MONTH(import_date)
+                        ORDER BY MONTH(import_date)
+                        """)
+                        .bind("year", year)
+                        .mapToBean(RevenueDTO.class)
+                        .list()
+        );
+        for (int i = 0; i < listRevenue.size(); i++) {
+            listProfitDTO.get(i).setRevenue(listRevenue.get(i).getRevenue());
+        }
+        return listProfitDTO;
     }
 
     public static void main(String[] args) {

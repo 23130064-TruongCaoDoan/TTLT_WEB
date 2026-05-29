@@ -1,8 +1,11 @@
 package DTO;
 
+import java.time.LocalDate;
+
 public class RevenueDTO {
     private String label;
     private double revenue;
+    private double profit;
 
     public String getLabel() {
         return label;
@@ -18,6 +21,12 @@ public class RevenueDTO {
 
     public void setRevenue(double revenue) {
         this.revenue = revenue;
+    }
+    public double getProfit() {
+        return profit;
+    }
+    public void setProfit(double profit) {
+        this.profit = profit;
     }
 
     @Override

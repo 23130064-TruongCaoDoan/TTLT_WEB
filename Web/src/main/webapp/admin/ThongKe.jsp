@@ -51,6 +51,12 @@
                                              groupingUsed="true" maxFractionDigits="0"/> Đ</p>
                     </div>
                     <div class="card">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <h3>Tổng lợi nhuận</h3>
+                        <p><fmt:formatNumber value="${totalProfit}" type="number"
+                                             groupingUsed="true" maxFractionDigits="0"/> Đ</p>
+                    </div>
+                    <div class="card">
                         <i class="fa-solid fa-receipt"></i>
                         <h3>Tổng đơn hàng</h3>
                         <p>${totalOrders}</p>
