@@ -101,6 +101,7 @@ public class updateVoucher extends HttpServlet {
         );
 
         if (success) {
+            request.setAttribute("logSuccess", true);
             response.getWriter().write(
                     "{\"success\":true,\"message\":\"Cập nhật voucher thành công\"}"
             );

@@ -26,6 +26,7 @@ public class NotifyUserServlet extends HttpServlet {
         String[] userCodes = request.getParameterValues("userIds");
 
         ns.sendToUsers(title, content, userCodes);
+        request.setAttribute("logSuccess", true);
         response.sendRedirect("user-manage?success=notify");
 
     }

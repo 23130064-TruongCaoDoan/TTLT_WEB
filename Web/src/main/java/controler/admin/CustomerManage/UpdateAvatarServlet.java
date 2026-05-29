@@ -43,6 +43,7 @@ public class UpdateAvatarServlet extends HttpServlet {
             }
 
             userService.updateAvatar(userId, avatarUrl);
+            request.setAttribute("logSuccess", true);
 
             response.getWriter().write(
                     "{\"success\":true,\"avatarUrl\":\"" + avatarUrl + "\"}"

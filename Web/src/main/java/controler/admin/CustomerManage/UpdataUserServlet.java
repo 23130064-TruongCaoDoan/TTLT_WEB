@@ -53,6 +53,9 @@ public class UpdataUserServlet extends HttpServlet {
                 break;
             }
         }
+        if (success) {
+            request.setAttribute("logSuccess", true);
+        }
         response.getWriter().write("{\"success\":"+success+"}");
     }
 }

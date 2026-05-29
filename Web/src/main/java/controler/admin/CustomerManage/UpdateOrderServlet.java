@@ -34,6 +34,7 @@ public class UpdateOrderServlet extends HttpServlet {
 
         boolean ok= orderService.updateOrder(orderId,totalAmount,status);
         if (ok) {
+            request.setAttribute("logSuccess", true);
             response.getWriter().write("{\"success\":true,\"message\":\"Thực hiện chỉnh sửa thành công\"}");
             return;
         }

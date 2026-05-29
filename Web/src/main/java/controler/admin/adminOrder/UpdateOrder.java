@@ -29,6 +29,7 @@ public class UpdateOrder extends HttpServlet {
         OrderService orderService = new OrderService();
         boolean success=orderService.updateOrder(orderId,orderTotalPrice,orderStatus);
         if(success){
+            request.setAttribute("logSuccess", true);
             response.getWriter().write(
                     "{\"success\":true}"
             );

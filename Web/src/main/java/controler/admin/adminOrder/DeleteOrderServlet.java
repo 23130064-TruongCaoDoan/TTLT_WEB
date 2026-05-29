@@ -37,6 +37,7 @@ public class DeleteOrderServlet extends HttpServlet {
             }
 
             if (success) {
+                request.setAttribute("logSuccess", true);
                 response.getWriter().write(
                         "{\"success\":true,\"message\":\"Xóa đơn hàng thành công\"}"
                 );

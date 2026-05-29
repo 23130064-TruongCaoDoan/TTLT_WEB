@@ -42,6 +42,7 @@ public class UpdateOrderStatus extends HttpServlet {
         OrderService orderService = new OrderService();
         orderService.updateOrderStatus(orderId, orderStatus);
 
+        request.setAttribute("logSuccess", true);
         String q = request.getParameter("q");
 
         String sortDate = request.getParameter("sortDate");

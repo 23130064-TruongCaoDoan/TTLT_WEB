@@ -26,6 +26,7 @@ public class Notify extends HttpServlet {
         int userId = Integer.parseInt(userCodes);
 
         ns.sendNoti(userId, title, content);
+        request.setAttribute("logSuccess", true);
         response.getWriter().write("{\"success\" :true, \"message\":\"Đã gửi thông báo cho khách hàng\"}");
     }
 }

@@ -35,6 +35,7 @@ public class GiftVoucher extends HttpServlet {
         for (String id : ids) {
             voucherService.tangVoucher(listU, id);
         }
+        request.setAttribute("logSuccess", true);
 
         response.getWriter().write("{\"success\":true, \"message\":\"Tặng voucher thành công\"}");
 
