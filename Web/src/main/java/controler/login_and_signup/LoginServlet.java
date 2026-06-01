@@ -1,6 +1,21 @@
 package controler.login_and_signup;
 
 import Service.CartSerive;
+import dao.AuthTokenDao;
+import model.AuthToken;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.MessageDigest;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Base64;
+
+import jakarta.servlet.http.Cookie;
+
+import java.util.Optional;
+
+import dao.UserDao;
 import Service.UserService;
 import Service.NotificationService;
 import Util.FacebookOAuthUltis;
@@ -23,7 +38,6 @@ public class LoginServlet extends HttpServlet {
         }
         String redirect = request.getParameter("redirect");
         request.setAttribute("redirect", redirect);
-
         request.setAttribute("fbClientId", FacebookOAuthUltis.getAppId());
 
         request.getRequestDispatcher("user/login.jsp").forward(request, response);
@@ -56,6 +70,33 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("loginSuccess", "Đăng nhập thành công");
+
+            String remember = request.getParameter("remember");
+            if (remember != null && (remember.equalsIgnoreCase("on") || remember.equalsIgnoreCase("true"))) {
+                SecureRandom random = new SecureRandom();
+                byte[] selectorBytes = new byte[9];
+                random.nextBytes(selectorBytes);
+                String selector = Base64.getUrlEncoder().withoutPadding().encodeToString(selectorBytes);
+                byte[] validatorBytes = new byte[33];
+                random.nextBytes(validatorBytes);
+                String validator = Base64.getUrlEncoder().withoutPadding().encodeToString(validatorBytes);
+                MessageDigest digest = null;
+                try {
+                    digest = MessageDigest.getInstance("SHA-256");
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
+                String validatorHash = Base64.getUrlEncoder().withoutPadding().encodeToString(digest.digest(validator.getBytes(StandardCharsets.UTF_8)));
+                LocalDateTime expiresAt = LocalDateTime.now().plusDays(30);
+                AuthToken authToken = new AuthToken(user.getId(), selector, validatorHash, expiresAt);
+                new AuthTokenDao().saveToken(authToken);
+                String cookieValue = selector + ":" + validator;
+                Cookie rememberCookie = new Cookie("remember_me", cookieValue);
+                rememberCookie.setMaxAge(30 * 24 * 60 * 60);
+                rememberCookie.setHttpOnly(true);
+                rememberCookie.setPath(request.getContextPath());
+                response.addCookie(rememberCookie);
+            }
 
             NotificationService notificationService = new NotificationService();
             int count = notificationService.countNotification((user.getId()));

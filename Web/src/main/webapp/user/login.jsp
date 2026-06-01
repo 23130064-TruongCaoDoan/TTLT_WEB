@@ -36,15 +36,26 @@
                 <div class="error" style="color: red">${error}</div>
             </div>
             <div class="forget"><a href="" class="qmk"><span>Quên mật khẩu</span></a></div>
+            <div class="remember">
+                <label>
+                    <input type="checkbox"
+                           id="remember"
+                           name="remember"
+                           value="true">
+                    Ghi nhớ đăng nhập
+                </label>
+            </div>
             <div class="buttonLoginAndSignUp">
                 <button type="submit" class="dangNhap">Đăng nhập</button>
                 <div id="or">OR</div>
                 <div class="login-google-and_facebook">
-                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Web_war_exploded/login-google&response_type=code&client_id=846603349467-fma7pe8c0b03i56hibab7psvktbnluj7.apps.googleusercontent.com&approval_prompt=force">
+                    <a id="googleLogin"
+                       href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Web_war_exploded/login-google&response_type=code&client_id=846603349467-fma7pe8c0b03i56hibab7psvktbnluj7.apps.googleusercontent.com&approval_prompt=force">
                         <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png"
                              alt="google">
                     </a>
-                    <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=${fbClientId}&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook&scope=email,public_profile">
+                    <a id="facebookLogin"
+                       href="https://www.facebook.com/v18.0/dialog/oauth?client_id=${fbClientId}&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook&scope=email,public_profile">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/960px-2023_Facebook_icon.svg.png"
                              alt="facebook">
                     </a>
@@ -108,7 +119,7 @@
         errorEmailDiv.innerText = "";
         document.querySelector(".otp-box").style.display = "none";
         document.querySelector(".khungk").style.display = "block";
-        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearMessageError(errorEmailDiv, errorVerifyDiv);
         clearInputError(emailInput);
         clearInputError(otpInput);
         clearInterval(countdownInterval);
@@ -210,8 +221,7 @@
     }
 
 
-
-    function clearMessageError(email,otp) {
+    function clearMessageError(email, otp) {
         email.innerText = "";
         email.classList.remove("error", "success");
         otp.innerText = "";
@@ -226,7 +236,7 @@
     function send_OTP() {
         const email = emailInput.value.trim();
         errorEmailDiv.innerText = "";
-        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearMessageError(errorEmailDiv, errorVerifyDiv);
         clearInputError(emailInput);
         if (email == "") {
             errorEmailDiv.innerText = "Vui lòng nhập email";
@@ -244,7 +254,7 @@
             return;
         }
 
-        errorEmailDiv.innerText ="Đang gửi";
+        errorEmailDiv.innerText = "Đang gửi";
         fetch("send_otp", {
             method: "POST",
             headers: {
@@ -277,7 +287,7 @@
         const otp = otpInput.value.trim();
 
         errorVerifyDiv.innerText = "";
-        clearMessageError(errorEmailDiv,errorVerifyDiv);
+        clearMessageError(errorEmailDiv, errorVerifyDiv);
         clearInputError(otpInput);
 
         if (otp === "") {
@@ -286,7 +296,7 @@
             showInputError(otpInput);
             return;
         }
-        errorVerifyDiv.innerText ="Đang xử lí";
+        errorVerifyDiv.innerText = "Đang xử lí";
 
         fetch("verify_otp", {
             method: "POST",
