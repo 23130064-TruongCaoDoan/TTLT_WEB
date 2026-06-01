@@ -3,6 +3,7 @@ package controler.login_and_signup;
 import Service.CartSerive;
 import Service.UserService;
 import Util.FacebookOAuthUltis;
+import Util.RememberMeUtil;
 import cart.Cart;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -38,6 +39,14 @@ public class LoginFacebookServlet extends HttpServlet {
                     userService.addUser(userFace.getName(), userFace.getEmail());
                     user = userService.findUser(userFace.getEmail());
                     session.setAttribute("user", user);
+                }
+                String state = request.getParameter("state");
+                if ("remember".equals(state)) {
+                    RememberMeUtil.createRememberMe(
+                            user,
+                            request,
+                            response
+                    );
                 }
                 CartSerive cartSerive = new CartSerive();
                 if (cart != null && cart.getItems() != null && cart.getItems().size() > 0) {

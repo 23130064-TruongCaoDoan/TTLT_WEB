@@ -336,6 +336,37 @@
             });
     }
 
+    function updateOAuthLinks() {
+        const remember = document.getElementById("remember").checked;
+
+        const googleLogin = document.getElementById("googleLogin");
+        const facebookLogin = document.getElementById("facebookLogin");
+
+        let googleUrl =
+            "https://accounts.google.com/o/oauth2/auth?scope=email%20profile" +
+            "&redirect_uri=http://localhost:8080/Web_war_exploded/login-google" +
+            "&response_type=code" +
+            "&client_id=846603349467-fma7pe8c0b03i56hibab7psvktbnluj7.apps.googleusercontent.com";
+
+        let facebookUrl =
+            "https://www.facebook.com/v18.0/dialog/oauth" +
+            "?client_id=${fbClientId}" +
+            "&redirect_uri=http://localhost:8080/Web_war_exploded/login-facebook" +
+            "&scope=email,public_profile";
+
+        if (remember) {
+            googleUrl += "&state=remember";
+            facebookUrl += "&state=remember";
+        }
+
+        googleLogin.href = googleUrl;
+        facebookLogin.href = facebookUrl;
+    }
+
+    document.getElementById("remember").addEventListener("change", updateOAuthLinks);
+
+    updateOAuthLinks();
+
 </script>
 </body>
 </html>
