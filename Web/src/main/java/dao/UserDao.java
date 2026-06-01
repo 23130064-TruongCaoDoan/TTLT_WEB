@@ -54,7 +54,7 @@ public class UserDao extends BaseDao {
         );
     }
 
-    public boolean checkRole(String email) {
+    public int checkRole(String email) {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT role FROM USER where email=:email")
                         .bind("email", email)
@@ -74,8 +74,16 @@ public class UserDao extends BaseDao {
 
     public User findUserById(int id) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("select * from `USER` where id=:id")
-                        .bind("id", id).mapToBean(User.class).findFirst().orElse(null)
+                handle.createQuery("""
+                                SELECT u.*, r.role_name
+                                From USER u
+                                INNER JOIN roles r ON r.id = u.role
+                                WHERE id=:id
+                                """)
+                        .bind("id", id)
+                        .mapToBean(User.class)
+                        .findFirst()
+                        .orElse(null)
         );
     }
 
@@ -218,4 +226,5 @@ public class UserDao extends BaseDao {
                         .execute()>0
         );
     }
+
 }

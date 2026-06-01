@@ -51,7 +51,7 @@ public class UserService {
         }
     }
 
-    public boolean checkRole(User user) {
+    public int checkRole(User user) {
         return userDao.checkRole(user.getEmail());
     }
 

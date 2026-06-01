@@ -10,6 +10,9 @@ import model.User;
 import java.util.List;
 import java.io.IOException;
 
+import static Util.RolesGroup.USER_MANAGER_ROLE;
+
+
 @WebServlet(name = "UserManageServlet", value = "/user-manage")
 public class UserManageServlet extends HttpServlet {
     UserService userService = new UserService();
@@ -21,7 +24,8 @@ public class UserManageServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
-        if (!userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (user ==null || !USER_MANAGER_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

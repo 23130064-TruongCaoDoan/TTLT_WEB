@@ -10,6 +10,8 @@ import model.User;
 import java.io.IOException;
 import java.util.List;
 
+import static Util.RolesGroup.SALES_ROLE;
+
 @WebServlet(name = "Event", value = "/Event")
 public class Event extends HttpServlet {
     @Override
@@ -23,14 +25,11 @@ public class Event extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
 
-        if (user == null) {
-            response.sendRedirect("login");
-            return;
-        }
+
 
         UserService userService = new UserService();
-
-        if (!userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (user == null || !SALES_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

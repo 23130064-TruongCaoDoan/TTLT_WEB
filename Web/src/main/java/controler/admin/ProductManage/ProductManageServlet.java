@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Util.RolesGroup.PRODUCT_MANAGER_ROLE;
+
 @WebServlet(name = "ProductManageServlet", value = "/product-manage")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 50 * 1024 * 1024)
 public class ProductManageServlet extends HttpServlet {
@@ -29,8 +31,8 @@ public class ProductManageServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
-
-        if (!userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (user==null || !PRODUCT_MANAGER_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }
