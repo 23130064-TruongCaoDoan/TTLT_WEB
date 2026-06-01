@@ -3,6 +3,7 @@ package controler.login_and_signup;
 import Service.CartSerive;
 import Service.UserService;
 import Util.GoogleOAuthUtils;
+import Util.RememberMeUtil;
 import cart.Cart;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -40,6 +41,14 @@ public class LoginGoogleServlet extends HttpServlet {
                 user = userService.findUser(userLogin.getEmail());
             }
             request.getSession().setAttribute("user", user);
+            String state = request.getParameter("state");
+            if ("remember".equals(state)) {
+                RememberMeUtil.createRememberMe(
+                        user,
+                        request,
+                        response
+                );
+            }
             CartSerive cartSerive = new CartSerive();
             if (cart != null && cart.getItems() != null && cart.getItems().size() > 0) {
                 cartSerive.mergerCart(cart, user.getId());
