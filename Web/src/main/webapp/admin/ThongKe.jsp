@@ -51,6 +51,12 @@
                                              groupingUsed="true" maxFractionDigits="0"/> Đ</p>
                     </div>
                     <div class="card">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <h3>Tổng lợi nhuận</h3>
+                        <p><fmt:formatNumber value="${totalProfit}" type="number"
+                                             groupingUsed="true" maxFractionDigits="0"/> Đ</p>
+                    </div>
+                    <div class="card">
                         <i class="fa-solid fa-receipt"></i>
                         <h3>Tổng đơn hàng</h3>
                         <p>${totalOrders}</p>
@@ -102,22 +108,27 @@
                 <div class="chart-container">
                     <div class="chart">
                         <h2>Biểu đồ doanh thu</h2>
-                        <canvas id="revenueChart"
+                        <canvas id="revenueChart" data-type="${type}"
                                 data-labels='[
                                     <c:forEach var="l" items="${revenueChartData}" varStatus="s">
                                         "${l.label}"<c:if test="${!s.last}">,</c:if>
                                     </c:forEach>
                                         ]'
-                                data-values='[
+                                data-revenues='[
                                     <c:forEach var="r" items="${revenueChartData}" varStatus="s">
                                         ${r.revenue}<c:if test="${!s.last}">,</c:if>
+                                    </c:forEach>
+                                        ]'
+                                data-profits='[
+                                    <c:forEach var="p" items="${revenueChartData}" varStatus="s">
+                                        ${p.netProfit}<c:if test="${!s.last}">,</c:if>
                                     </c:forEach>
                                         ]'>
                         </canvas>
                     </div>
                     <div class="chart">
                         <h2>Biểu đồ thể hiện số lượng đơn hàng</h2>
-                        <canvas id="orderLineChart"
+                        <canvas id="orderLineChart" data-type="${type}"
                                 data-labels='[
                                     <c:forEach var="l" items="${OrderChartData}" varStatus="s">
                                         "${l.label}"<c:if test="${!s.last}">,</c:if>
@@ -133,7 +144,7 @@
                     <div class="chart-row">
                         <div class="chart-pie">
                             <h2>Tỷ lệ bán của từng loại</h2>
-                            <canvas id="categoryPieChart"
+                            <canvas id="categoryPieChart" data-type="${type}"
                                     data-labels='[
                                         <c:forEach var="entry" items="${percentTypeSold}" varStatus="s">
                                             "${entry.key}"<c:if test="${!s.last}">,</c:if>
@@ -148,7 +159,7 @@
                         </div>
                         <div class="chart-line">
                             <h2>Tỷ lệ doanh thu theo từng loại</h2>
-                            <canvas id="profitByCategoryPieChart"
+                            <canvas id="profitByCategoryPieChart" data-type="${type}"
                                     data-labels='[
                                         <c:forEach var="entry" items="${percentProfitByCategory}" varStatus="s">
                                             "${entry.key}"<c:if test="${!s.last}">,</c:if>
@@ -323,7 +334,6 @@
 </script>
 
 <script>
-    const type = document.getElementById("filter")?.value || 'day';
     function formatterDate(date) {
         let element = date.split('-');
         let y = element[0];
@@ -335,8 +345,19 @@
     function initChart() {
         const canvas = document.getElementById("revenueChart");
         if (!canvas) return;
+        const type = canvas.dataset.type;
+
         const rawLabels = JSON.parse(canvas.dataset.labels);
-        const revenueData = JSON.parse(canvas.dataset.values);
+        const revenueData = JSON.parse(canvas.dataset.revenues);
+        const profitData = JSON.parse(canvas.dataset.profits);
+
+        for (let i = profitData.length -1; i >=0; i--) {
+            if (profitData[i]==0 && revenueData[i]==0) {
+                rawLabels.splice(i, 1);
+                revenueData.splice(i, 1);
+                profitData.splice(i, 1);
+            }
+        }
         const labels = rawLabels.map(label =>
             type === 'year' ? label : formatterDate(label)
         );
@@ -347,21 +368,49 @@
                 label: 'Tổng doanh thu',
                 data: revenueData,
                 maxBarThickness: 50,
-                categoryPercentage: 0.7,
-                barPercentage: 0.7,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgb(54, 162, 235)',
-                borderWidth: 1
-            }]
+                borderWidth: 1,
+                yAxisID: 'y1'
+            },{
+                label: 'Tổng lợi nhuận',
+                type: 'line',
+                data: profitData,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(255, 99, 132)',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.3,
+                fill: false,
+                yAxisID: 'y2'
+            }
+            ]
         };
+
 
         const config = {
             type: 'bar',
             data: data,
             options: {
                 scales: {
-                    y: {
-                        beginAtZero: true
+                    y1: {
+                        position: 'left',
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Doanh thu'
+                        }
+                    },
+                    y2: {
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Lợi nhuận'
+                        }
                     }
                 },
                 plugins: {
@@ -391,8 +440,9 @@
     let chartPercentType = null;
     function initPieChart() {
         const canvasPie = document.getElementById("categoryPieChart");
-        if (!canvasPie) return;
 
+        if (!canvasPie) return;
+        const type = canvasPie.dataset.type;
         const pieLabels = JSON.parse(canvasPie.dataset.labels);
         const pieData = JSON.parse(canvasPie.dataset.values);
 
@@ -454,12 +504,13 @@
 
     function initLineChart() {
         const canvasLineChart = document.getElementById("orderLineChart");
+
         if (!canvasLineChart) return;
+        const type = canvasLineChart.dataset.type;
 
         const rawLabelsLine = JSON.parse(canvasLineChart.dataset.labels);
         const orderData = JSON.parse(canvasLineChart.dataset.values);
 
-        const type = document.getElementById("filter")?.value || 'day';
 
         const orderLabels = rawLabelsLine.map(label =>
             type === 'year' ? label : formatterDate(label)
@@ -473,16 +524,15 @@
                     data: orderData,
                     fill: false,
                     tension: 0.3,
+                    maxBarThickness: 50,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgb(54, 162, 235)',
-                    pointRadius: 5,
-                    pointHoverRadius: 7
                 }
             ]
         };
 
         const lineConfig = {
-            type: 'line',
+            type: 'bar',
             data: data,
             options: {
                 responsive: true,
@@ -523,7 +573,9 @@
     let chartPercentProfitType = null;
     function initPercentProfitTypeChart() {
         const canvasPBTPie = document.getElementById("profitByCategoryPieChart");
+
         if (!canvasPBTPie) return;
+        const type = canvasPBTPie.dataset.type;
 
         const pieProfitByTypeLabels = JSON.parse(canvasPBTPie.dataset.labels);
         const pieProfitByTypeData = JSON.parse(canvasPBTPie.dataset.values);

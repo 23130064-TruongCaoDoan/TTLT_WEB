@@ -29,6 +29,7 @@ public class ThongKeServlet extends HttpServlet {
         eventService.updatBookPriceForEvent();
         ThongKeService thongKeService = new ThongKeService();
         double totalRevenue =0;
+        double totalProfit = 0;
         List<UserWithTotalSpentDTO> getTop10Users =null;
         UserWithTotalSpentDTO getTopCustomer=null;
         BookWithSoldDTO getBestSeller=null;
@@ -39,6 +40,7 @@ public class ThongKeServlet extends HttpServlet {
         Map<String, Double> getPercentTypeChart=new HashMap<>();
         List<OrderDTOChart>  getTotalOrderChart=new ArrayList<>();
         Map<String, Double> getPercentProfitByCategory=new HashMap<>();
+        List<RevenueDTO> getProfitChart=new ArrayList<>();
 
         int totalSoldProducts=0;
         int totalOrders=0;
@@ -91,6 +93,7 @@ public class ThongKeServlet extends HttpServlet {
             totalCancelledOrders = thongKeService.getTotalCanceledOrders(year);
             getTotalOrderChart = thongKeService.getOrderChart(year);
             getPercentProfitByCategory = thongKeService.getPercentProfitByCategory(year);
+            totalProfit = thongKeService.getProfit(year);
         }else {
             totalRevenue = thongKeService.getTotalRevenue(from,to);
             getTop10Users = thongKeService.getTop10Users(from,to);
@@ -105,7 +108,7 @@ public class ThongKeServlet extends HttpServlet {
             totalCancelledOrders = thongKeService.getTotalCanceledOrders(from,to);
             getTotalOrderChart = thongKeService.getOrderChart(from,to);
             getPercentProfitByCategory = thongKeService.getPercentProfitByCategory(from,to);
-
+            totalProfit = thongKeService.getProfit(from,to);
         }
         request.setAttribute("totalRevenue",totalRevenue);
         request.setAttribute("top10Customers", getTop10Users);
@@ -121,10 +124,12 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("totalCancelledOrders", totalCancelledOrders);
         request.setAttribute("OrderChartData", getTotalOrderChart);
         request.setAttribute("percentProfitByCategory", getPercentProfitByCategory);
+        request.setAttribute("totalProfit",totalProfit);
         request.setAttribute("type", type);
         request.getRequestDispatcher("admin/ThongKe.jsp")
                 .forward(request, response);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
