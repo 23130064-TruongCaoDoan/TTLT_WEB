@@ -24,12 +24,13 @@ public class Event extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-
-
-
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         UserService userService = new UserService();
         int role = userService.checkRole(user);
-        if (user == null || !SALES_ROLE.contains(role)) {
+        if (!SALES_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

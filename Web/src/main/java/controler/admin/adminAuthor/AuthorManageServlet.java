@@ -28,8 +28,12 @@ public class AuthorManageServlet extends HttpServlet {
         }
         UserService userService = new UserService();
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         int role = userService.checkRole(user);
-        if (user == null || !ALL_STAFF_ROLE.contains(role)) {
+        if (!ALL_STAFF_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

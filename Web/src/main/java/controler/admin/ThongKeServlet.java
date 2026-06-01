@@ -54,9 +54,13 @@ public class ThongKeServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         UserService userService = new UserService();
         int role = userService.checkRole(user);
-        if (user == null || !STATISTICAL_ROLE.contains(role)) {
+        if (!STATISTICAL_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

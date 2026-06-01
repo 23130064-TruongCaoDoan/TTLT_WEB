@@ -58,7 +58,7 @@ public class UserDao extends BaseDao {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT role FROM USER where email=:email")
                         .bind("email", email)
-                        .mapTo(boolean.class).one()
+                        .mapTo(Integer.class).one()
         );
     }
 

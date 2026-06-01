@@ -31,8 +31,12 @@ public class ProductManageServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         int role = userService.checkRole(user);
-        if (user==null || !PRODUCT_MANAGER_ROLE.contains(role)) {
+        if (!PRODUCT_MANAGER_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

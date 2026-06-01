@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Util.RolesGroup.COMMENT_MANAGER_ROLE;
+import static Util.RolesGroup.ALL_STAFF_ROLE;
 
 
 @WebServlet(name="Rate", value = "/Rate")
@@ -28,10 +28,14 @@ public class RateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         User user = (User)session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         UserService userService = new UserService();
         BookService bookService = new BookService();
         int role = userService.checkRole(user);
-        if(user==null || !COMMENT_MANAGER_ROLE.contains(role)){}
+        if(!ALL_STAFF_ROLE.contains(role)){}
         LocalDate from = LocalDate.now();
         LocalDate to = LocalDate.now();
 

@@ -68,7 +68,8 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(redirect);
                 return;
             }
-            if (userService.checkRole(user)) {
+            int role = userService.checkRole(user);
+            if (role!=0) {
                 response.sendRedirect("ThongKe");
             } else {
                 CartSerive cartSerive = new CartSerive();

@@ -24,8 +24,12 @@ public class UserManageServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         int role = userService.checkRole(user);
-        if (user ==null || !USER_MANAGER_ROLE.contains(role)) {
+        if (!USER_MANAGER_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

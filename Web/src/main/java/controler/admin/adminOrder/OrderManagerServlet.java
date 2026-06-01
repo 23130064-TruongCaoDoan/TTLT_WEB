@@ -27,8 +27,12 @@ public class OrderManagerServlet extends HttpServlet {
         }
         UserService userService = new UserService();
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         int role = userService.checkRole(user);
-        if (user == null || !SALES_ROLE.contains(role)) {
+        if (!SALES_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

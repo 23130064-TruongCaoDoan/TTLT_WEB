@@ -15,6 +15,8 @@ import model.User;
 import java.io.IOException;
 import java.util.List;
 
+import static Util.RolesGroup.IMPORT_ROLE;
+
 @WebServlet(name = "history-import", value = "/history-import")
 public class HistoryImportServlet extends HttpServlet {
     @Override
@@ -25,8 +27,13 @@ public class HistoryImportServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         UserService userService = new UserService();
-        if (user == null || !userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (!IMPORT_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

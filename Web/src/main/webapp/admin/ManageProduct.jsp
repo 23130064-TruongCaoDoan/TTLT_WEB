@@ -47,7 +47,9 @@
             </div>
             <form method="get" action="${pageContext.request.contextPath}/product-manage">
                 <div class="function">
-                    <button id="add" type="button">Thêm sản phẩm</button>
+                    <c:if test="${canImport}">
+                        <button id="add" type="button">Thêm sản phẩm</button>
+                    </c:if>
                     <div class="find">
                     <div class="search-wrapper admin-search">
                         <input type="text"
@@ -263,7 +265,9 @@
             <textarea name="description" id="description" cols="10" rows="4" placeholder="mô tả về sách"></textarea>
         </div>
         <input type="hidden" name="id" id="bookId">
-        <button type="submit" class="btn-save">Thêm sản phẩm</button>
+        <c:if test="${canImport}">
+            <button type="submit" class="btn-save">Thêm sản phẩm</button>
+        </c:if>
     </form>
 
     <div id="out-of-stock-panel">

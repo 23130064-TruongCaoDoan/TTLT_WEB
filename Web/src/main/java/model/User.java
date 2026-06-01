@@ -9,7 +9,7 @@ public class User {
 
     private String password_hash;
 
-    private boolean role;
+    private int role;
 
     private boolean sex;
 
@@ -51,11 +51,10 @@ public class User {
         this.password_hash = password_hash;
     }
 
-    public boolean isRole() {
+    public int getRole() {
         return role;
     }
-
-    public void setRole(boolean role) {
+    public void setRole(int role) {
         this.role = role;
     }
 
