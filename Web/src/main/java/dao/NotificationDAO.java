@@ -66,15 +66,15 @@ public class NotificationDAO extends BaseDao {
         );
     }
 
-    public void markReadById(int id){
-        getJdbi().useHandle(handle ->
+    public boolean markReadById(int id){
+        return getJdbi().withHandle(handle ->
                 handle.createUpdate("""
                         UPDATE notification
                         SET is_read = 1
-                        WHERE id = :id
+                        WHERE id = :id AND is_read = 0
                         """)
                         .bind("id", id)
-                        .execute()
+                        .execute() > 0
         );
     }
 
