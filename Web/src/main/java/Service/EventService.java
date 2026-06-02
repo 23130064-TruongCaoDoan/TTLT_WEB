@@ -28,12 +28,12 @@ public class EventService {
     }
 
 
-    public boolean addEvent(String code, Part imagePart, String title, double value, String startDate, String endDate, String typeBookApply, String pulisher, String author, String voucher, String specialVoucher, int minPoint, String age) {
+    public boolean addEvent(String code, Part imagePart, String title, double value, String startDate, String endDate, String typeBookApply, String pulisher, String author, String voucher, String age) {
         String coverImgUrl = uploadService.upload(imagePart, "event/");
         BookService bookService = new BookService();
-        List<Book> listBookEvent = bookService.filterBooksForEvent(bookService.getAllBooks(), typeBookApply, pulisher, author, age);
+        List<Book> listBookEvent = bookService.filterBooksForEvent(bookService.getAllBooks(), typeBookApply, author,pulisher, age);
         bookService.updateDiscountBook(listBookEvent, value);
-        return eventDao.addEvent(code, coverImgUrl, title, value, startDate, endDate, typeBookApply, pulisher, author, voucher, specialVoucher, minPoint, age, listBookEvent);
+        return eventDao.addEvent(code, coverImgUrl, title, value, startDate, endDate, typeBookApply, pulisher, author, voucher, age, listBookEvent);
     }
     public List<Event> getActiveEventsOrderByStartDateAsc() {
         return eventDao.getActiveEventsOrderByStartDateAsc();
@@ -62,8 +62,6 @@ public class EventService {
             String pulisher,
             String author,
             String voucher,
-            String specialVoucher,
-            int minPoint,
             String age
     ) {
 
@@ -82,8 +80,8 @@ public class EventService {
         List<Book> listBookEvent = bookService.filterBooksForEvent(
                 bookService.getAllBooks(),
                 typeBookApply,
-                pulisher,
                 author,
+                pulisher,
                 age
         );
 
@@ -100,8 +98,6 @@ public class EventService {
                 pulisher,
                 author,
                 voucher,
-                specialVoucher,
-                minPoint,
                 age,
                 listBookEvent
         );

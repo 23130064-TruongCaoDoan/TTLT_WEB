@@ -41,7 +41,6 @@ public class addEvent extends HttpServlet {
             String endDate = request.getParameter("enddate");
             String valueParam = request.getParameter("giatri");
             String voucherParam = request.getParameter("voucher") != null ? request.getParameter("voucher") : "";
-            String specialVoucherParam = request.getParameter("v") != null ? request.getParameter("v") : "";
             String pointParam = request.getParameter("point");
             String age = request.getParameter("age");
             String author = request.getParameter("author");
@@ -127,29 +126,10 @@ public class addEvent extends HttpServlet {
                     ? voucherParam.trim()
                     : null;
 
-            specialVoucherParam = (specialVoucherParam != null && !specialVoucherParam.trim().isEmpty())
-                    ? specialVoucherParam.trim()
-                    : null;
 
             if (voucherParam != null && !voucherService.voucherExists(voucherParam)) {
                 writeError(response, "Voucher tặng chung không tồn tại");
                 return;
-            }
-
-            if (specialVoucherParam != null && !voucherService.voucherExists(specialVoucherParam)) {
-                writeError(response, "Voucher tặng theo điểm không tồn tại");
-                return;
-            }
-            if (specialVoucherParam != null) {
-                if (pointParam == null || pointParam.trim().isEmpty()) {
-                    writeError(response, "Voucher theo điểm bắt buộc phải nhập điểm tối thiểu");
-                    return;
-                }
-
-                if (minPoint <= 0) {
-                    writeError(response, "Điểm tối thiểu phải lớn hơn 0 khi dùng voucher theo điểm");
-                    return;
-                }
             }
             String contentType = imagePart.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
@@ -189,18 +169,12 @@ public class addEvent extends HttpServlet {
                     pulisher,
                     author,
                     voucherParam,
-                    specialVoucherParam,
-                    minPoint,
                     age
             );
 
             if (success) {
                 if (voucherParam != null) {
                     voucherService.tangVoucher(listU, voucherParam);
-                }
-
-                if (specialVoucherParam != null) {
-                    voucherService.tangVoucher(listUPoint, specialVoucherParam);
                 }
 
                 HttpSession session = request.getSession(false);

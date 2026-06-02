@@ -292,3 +292,10 @@ textarea {
 .btn-cancel:hover {
     background: #b3b3b3;
 }
+.event-list td:nth-child(6),
+.event-list th:nth-child(6) {
+    white-space: normal;
+    min-width: 350px;
+    max-width: 500px;
+    word-break: break-word;
+}

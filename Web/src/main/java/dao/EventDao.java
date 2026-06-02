@@ -90,8 +90,6 @@ public class EventDao extends BaseDao {
             String pulisher,
             String author,
             String voucher,
-            String specialVoucher,
-            int minPoint,
             String age,
             List<Book> listBookEvent
     ) {
@@ -102,11 +100,11 @@ public class EventDao extends BaseDao {
                                 INSERT INTO events(
                                     event_code, img_url, title, value, start_date, end_date,
                                     type_book_apply, pulisher_apply, author_apply,
-                                    voucher_code, special_voucher, min_point, age_apply
+                                    voucher_code, age_apply
                                 ) VALUES (
                                     :event_code, :img_url, :title, :value, :start_date, :end_date,
                                     :type_book_apply, :pulisher_apply, :author_apply,
-                                    :voucher_code, :special_voucher, :min_point, :age_apply
+                                    :voucher_code, :age_apply
                                 )
                             """)
                     .bind("event_code", code)
@@ -119,8 +117,6 @@ public class EventDao extends BaseDao {
                     .bind("pulisher_apply", pulisher)
                     .bind("author_apply", author)
                     .bind("voucher_code", voucher)
-                    .bind("special_voucher", specialVoucher)
-                    .bind("min_point", minPoint)
                     .bind("age_apply", age)
                     .executeAndReturnGeneratedKeys("id")
                     .mapTo(Integer.class)
@@ -167,8 +163,6 @@ public class EventDao extends BaseDao {
             String pulisher,
             String author,
             String voucher,
-            String specialVoucher,
-            int minPoint,
             String age,
             List<Book> listBookEvent
     ) {
@@ -197,8 +191,6 @@ public class EventDao extends BaseDao {
                                 pulisher_apply = :pulisher_apply,
                                 author_apply = :author_apply,
                                 voucher_code = :voucher_code,
-                                special_voucher = :special_voucher,
-                                min_point = :min_point,
                                 age_apply = :age_apply
                             WHERE event_code = :code
                             """)
@@ -211,8 +203,6 @@ public class EventDao extends BaseDao {
                     .bind("pulisher_apply", pulisher)
                     .bind("author_apply", author)
                     .bind("voucher_code", voucher)
-                    .bind("special_voucher", specialVoucher)
-                    .bind("min_point", minPoint)
                     .bind("age_apply", age)
                     .bind("code", code)
                     .execute();
