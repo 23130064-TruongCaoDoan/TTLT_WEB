@@ -2,6 +2,7 @@ package controler.admin.adminRateManagement;
 
 import Service.BookService;
 import Service.CommentService;
+import Service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,6 +19,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Util.RolesGroup.ALL_STAFF_ROLE;
+
 
 @WebServlet(name="Rate", value = "/Rate")
 public class RateServlet extends HttpServlet {
@@ -25,14 +28,14 @@ public class RateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         User user = (User)session.getAttribute("user");
-        BookService bookService = new BookService();
-        if(user==null){
+        if (user == null) {
             response.sendRedirect("login");
             return;
         }
-        if(!user.isRole()){
-            response.sendRedirect("login");
-        }
+        UserService userService = new UserService();
+        BookService bookService = new BookService();
+        int role = userService.checkRole(user);
+        if(!ALL_STAFF_ROLE.contains(role)){}
         LocalDate from = LocalDate.now();
         LocalDate to = LocalDate.now();
 

@@ -1,12 +1,18 @@
 package controler.admin.adminAuthor;
 
 import Service.AuthorService;
+import Service.UserService;
 import model.Author;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.User;
+
 import java.io.IOException;
 import java.util.List;
+
+import static Util.RolesGroup.ALL_STAFF_ROLE;
+import static Util.RolesGroup.SALES_ROLE;
 
 @WebServlet(name = "AuthorManageServlet", urlPatterns = {"/author-manage", "/admin-add-author", "/admin-edit-author", "/admin-delete-author"})
 public class AuthorManageServlet extends HttpServlet {
@@ -14,8 +20,24 @@ public class AuthorManageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String keyword = request.getParameter("q");
+        HttpSession session = request.getSession(false);
 
+        if (session == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        UserService userService = new UserService();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        int role = userService.checkRole(user);
+        if (!ALL_STAFF_ROLE.contains(role)) {
+            response.sendRedirect("login");
+            return;
+        }
+        String keyword = request.getParameter("q");
         int page = 1;
         int recordsPerPage = 30;
 

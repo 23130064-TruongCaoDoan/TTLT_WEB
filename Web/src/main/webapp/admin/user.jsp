@@ -9,8 +9,7 @@
     <title>Quản lý user</title>
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/user.css?v=2">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
 </head>
 <body>
 
@@ -100,17 +99,14 @@
                                                 }
                                                 this.form.submit();
                                                 ">
-                                            <c:choose>
-                                                <c:when test="${u.role == 0}">
-                                                    <option value="0" selected>USER</option>
-                                                    <option value="1">ADMIN</option>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <option value="0">USER</option>
-                                                    <option value="1" selected>ADMIN</option>
-                                                </c:otherwise>
-                                            </c:choose>
-
+                                            <c:forEach var="r" items="${roles}">
+                                                <c:if test="${!(sessionScope.user.role == 2 && (r.id == 1 || r.id == 2))}">
+                                                    <option value="${r.id}"
+                                                            <c:if test="${r.id == u.role}">selected</c:if>>
+                                                            ${r.roleName}
+                                                    </option>
+                                                </c:if>
+                                            </c:forEach>
                                         </select>
                                     </form>
                                 </td>
@@ -265,6 +261,7 @@
         alert(" Tạo thông báo thành công");
     </script>
 </c:if>
+
 <script>
     const overlay = document.getElementById("overlay");
     const add = document.getElementById("add");

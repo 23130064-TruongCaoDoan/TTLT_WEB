@@ -39,6 +39,5 @@ public class UpdateOrder extends HttpServlet {
                     "{\"success\":false}"
             );
         }
-
     }
 }

@@ -8,6 +8,8 @@ import model.User;
 
 import java.io.IOException;
 
+import static Util.RolesGroup.USER_MANAGER_ROLE;
+
 @WebServlet(name = "ChangeRoleServlet", value = "/change-role")
 public class ChangeRoleServlet extends HttpServlet {
     @Override
@@ -28,11 +30,17 @@ public class ChangeRoleServlet extends HttpServlet {
         }
 
         User currentUser = (User) session.getAttribute("user");
-
+        UserService userService = new UserService();
+        int role = userService.checkRole(currentUser);
+        if (!USER_MANAGER_ROLE.contains(role)) {
+            response.sendRedirect("login");
+            return;
+        }
         int userId = Integer.parseInt(request.getParameter("userId"));
         String roleParam = request.getParameter("role");
-        boolean newRole = "1".equals(roleParam);
-        if (currentUser.getId() == userId && !newRole) {
+        int newRole = Integer.parseInt(roleParam);
+
+        if (currentUser.getId() == userId) {
             response.sendRedirect("user-manage?error=self_downgrade");
             return;
         }

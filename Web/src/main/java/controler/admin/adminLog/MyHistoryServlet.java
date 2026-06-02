@@ -1,5 +1,6 @@
 package controler.admin.adminLog;
 
+import Service.UserService;
 import dao.AdminLogDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +11,8 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 
 import java.io.IOException;
+
+import static Util.RolesGroup.USER_MANAGER_ROLE;
 
 @WebServlet(name = "myHistory", value = "/myHistory")
 public class MyHistoryServlet extends HttpServlet {
@@ -22,9 +25,15 @@ public class MyHistoryServlet extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
+        UserService userService = new UserService();
+
 
         User currentUser = (User) session.getAttribute("user");
-
+        int role = userService.checkRole(currentUser);
+        if (currentUser == null || !USER_MANAGER_ROLE.contains(role)) {
+            response.sendRedirect("login");
+            return;
+        }
         AdminLogDAO logDAO = new AdminLogDAO();
         logDAO.markAllAsRead(currentUser.getId());
         request.setAttribute("unreadLogCount", 0);

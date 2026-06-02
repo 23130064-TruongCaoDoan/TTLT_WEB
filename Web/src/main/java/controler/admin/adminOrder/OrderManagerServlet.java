@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static Util.RolesGroup.SALES_ROLE;
+
 @WebServlet(name = "OrderManagerServlet", value = "/OrderManagerServlet")
 public class OrderManagerServlet extends HttpServlet {
     @Override
@@ -23,20 +25,18 @@ public class OrderManagerServlet extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-
+        UserService userService = new UserService();
         User user = (User) session.getAttribute("user");
-
         if (user == null) {
             response.sendRedirect("login");
             return;
         }
-
-        UserService userService = new UserService();
-
-        if (!userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (!SALES_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }
+
         OrderService orderService = new OrderService();
 
         String q = request.getParameter("q");

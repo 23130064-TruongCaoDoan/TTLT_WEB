@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static Util.RolesGroup.SALES_ROLE;
+
 
 @WebServlet(name = "UpdateOrderStatus", value = "/UpdateOrderStatus")
 public class UpdateOrderStatus extends HttpServlet {
@@ -33,7 +35,8 @@ public class UpdateOrderStatus extends HttpServlet {
         }
         User user = (User)session.getAttribute("user");
 
-        if(!user.isRole()){
+        int role = user.getRole();
+        if(!SALES_ROLE.contains(role)){
             response.sendRedirect("login");
             return;
         }

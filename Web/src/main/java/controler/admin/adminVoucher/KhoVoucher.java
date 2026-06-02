@@ -13,6 +13,8 @@ import model.Voucher;
 import java.io.IOException;
 import java.util.List;
 
+import static Util.RolesGroup.SALES_ROLE;
+
 @WebServlet(name = "KhoVoucher", value = "/KhoVoucher")
 public class KhoVoucher extends HttpServlet {
     @Override
@@ -31,7 +33,8 @@ public class KhoVoucher extends HttpServlet {
         }
 
         UserService userService = new UserService();
-        if (!userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (user==null || !SALES_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

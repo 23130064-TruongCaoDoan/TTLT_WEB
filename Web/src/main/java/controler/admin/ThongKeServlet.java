@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Util.RolesGroup.STATISTICAL_ROLE;
+
 @WebServlet(name = "ThongKe", value = "/ThongKe")
 public class ThongKeServlet extends HttpServlet {
     @Override
@@ -52,8 +54,13 @@ public class ThongKeServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
         UserService userService = new UserService();
-        if (user == null || !userService.checkRole(user)) {
+        int role = userService.checkRole(user);
+        if (!STATISTICAL_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }

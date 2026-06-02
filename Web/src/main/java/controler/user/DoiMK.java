@@ -15,21 +15,11 @@ public class DoiMK extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
 
-//        if (session == null) {
-//            response.sendRedirect("login");
-//            return;
-//        }
-//
         User user = (User) session.getAttribute("user");
-//
-//        if (user == null) {
-//            response.sendRedirect("login");
-//            return;
-//        }
-//
+
         UserService userService = new UserService();
 
-        if (userService.checkRole(user)) {
+        if (user==null) {
             response.sendRedirect("login");
             return;
         }

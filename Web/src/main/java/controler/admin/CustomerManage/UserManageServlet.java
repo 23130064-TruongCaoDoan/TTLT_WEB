@@ -5,10 +5,14 @@ import Service.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.Role;
 import model.User;
 
 import java.util.List;
 import java.io.IOException;
+
+import static Util.RolesGroup.USER_MANAGER_ROLE;
+
 
 @WebServlet(name = "UserManageServlet", value = "/user-manage")
 public class UserManageServlet extends HttpServlet {
@@ -21,7 +25,12 @@ public class UserManageServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
-        if (!userService.checkRole(user)) {
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        int role = userService.checkRole(user);
+        if (!USER_MANAGER_ROLE.contains(role)) {
             response.sendRedirect("login");
             return;
         }
@@ -34,7 +43,9 @@ public class UserManageServlet extends HttpServlet {
         String stock = request.getParameter("sortStock");
         stock = (stock == null || stock.isEmpty()) ? null : stock;
         List<UserWithTotalSpentDTO> lsUser = userService.getUserWithTotalSpent(q,stock);
+        List<Role> listRoles = userService.getAllRoles();
         request.setAttribute("users", lsUser);
+        request.setAttribute("roles", listRoles);
         request.getRequestDispatcher("admin/user.jsp").forward(request,response);
     }
 
