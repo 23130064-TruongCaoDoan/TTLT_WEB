@@ -5,6 +5,7 @@ import cart.CartItem;
 import dao.AuthorDao;
 import dao.BookDao;
 import jakarta.servlet.http.Part;
+import model.Author;
 import model.Book;
 
 import java.util.*;
@@ -317,7 +318,7 @@ public class BookService {
             String ageApply
     ) {
         Set<String> typeSet = splitToSet(typeBookApply);
-        Set<Integer> authorSet = splitToIntSet(authorApply);
+        Set<String> authorSet = splitToSet(authorApply);
         Set<String> publisherSet = splitToSet(publisherApply);
         Set<Integer> ageSet = splitToIntSet(ageApply);
 
@@ -459,20 +460,11 @@ public class BookService {
 
     public static void main(String[] args) {
         BookService bookService = new BookService();
-        List<Book> books = bookService.getBooksUniversal(
-                "doraemon", 0, 0,
-                null, // category
-                null, // author
-                null, // publisher
-                null, // age
-                "100000", // maxPrice
-                "",   // year
-                1, 28
-        );
-        for (Book book : books) {
-            System.out.println(book.getTitle());
+        for (String s : bookService.getAllPublishers()) {
+            System.out.println(
+                    "[" + s + "] len=" + s.length()
+            );
         }
-        System.out.println(books.size());
     }
 
     public int countSearchAndFilter(String q, String type) {
@@ -494,4 +486,11 @@ public class BookService {
         return hd.salesPercentageTheMostRecentImport(bookId);
     }
 
+    public List<Integer> getAllAges() {
+        return hd.getAllAges();
+    }
+
+    public List<Author> getAllAuthorsOb() {
+        return hd.getAllAuthorsOb();
+    }
 }

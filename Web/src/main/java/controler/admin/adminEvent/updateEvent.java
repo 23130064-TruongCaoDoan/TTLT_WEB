@@ -44,8 +44,6 @@ public class updateEvent extends HttpServlet {
             String valueParam = request.getParameter("giatri");
 
             String voucherParam = request.getParameter("voucher");
-            String specialVoucherParam = request.getParameter("v");
-            String pointParam = request.getParameter("point");
 
             String age = request.getParameter("age");
             String author = request.getParameter("author");
@@ -82,19 +80,6 @@ public class updateEvent extends HttpServlet {
                 return;
             }
 
-            int minPoint = 0;
-            if (pointParam != null && !pointParam.trim().isEmpty()) {
-                try {
-                    minPoint = Integer.parseInt(pointParam);
-                    if (minPoint <= 0) {
-                        writeError(response, "Điểm tối thiểu phải > 0");
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    writeError(response, "Điểm tối thiểu không hợp lệ");
-                    return;
-                }
-            }
 
             try {
                 LocalDate start = LocalDate.parse(startDate);
@@ -112,22 +97,9 @@ public class updateEvent extends HttpServlet {
                     ? voucherParam.trim()
                     : null;
 
-            specialVoucherParam = (specialVoucherParam != null && !specialVoucherParam.trim().isEmpty())
-                    ? specialVoucherParam.trim()
-                    : null;
 
             if (voucherParam != null && !voucherService.voucherExists(voucherParam)) {
                 writeError(response, "Voucher chung không tồn tại");
-                return;
-            }
-
-            if (specialVoucherParam != null && !voucherService.voucherExists(specialVoucherParam)) {
-                writeError(response, "Voucher theo điểm không tồn tại");
-                return;
-            }
-
-            if (specialVoucherParam != null && minPoint <= 0) {
-                writeError(response, "Voucher theo điểm bắt buộc có điểm tối thiểu");
                 return;
             }
 
@@ -157,8 +129,6 @@ public class updateEvent extends HttpServlet {
                     pulisher,
                     author,
                     voucherParam,
-                    specialVoucherParam,
-                    minPoint,
                     age
             );
 
@@ -168,10 +138,6 @@ public class updateEvent extends HttpServlet {
                     voucherService.tangVoucher(allUsers, voucherParam);
                 }
 
-                if (specialVoucherParam != null) {
-                    List<Integer> usersByPoint = userService.getUserPoint(minPoint);
-                    voucherService.tangVoucher(usersByPoint, specialVoucherParam);
-                }
 
                 HttpSession session = request.getSession(false);
                 if (session != null && session.getAttribute("user") != null) {

@@ -1,7 +1,9 @@
 package controler.admin.adminEvent;
 
+import Service.BookService;
 import Service.EventService;
 import Service.UserService;
+import Service.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -42,6 +44,12 @@ public class Event extends HttpServlet {
 
         List<model.Event> listEvent = eventService.searchAndFilter(q, sortDate);
 
+        BookService bookService = new BookService();
+        VoucherService voucherService = new VoucherService();
+        request.setAttribute("listAuthors", bookService.getAllAuthorsOb());
+        request.setAttribute("listPublishers", bookService.getAllPublishers());
+        request.setAttribute("listAges", bookService.getAllAges());
+        request.setAttribute("listVoucher", voucherService.getListVoucher());
         request.setAttribute("listEvent", listEvent);
         request.getRequestDispatcher("admin/events.jsp").forward(request, response);
     }

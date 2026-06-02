@@ -1,5 +1,6 @@
 package dao;
 
+import model.Author;
 import model.Book;
 import model.CommentView;
 import model.RatingStartView;
@@ -921,5 +922,19 @@ public class BookDao extends BaseDao {
     public static void main(String[] args) {
         BookDao dao = new BookDao();
         System.out.println(dao.findBookByBookCode("8935074134141"));
+    }
+
+    public List<Integer> getAllAges() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT DISTINCT age FROM BOOKS ORDER BY age ASC")
+                        .mapTo(Integer.class).list()
+                );
+    }
+
+    public List<Author> getAllAuthorsOb() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT ID, NAME, BIO, BIRTHDAY FROM AUTHORS ORDER BY NAME ASC")
+                        .mapToBean(Author.class).list()
+                );
     }
 }

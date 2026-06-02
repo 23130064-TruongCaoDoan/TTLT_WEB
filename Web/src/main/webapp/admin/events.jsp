@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="assets/css_admin/events.css">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/notifySuccess.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 </head>
 <body>
 <main>
@@ -189,38 +191,58 @@
         </div>
 
         <div class="form-group">
-            <label>Loại sách theo độ tuổi đc áp dụng</label>
-            <input id="ageBook" name="age" placeholder="Nhập các tên loại, cách nhau bằng dấu phẩy...">
+            <label>Loại sách theo độ tuổi được áp dụng</label>
+            <select id="ageBook" name="age" multiple>
+                <option value="">Tất cả độ tuổi</option>
+
+                <c:forEach items="${listAges}" var="age">
+                    <option value="${age}">
+                            ${age}
+                    </option>
+                </c:forEach>
+            </select>
             <span class="error"></span>
         </div>
         <div class="form-group">
-            <label>Sách của tác giả được áp dụng đc áp dụng</label>
-            <input id="authorBook" name="author" placeholder="Nhập các tên loại, cách nhau bằng dấu phẩy...">
+            <label>Tác giả được áp dụng</label>
+            <select id="authorBook" name="author" multiple>
+                <option value="">Tất cả tác giả</option>
+
+                <c:forEach items="${listAuthors}" var="author">
+                    <option value="${author.name}">
+                            ${author.name}
+                    </option>
+                </c:forEach>
+            </select>
             <span class="error"></span>
         </div>
         <div class="form-group">
             <label>Nhà xuất bản áp dụng</label>
-            <input id="publisher" name="pulisher" placeholder="Nhập các tên nhà xuất bảng, cách nhau bằng dấu phẩy...">
+
+            <select id="publisher" name="pulisher" multiple>
+                <option value="">Tất cả NXB</option>
+
+                <c:forEach items="${listPublishers}" var="pub">
+                    <option value="${pub}">
+                            ${pub}
+                    </option>
+                </c:forEach>
+            </select>
+
             <span class="error"></span>
         </div>
         <div class="form-group">
             <label>Mã voucher tặng chung</label>
-            <input type="text" id="voucherCode" name="voucher" placeholder="Nhập mã voucher">
-            <span class="error"></span>
-        </div>
+            <select id="voucherCode" name="voucher">
+                <option value="">Không tặng voucher</option>
 
-        <div class="form-group-inline">
-            <div>
-                <label>Các mã voucher dành riêng</label>
-                <input type="text" id="specialVoucher" name="v"
-                       placeholder="Nhập các mã voucher (cách nhau bằng dấu phẩy)">
-                <span class="error"></span>
-            </div>
-            <div>
-                <label>Điều kiện point</label>
-                <input type="number" id="minPoint" name="point" placeholder="Điềm từ...">
-                <span class="error"></span>
-            </div>
+                <c:forEach items="${listVoucher}" var="v">
+                    <option value="${v.code}">
+                            ${v.code} - ${v.description}
+                    </option>
+                </c:forEach>
+            </select>
+            <span class="error"></span>
         </div>
 
         <button type="submit" class="btn-save">Lưu sự kiện</button>
@@ -262,7 +284,6 @@
     const sachanh = document.getElementById("sachanh");
     const truyentranh = document.getElementById("truyentranh");
     const voucher = document.getElementById("voucherCode");
-    const spVoucher = document.getElementById("specialVoucher");
     const minPoint = document.getElementById("minPoint");
     const age = document.getElementById("ageBook");
     const authorBook = document.getElementById("authorBook");
@@ -340,9 +361,9 @@
         // ===== Điều kiện áp dụng (ít nhất 1 trong 4) =====
         const checkedBooks = document.querySelectorAll('input[name="typeBook"]:checked');
         const hasTypeBook = checkedBooks.length > 0;
-        const hasPublisher = bookCodes.value.trim() !== "";
-        const hasAge = age.value.trim() !== "";
-        const hasAuthor = authorBook.value.trim() !== "";
+        const hasPublisher = getMultiSelectValues(bookCodes) !== "";
+        const hasAge = getMultiSelectValues(age) !== "";
+        const hasAuthor = getMultiSelectValues(authorBook) !== "";
 
         if (!hasTypeBook && !hasPublisher && !hasAge && !hasAuthor) {
 
@@ -367,10 +388,6 @@
         }
 
 
-        if (minPoint.value !== "" && minPoint.value < 0) {
-            setError(minPoint, "Point phải >= 0");
-            hasError = true;
-        } else clearError(minPoint);
 
         if (!hasError) {
             if (mode === "add") {
@@ -415,13 +432,10 @@
         sd.value = el.dataset.start;
         ed.value = el.dataset.end;
 
-        voucher.value = el.dataset.voucher || "";
-        spVoucher.value = el.dataset.special || "";
-        minPoint.value = el.dataset.point || "";
-
-        age.value = el.dataset.age || "";
-        authorBook.value = el.dataset.author || "";
-        bookCodes.value = el.dataset.publisher || "";
+        setChoicesValues( ageChoices, el.dataset.age);
+        setChoicesValues(authorChoices, el.dataset.author);
+        setChoicesValues(publisherChoices, el.dataset.publisher);
+        voucherChoices.setChoiceByValue(el.dataset.voucher || "");
 
         document.getElementById("oldImg").value = el.dataset.img || "";
 
@@ -442,6 +456,9 @@
 
     function updateEvent() {
         const data = new FormData(form);
+        data.set("age",getMultiSelectValues(age));
+        data.set("author",getMultiSelectValues(authorBook));
+        data.set("pulisher",getMultiSelectValues(bookCodes));
         data.append("id", editId);
 
         fetch("updateEvent", {
@@ -529,25 +546,84 @@
             .then(data => {
                 closeDeletePopup();
                 if (data.success) {
-                    if (data.message.isEmpty()){
-                        show("Thực hiện thành công");
-                    }
-                    else{
-                    show(data.message);
-                    }
-
+                    show("Thực hiện thành công");
                     setTimeout(() => location.reload(), 1200);
                 } else {
-                    if (data.message.isEmpty()){
-                        show("Thực hiện thất bại");
-                    }
-                    else{
-                        show(data.message, false);
-                    }
+                    show("Thực hiện thất bại");
                 }
             });
     }
 
+    let ageChoices;
+    let authorChoices;
+    let publisherChoices;
+    let voucherChoices;
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        ageChoices = new Choices("#ageBook", {
+            removeItemButton: true,
+            searchEnabled: true,
+            placeholderValue: "Chọn độ tuổi"
+        });
+
+        authorChoices = new Choices("#authorBook", {
+            removeItemButton: true,
+            searchEnabled: true,
+            placeholderValue: "Chọn tác giả"
+        });
+
+        publisherChoices = new Choices("#publisher", {
+            removeItemButton: true,
+            searchEnabled: true,
+            placeholderValue: "Chọn nhà xuất bản"
+        });
+
+        voucherChoices = new Choices("#voucherCode", {
+            searchEnabled: true,
+            shouldSort: false,
+            placeholderValue: "Chọn voucher"
+        });
+
+    });
+
+    function getMultiSelectValues(selectElement) {
+        const selectedOptions =
+            Array.from(selectElement.selectedOptions)
+                .map(opt => opt.value);
+
+        if (
+            selectedOptions.length === 0 ||
+            selectedOptions.includes("")
+        ) {
+            return "";
+        }
+
+        return selectedOptions.join(",");
+    }
+    function setChoicesValues(choiceInstance, valuesString) {
+
+        choiceInstance.removeActiveItems();
+
+        if (
+            valuesString &&
+            valuesString !== "null" &&
+            valuesString.trim() !== ""
+        ) {
+
+            const values =
+                valuesString
+                    .split(",")
+                    .map(v => v.trim());
+
+            choiceInstance.setChoiceByValue(values);
+
+        } else {
+
+            choiceInstance.setChoiceByValue("");
+
+        }
+    }
 
 </script>
 </body>
