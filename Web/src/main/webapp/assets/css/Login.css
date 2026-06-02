@@ -250,3 +250,23 @@
 .nhapOTP.success,.nhapemail.success {
     border-color: green;
 }
+#content .login .forget{
+    margin-bottom: 5px;
+}
+
+#content .login .remember{
+    text-align: left;
+    padding-left: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #0d3164;
+}
+
+#content .login .remember label{
+    cursor: pointer;
+}
+
+#content .login .remember input{
+    margin-right: 5px;
+    cursor: pointer;
+}
