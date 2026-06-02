@@ -4,6 +4,7 @@ import DTO.UserWithTotalSpentDTO;
 import Util.EmailSender;
 import Util.PasswordUtil;
 import dao.UserDao;
+import model.Role;
 import model.User;
 import org.springframework.cglib.core.Local;
 
@@ -100,7 +101,7 @@ public class UserService {
         return userDao.changePassword(id, newPassword);
     }
 
-    public boolean updateRole(int userId, boolean role) {
+    public boolean updateRole(int userId, int role) {
         return userDao.updateRole(userId, role);
     }
     public boolean updateStatus(int userId, boolean status) {
@@ -146,5 +147,8 @@ public class UserService {
 
     public User findUserByID(int id) {
         return userDao.findUserById(id);
+    }
+    public List<Role> getAllRoles() {
+        return userDao.getAllRoles();
     }
 }

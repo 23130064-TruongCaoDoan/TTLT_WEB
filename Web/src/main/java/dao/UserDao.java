@@ -1,11 +1,13 @@
 package dao;
 
 import DTO.UserWithTotalSpentDTO;
+import model.Role;
 import model.User;
 import org.jdbi.v3.core.result.ResultIterable;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class UserDao extends BaseDao {
     public void tichDiem(int userId, double finalTotal) {
@@ -77,8 +79,8 @@ public class UserDao extends BaseDao {
                 handle.createQuery("""
                                 SELECT u.*, r.role_name
                                 From USER u
-                                INNER JOIN roles r ON r.id = u.role
-                                WHERE id=:id
+                                INNER JOIN ROLES r ON r.id = u.role
+                                WHERE u.id=:id
                                 """)
                         .bind("id", id)
                         .mapToBean(User.class)
@@ -160,11 +162,9 @@ public class UserDao extends BaseDao {
                 ));
     }
 
-    public boolean updateRole(int userId, boolean  role) {
-        String sql = "UPDATE user SET role = :role WHERE id = :id";
-
+    public boolean updateRole(int userId, int  role) {
         return getJdbi().withHandle(handle ->
-                handle.createUpdate(sql)
+                handle.createUpdate("UPDATE user SET role = :role WHERE id = :id")
                         .bind("role", role)
                         .bind("id", userId)
                         .execute()>0
@@ -226,5 +226,11 @@ public class UserDao extends BaseDao {
                         .execute()>0
         );
     }
-
+     public List<Role> getAllRoles() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT * FROM ROLES")
+                        .mapToBean(Role.class)
+                        .list()
+        );
+     }
 }

@@ -5,6 +5,7 @@ import Service.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.Role;
 import model.User;
 
 import java.util.List;
@@ -42,7 +43,9 @@ public class UserManageServlet extends HttpServlet {
         String stock = request.getParameter("sortStock");
         stock = (stock == null || stock.isEmpty()) ? null : stock;
         List<UserWithTotalSpentDTO> lsUser = userService.getUserWithTotalSpent(q,stock);
+        List<Role> listRoles = userService.getAllRoles();
         request.setAttribute("users", lsUser);
+        request.setAttribute("roles", listRoles);
         request.getRequestDispatcher("admin/user.jsp").forward(request,response);
     }
 
