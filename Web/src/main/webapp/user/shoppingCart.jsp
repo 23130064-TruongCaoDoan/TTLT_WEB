@@ -438,7 +438,6 @@
         })
             .then(res => res.json())
             .then(data => {
-
                 if (data.success) {
                     location.reload();
                 } else {

@@ -305,7 +305,7 @@ public class CreateOrder extends HttpServlet {
 
         session.removeAttribute("appliedDiscountVoucher");
         session.removeAttribute("appliedShipVoucher");
-
+        session.setAttribute("numApplyVoucher", 0);
         response.sendRedirect("my-orders");
     }
 }

@@ -118,18 +118,40 @@ public class ThanhToan extends HttpServlet {
                     session.setAttribute("numApplyVoucher", numApplyVoucher);
                 }
             }
-        }
-
-        if (voucherShip != null) {
-            boolean valid = voucherService.isVoucherValid(cartDb, voucherShip);
-            if (!valid) {
-                session.removeAttribute("appliedShipVoucher");
-                voucherShip = null;
-                Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
-                numApplyVoucher--;
-                session.setAttribute("numApplyVoucher", numApplyVoucher);
+            if (voucherShip != null) {
+                boolean valid = voucherService.isVoucherValid(cartDb, voucherShip);
+                if (!valid) {
+                    session.removeAttribute("appliedShipVoucher");
+                    voucherShip = null;
+                    Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
+                    numApplyVoucher--;
+                    session.setAttribute("numApplyVoucher", numApplyVoucher);
+                }
             }
         }
+        else{
+            if (voucherDis != null) {
+                boolean valid = voucherService.isVoucherValid(cartGuest, voucherDis);
+                if (!valid) {
+                    session.removeAttribute("appliedDiscountVoucher");
+                    voucherDis = null;
+                    Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
+                    numApplyVoucher--;
+                    session.setAttribute("numApplyVoucher", numApplyVoucher);
+                }
+            }
+            if (voucherShip != null) {
+                boolean valid = voucherService.isVoucherValid(cartGuest, voucherShip);
+                if (!valid) {
+                    session.removeAttribute("appliedShipVoucher");
+                    voucherShip = null;
+                    Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
+                    numApplyVoucher--;
+                    session.setAttribute("numApplyVoucher", numApplyVoucher);
+                }
+            }
+        }
+
 
         double discountMoney = 0;
 
@@ -156,9 +178,15 @@ public class ThanhToan extends HttpServlet {
 
         int userId = user.getId();
 
-        request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherDiscountUser(userId)));
+        if(isDbCart){
+            request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherDiscountUser(userId)));
+            request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherShipUser(userId)));
+        }
+        else{
+            request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cartGuest, totalBill, voucherService.listVoucherDiscountUser(userId)));
+            request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cartGuest, totalBill, voucherService.listVoucherShipUser(userId)));
+        }
 
-        request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherShipUser(userId)));
 
         request.getRequestDispatcher("user/ThanhToan.jsp").forward(request, response);
     }

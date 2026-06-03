@@ -1,10 +1,12 @@
 package controler.user.voucher;
 
+import Service.CartSerive;
 import cart.Cart;
 import Service.VoucherService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.User;
 import model.Voucher;
 
 import java.io.IOException;
@@ -25,25 +27,47 @@ public class applyVoucher extends HttpServlet {
 
         HttpSession session = request.getSession();
         String mode = request.getParameter("mode");
-        Cart cart;
+        User user = (User) session.getAttribute("user");
+        Cart cartGuest = null;
+        model.Cart cartDb = null;
+
+        boolean isDbCart = false;
+        CartSerive cartSerive = new CartSerive();
+
         if ("buynow".equals(mode)) {
-            cart = (Cart) session.getAttribute("buyNowCart");
+            cartGuest = (Cart) request.getSession().getAttribute("buyNowCart");
+
+        } else if ("rebuy".equals(mode)) {
+            cartGuest = (Cart) request.getSession().getAttribute("rebuyCart");
         } else {
-            cart = (Cart) session.getAttribute("cart");
+            if(user != null){
+                cartDb = cartSerive.getCart(user.getId());
+                session.setAttribute("cart", cartDb);
+                isDbCart = true;
+            }
+            else {
+                cartGuest = (Cart) request.getSession().getAttribute("cart");
+            }
         }
 
         int voucherId = Integer.parseInt(request.getParameter("voucherId"));
         VoucherService voucherService = new VoucherService();
         Voucher voucher = voucherService.getById(voucherId);
-
-        boolean valid = voucherService.isVoucherValid(cart, voucher);
+        boolean valid=false;
+        if(isDbCart){
+             valid = voucherService.isVoucherValid(cartDb, voucher);
+        }
+        else{
+            valid = voucherService.isVoucherValid(cartGuest, voucher);
+        }
 
         Integer numApplyVoucher = (Integer) session.getAttribute("numApplyVoucher");
         if (numApplyVoucher == null) numApplyVoucher = 0;
 
         boolean success = false;
         String message = "";
-
+        System.out.println("Voucher = " + voucher.getCode());
+        System.out.println("Valid = " + valid);
         if (valid) {
             if ("discount".equals(voucher.getType())&& session.getAttribute("appliedDiscountVoucher") == null) {
                 session.setAttribute("appliedDiscountVoucher", voucher);
