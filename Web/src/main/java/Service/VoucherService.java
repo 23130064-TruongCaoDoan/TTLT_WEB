@@ -206,6 +206,8 @@ public class VoucherService {
     }
 
     public boolean isVoucherValid(Cart cart, Voucher v) {
+        System.out.println("Cart total = " + cart.getTotalBill());
+        System.out.println("Condition = " + v.getConditionPrice());
         if (cart == null || v == null) return false;
 
         if (cart.getTotalBill() < v.getConditionPrice()) return false;
@@ -232,6 +234,9 @@ public class VoucherService {
         return true;
     }
     public boolean isVoucherValid(model.Cart cart, Voucher v) {
+        System.out.println("Cart total = " + cart.getTotalBill());
+        System.out.println("Condition = " + v.getConditionPrice());
+
         if (cart == null || v == null) return false;
 
         if (cart.getTotalBill() < v.getConditionPrice()) return false;

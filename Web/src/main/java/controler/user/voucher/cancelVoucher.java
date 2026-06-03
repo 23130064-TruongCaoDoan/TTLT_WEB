@@ -42,6 +42,7 @@ public class cancelVoucher extends HttpServlet {
 
             if (ship != null && ship.getId() == voucherId) {
                 session.removeAttribute("appliedShipVoucher");
+                session.removeAttribute("shipDiscount");
                 numApplyVoucher--;
                 success = true;
             }
