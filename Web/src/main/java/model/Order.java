@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
 public class Order {
     private int id;
@@ -120,6 +121,9 @@ public class Order {
     }
     public String getPaymentStatus() {
         return paymentStatus;
+    }
+    public String getEncodeId() {
+        return Base64.getUrlEncoder().encodeToString(String.valueOf(this.id).getBytes());
     }
 
     @Override
