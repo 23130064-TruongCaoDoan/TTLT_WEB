@@ -33,9 +33,17 @@ public class OrderDetailServlet extends HttpServlet {
             return;
         }
         User user = (User) session.getAttribute("user");
-        int orderId = Integer.parseInt(request.getParameter("id"));
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        String orderIdEncoded  = request.getParameter("id");
+        int orderId = Integer.parseInt(new String(Base64.getUrlDecoder().decode(orderIdEncoded)));
         OrderDetailDTO dto = orderService.getOrderDetail(orderId);
-
+        if(dto.getOrder().getUserId() != user.getId()){
+            response.sendError(403);
+            return;
+        }
         CommentService commentService = new CommentService();
 
         Set<Integer> bookReviewList = commentService.getReviewedBookIds(user.getId(), orderId);

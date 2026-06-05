@@ -3,6 +3,7 @@ package DTO;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 
 public class MyOrderDTO {
     private int orderId;
@@ -63,6 +64,9 @@ public class MyOrderDTO {
 
     public void setFirstBookImage(String firstBookImage) {
         this.firstBookImage = firstBookImage;
+    }
+    public String getEncodeId() {
+        return Base64.getUrlEncoder().encodeToString(String.valueOf(this.orderId).getBytes());
     }
 
 

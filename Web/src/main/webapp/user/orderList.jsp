@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="button">
-                    <button onclick="window.location='my-order?id=${o.orderId}'">
+                    <button onclick="window.location='my-order?id=${o.encodeId}'">
                         Xem chi tiết
                     </button>
                 </div>
