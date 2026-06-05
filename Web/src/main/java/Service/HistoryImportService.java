@@ -14,4 +14,7 @@ public class HistoryImportService {
     public List<ImportOrderDetails> getImportOrderDetailById(int id){
         return hid.getImportOrderDetails(id);
     }
+    public List<HistoryImportDTO> getHistoryImportDTOSearch(String importId, String employeeId, String fromDate, String toDate){
+        return hid.getHistoryImportDTOSearch(importId, employeeId, fromDate, toDate);
+    }
 }

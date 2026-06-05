@@ -233,4 +233,15 @@ public class UserDao extends BaseDao {
                         .list()
         );
      }
+     public List<User> getAllEmployeeImportProduct() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                        SELECT id, name
+                        FROM USER
+                        WHERE role IN (1,2,4)
+                        """)
+                        .mapToBean(User.class)
+                        .list()
+        );
+     }
 }

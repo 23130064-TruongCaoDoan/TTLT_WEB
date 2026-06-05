@@ -151,4 +151,7 @@ public class UserService {
     public List<Role> getAllRoles() {
         return userDao.getAllRoles();
     }
+    public List<User> getAllEmployeeImportProduct() {
+        return userDao.getAllEmployeeImportProduct();
+    }
 }

@@ -31,9 +31,9 @@
             <div class="function">
 
                 <div class="find">
-                    <form method="get" action="${pageContext.request.contextPath}/import-history" class="form-filter-import">
+                    <form method="get" action="${pageContext.request.contextPath}/history-import" class="form-filter-import">
 
-                        <input type="text" class="search" name="q" value="${param.q}" placeholder="Tìm mã phiếu nhập">
+                        <input type="text" class="search" name="importId" value="${param.importId}" placeholder="Tìm mã phiếu nhập">
 
                         <div class="date-filter">
                             <label>Từ:</label>
@@ -43,6 +43,14 @@
                             <label>Đến:</label>
                             <input type="date" name="toDate" value="${param.toDate}">
                         </div>
+                        <select name="employeeId">
+                            <option value="">Tất cả nhân viên</option>
+                            <c:forEach var="e" items="${employeeImportDTO}">
+                                <option value="${e.id}" ${param.employeeId == e.id ? "selected":""}>
+                                        ${e.name}-${e.id}
+                                </option>
+                            </c:forEach>
+                        </select>
                         <button type="submit" class="buttonSearch">
                             Tìm kiếm
                         </button>
@@ -75,7 +83,7 @@
                                 <td>
                                     <fmt:formatNumber value="${o.totalAmount}" type="number" groupingUsed="true" maxFractionDigits="0"/>đ
                                 </td>
-                                <td>${o.employeeName}</td>
+                                <td>${o.employeeName}-${o.employeeId}</td>
                                 <td>${o.note}</td>
                                 <td>
                                     <button class="btn-detail btnDetail" data-id="${o.id}">
