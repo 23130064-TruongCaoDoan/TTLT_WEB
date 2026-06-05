@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static Util.RolesGroup.IMPORT_ROLE;
@@ -37,9 +38,26 @@ public class HistoryImportServlet extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
+        List<User> employeeImportDTO = userService.getAllEmployeeImportProduct();
         HistoryImportService historyImportService = new HistoryImportService();
-        List<HistoryImportDTO> historyImportDTOList = historyImportService.getHistoryImportList();
-        request.setAttribute("historyImportDTOList", historyImportDTOList);
+        List<HistoryImportDTO> historyImportDTOList = new ArrayList<>();
+        request.setAttribute("employeeImportDTO", employeeImportDTO);
+
+        String importId = request.getParameter("importId");
+        String employeeId = request.getParameter("employeeId");
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+        boolean hasFilter = (importId != null && !importId.isBlank()) ||
+                            (employeeId != null && !employeeId.isBlank()) ||
+                            (fromDate != null && !fromDate.isBlank()) ||
+                            (toDate != null && !toDate.isBlank());
+        if (hasFilter) {
+            historyImportDTOList = historyImportService.getHistoryImportDTOSearch(importId, employeeId, fromDate, toDate);
+            request.setAttribute("historyImportDTOList", historyImportDTOList);
+        }else{
+            historyImportDTOList = historyImportService.getHistoryImportList();
+            request.setAttribute("historyImportDTOList", historyImportDTOList);
+        }
         request.getRequestDispatcher("/admin/importManagement.jsp").forward(request, response);
 
     }
