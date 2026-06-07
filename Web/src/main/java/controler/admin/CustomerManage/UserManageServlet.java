@@ -2,6 +2,7 @@ package controler.admin.CustomerManage;
 
 import DTO.UserWithTotalSpentDTO;
 import Service.UserService;
+import Service.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -46,6 +47,8 @@ public class UserManageServlet extends HttpServlet {
         List<Role> listRoles = userService.getAllRoles();
         request.setAttribute("users", lsUser);
         request.setAttribute("roles", listRoles);
+        VoucherService voucherService = new VoucherService();
+        request.setAttribute("listVoucher", voucherService.getListVoucherStillValid());
         request.getRequestDispatcher("admin/user.jsp").forward(request,response);
     }
 

@@ -20,32 +20,26 @@ public class GiftVoucherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String userIds = request.getParameter("userIds");
-        String code = request.getParameter("voucherCode");
+        String[] voucherCodes = request.getParameterValues("voucherCodes");
+        String[] userIds = request.getParameterValues("userIds");
         String target = request.getParameter("chon");
-        if (code == null || code.isBlank()) {
+        if (voucherCodes == null || voucherCodes.length == 0) {
             response.sendRedirect("user-manage?error=invalid_code");
             return;
         }
 
-        if ("all".equals(target)) {
-            vs.insertVoucherForAll(code);
-            request.setAttribute("logSuccess", true);
-
-        } else if ("selected".equals(target)) {
-
-            if (userIds == null || userIds.isBlank()) {
-                response.sendRedirect("user-manage?error=no_user_selected");
-                return;
+        for (String code : voucherCodes) {
+            if ("all".equals(target)) {
+                vs.insertVoucherForAll(code);
+            } else if ("selected".equals(target)) {
+                if (userIds == null || userIds.length == 0) {
+                    response.sendRedirect("user-manage?error=no_user_selected");
+                    return;
+                }
+                String userIdsRaw = String.join(",", userIds);
+                vs.insertVoucherForUsers(code, userIdsRaw);
             }
-            vs.insertVoucherForUsers(code, userIds);
-            request.setAttribute("logSuccess", true);
-
-        } else {
-            response.sendRedirect("user-manage?error=invalid_target");
-            return;
         }
-
         response.sendRedirect("user-manage?success=gifted");
     }
 
