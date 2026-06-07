@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>Quản lý user</title>
     <link rel="stylesheet" href="assets/css_admin/admin.css">
-    <link rel="stylesheet" href="assets/css_admin/user.css?v=5">
+    <link rel="stylesheet" href="assets/css_admin/user.css?v=6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
 </head>
 <body>
@@ -219,29 +219,45 @@
             </div>
         </form>
 
-    <form id="taoThongBao" method="post" action="${pageContext.request.contextPath}/notify-user">
-        <h3>THÔNG BÁO</h3>
-
-        <div class="form-group">
-            <label>Tiêu Đề</label>
-            <input type="text" name="title" placeholder="Nhập tiêu đề" required>
-        </div>
-
-        <div class="form-group">
-            <label>Mô tả</label>
-            <textarea name="content" class="mota" placeholder="Nhập mô tả"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Người nhận</label>
-            <select name="userIds" class="mota" multiple required>
-                <c:forEach items="${users}" var="u">
-                    <option value="${u.id}">${u.email}</option>
-                </c:forEach>
-            </select>
-        </div>
-
-        <button type="submit" class="confirm">Xác nhận</button>
+    <form id="taoThongBao" method="post" action="${pageContext.request.contextPath}/notify-user" style="width: 550px; max-width: 95vw;">
+            <h3 class="popup-title">TẠO THÔNG BÁO</h3>
+            <div class="form-group">
+                <label style="font-weight: bold; color: #0d3164;">Tiêu Đề</label>
+                <input type="text" name="title" placeholder="Nhập tiêu đề" required style="margin-top: 8px;">
+            </div>
+            <div class="form-group">
+                <label style="font-weight: bold; color: #0d3164;">Mô tả</label>
+                <textarea name="content" class="mota" placeholder="Nhập nội dung thông báo..." required style="margin-top: 8px; height: 80px; resize: none;"></textarea>
+            </div>
+            <div class="form-group">
+                <label style="font-weight: bold; color: #0d3164;"><i class="fas fa-users"></i> Chọn Người Nhận</label>
+                <div class="selection-block" style="margin-top: 10px;">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchUserNotify" placeholder="Tìm tên/email người nhận..." onkeyup="filterGiftList('searchUserNotify', 'listUserNotify')">
+                    </div>
+                    <div class="gift-list-box">
+                        <div class="gift-list-header">
+                            <label>
+                                <input type="checkbox" id="selectAllUNotify" onchange="toggleSelectAllGift('listUserNotify', this)">
+                                Chọn tất cả
+                            </label>
+                        </div>
+                        <div id="listUserNotify" class="gift-list-content" style="max-height: 200px;">
+                            <c:forEach items="${users}" var="u">
+                                <label class="gift-item">
+                                    <input type="checkbox" name="userIds" value="${u.id}">
+                                    <span><strong>${u.name}</strong> - ${u.email}</span>
+                                </label>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gift-actions">
+                <button type="button" class="btn-cancel" onclick="document.getElementById('overlay').click()">Hủy</button>
+                <button type="submit" class="btn-submit">Xác nhận gửi</button>
+            </div>
     </form>
 
     <form id="taoTaiKhoanForm" method="post" action="${pageContext.request.contextPath}/admin-add-user">
