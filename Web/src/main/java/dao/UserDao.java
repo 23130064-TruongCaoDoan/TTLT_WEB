@@ -64,14 +64,55 @@ public class UserDao extends BaseDao {
         );
     }
 
-    public List<UserWithTotalSpentDTO> getUserWithTotalSpent(String q, String stock) {
-        return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT u.id, u.name, u.email, u.point, u.role,  COALESCE(SUM(o.total_amount), 0) AS total_spent, u.status FROM user u LEFT JOIN orders o ON u.id = o.user_id WHERE (:q IS NULL OR u.name LIKE CONCAT('%', :q, '%') OR u.email LIKE CONCAT('%', :q, '%')) GROUP BY u.id, u.name, u.email, u.point ORDER BY CASE WHEN :sort = 'pAsc'  THEN u.point END ASC, CASE WHEN :sort = 'pDesc' THEN u.point END DESC, CASE WHEN :sort = 'mAsc'  THEN total_spent END ASC, CASE WHEN :sort = 'mDesc' THEN total_spent END DESC;")
-                        .bind("q",q)
-                        .bind("sort",stock)
-                        .mapToBean(UserWithTotalSpentDTO.class)
-                        .list()
-        );
+    public List<UserWithTotalSpentDTO> getUserWithTotalSpent(String q, String sortStock, String roleFilter, String statusFilter) {
+        StringBuilder sql = new StringBuilder("""
+            SELECT u.id, u.name, u.email, u.point, u.role, COALESCE(SUM(o.total_amount), 0) AS total_spent, u.status 
+            FROM user u 
+            LEFT JOIN orders o ON u.id = o.user_id 
+            WHERE 1=1 
+        """);
+
+        if (q != null && !q.trim().isEmpty()) {
+            sql.append(" AND (u.name LIKE :q OR u.email LIKE :q) ");
+        }
+
+        if (roleFilter != null && !roleFilter.isEmpty()) {
+            sql.append(" AND u.role = :roleFilter ");
+        }
+
+        if (statusFilter != null && !statusFilter.isEmpty()) {
+            sql.append(" AND u.status = :statusFilter ");
+        }
+
+        sql.append(" GROUP BY u.id, u.name, u.email, u.point, u.role, u.status ");
+
+        if (sortStock != null && !sortStock.isEmpty()) {
+            switch (sortStock) {
+                case "pAsc": sql.append(" ORDER BY u.point ASC "); break;
+                case "pDesc": sql.append(" ORDER BY u.point DESC "); break;
+                case "mAsc": sql.append(" ORDER BY total_spent ASC "); break;
+                case "mDesc": sql.append(" ORDER BY total_spent DESC "); break;
+                default: sql.append(" ORDER BY u.name ASC "); break;
+            }
+        } else {
+            sql.append(" ORDER BY u.name ASC ");
+        }
+
+        return getJdbi().withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+
+            if (q != null && !q.trim().isEmpty()) {
+                query.bind("q", "%" + q.trim() + "%");
+            }
+            if (roleFilter != null && !roleFilter.isEmpty()) {
+                query.bind("roleFilter", Integer.parseInt(roleFilter));
+            }
+            if (statusFilter != null && !statusFilter.isEmpty()) {
+                query.bind("statusFilter", Integer.parseInt(statusFilter));
+            }
+
+            return query.mapToBean(UserWithTotalSpentDTO.class).list();
+        });
     }
 
     public User findUserById(int id) {

@@ -43,23 +43,31 @@
 
                 <div class="title">
                     <h3>Danh sách khách hàng</h3>
-                    <div>
-                        <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
-                            <option value="">Tất cả</option>
-                            <option value="pAsc"  ${param.sortStock == 'pAsc'  ? 'selected' : ''}>
-                                Điểm giảm dần
-                            </option>
-                            <option value="pDesc" ${param.sortStock == 'pDesc' ? 'selected' : ''}>
-                                Điểm tăng dần
-                            </option>
-                            <option value="mAsc"  ${param.sortStock == 'mAsc'  ? 'selected' : ''}>
-                                Tổng tiền giảm dần
-                            </option>
-                            <option value="mDesc" ${param.sortStock == 'mDesc' ? 'selected' : ''}>
-                                Tổng tiền tăng dần
-                            </option>
-                        </select>
-                    </div>
+                        <div style="display: flex; gap: 10px;">
+                            <select class="filter-sp" name="roleFilter" onchange="this.form.submit()">
+                                <option value="">Tất cả quyền</option>
+                                <c:forEach var="r" items="${roles}">
+                                    <option value="${r.id}" ${param.roleFilter == r.id ? 'selected' : ''}>
+                                        ${r.roleName}
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                            <select class="filter-sp" name="statusFilter" onchange="this.form.submit()">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="1" ${param.statusFilter == '1' ? 'selected' : ''}>Mở</option>
+                                <option value="0" ${param.statusFilter == '0' ? 'selected' : ''}>Khóa</option>
+                            </select>
+
+                            <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
+                                <option value="">Mặc định</option>
+                                <option value="pAsc"  ${param.sortStock == 'pAsc'  ? 'selected' : ''}>Điểm giảm dần</option>
+                                <option value="pDesc" ${param.sortStock == 'pDesc' ? 'selected' : ''}>Điểm tăng dần</option>
+                                <option value="mAsc"  ${param.sortStock == 'mAsc'  ? 'selected' : ''}>Tổng tiền giảm dần</option>
+                                <option value="mDesc" ${param.sortStock == 'mDesc' ? 'selected' : ''}>Tổng tiền tăng dần</option>
+                            </select>
+
+                        </div>
                 </div>
 
             </form>

@@ -40,10 +40,13 @@ public class UserManageServlet extends HttpServlet {
             q = q.trim();
             if (q.isEmpty()) q = null;
         }
-
         String stock = request.getParameter("sortStock");
         stock = (stock == null || stock.isEmpty()) ? null : stock;
-        List<UserWithTotalSpentDTO> lsUser = userService.getUserWithTotalSpent(q,stock);
+        String roleFilter = request.getParameter("roleFilter");
+        roleFilter = (roleFilter == null || roleFilter.isEmpty()) ? null : roleFilter;
+        String statusFilter = request.getParameter("statusFilter");
+        statusFilter = (statusFilter == null || statusFilter.isEmpty()) ? null : statusFilter;
+        List<UserWithTotalSpentDTO> lsUser = userService.getUserWithTotalSpent(q, stock, roleFilter, statusFilter);
         List<Role> listRoles = userService.getAllRoles();
         request.setAttribute("users", lsUser);
         request.setAttribute("roles", listRoles);
