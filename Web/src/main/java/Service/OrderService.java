@@ -125,4 +125,11 @@ public class OrderService {
 
         return order_id != -1;
     }
+    public int countSearchOrder(String q, String fromDate, String toDate, String statusFilter) {
+        return orderDao.countSearchOrder(q, fromDate, toDate, statusFilter);
+    }
+
+    public List<OrderView> searchOrderPaginated(String q, String sortDate, String fromDate, String toDate, String statusFilter, int limit, int offset) {
+        return orderDao.searchOrderPaginated(q, sortDate, fromDate, toDate, statusFilter, limit, offset);
+    }
 }

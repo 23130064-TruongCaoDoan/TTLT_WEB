@@ -71,8 +71,8 @@ public class UserService {
     public User getUserById(int id){
         return userDao.findUserById(id);
     }
-    public List<UserWithTotalSpentDTO> getUserWithTotalSpent(String q, String stock) {
-        return userDao.getUserWithTotalSpent(q,stock);
+    public List<UserWithTotalSpentDTO> getUserWithTotalSpent(String q, String stock, String roleFilter, String statusFilter) {
+        return userDao.getUserWithTotalSpent(q, stock, roleFilter, statusFilter);
     }
 
     public boolean existsById(int id) {

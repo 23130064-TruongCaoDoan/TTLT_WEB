@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>Quản lý user</title>
     <link rel="stylesheet" href="assets/css_admin/admin.css">
-    <link rel="stylesheet" href="assets/css_admin/user.css?v=2">
+    <link rel="stylesheet" href="assets/css_admin/user.css?v=6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
 </head>
 <body>
@@ -43,23 +43,31 @@
 
                 <div class="title">
                     <h3>Danh sách khách hàng</h3>
-                    <div>
-                        <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
-                            <option value="">Tất cả</option>
-                            <option value="pAsc"  ${param.sortStock == 'pAsc'  ? 'selected' : ''}>
-                                Điểm giảm dần
-                            </option>
-                            <option value="pDesc" ${param.sortStock == 'pDesc' ? 'selected' : ''}>
-                                Điểm tăng dần
-                            </option>
-                            <option value="mAsc"  ${param.sortStock == 'mAsc'  ? 'selected' : ''}>
-                                Tổng tiền giảm dần
-                            </option>
-                            <option value="mDesc" ${param.sortStock == 'mDesc' ? 'selected' : ''}>
-                                Tổng tiền tăng dần
-                            </option>
-                        </select>
-                    </div>
+                        <div style="display: flex; gap: 10px;">
+                            <select class="filter-sp" name="roleFilter" onchange="this.form.submit()">
+                                <option value="">Tất cả quyền</option>
+                                <c:forEach var="r" items="${roles}">
+                                    <option value="${r.id}" ${param.roleFilter == r.id ? 'selected' : ''}>
+                                        ${r.roleName}
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                            <select class="filter-sp" name="statusFilter" onchange="this.form.submit()">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="1" ${param.statusFilter == '1' ? 'selected' : ''}>Mở</option>
+                                <option value="0" ${param.statusFilter == '0' ? 'selected' : ''}>Khóa</option>
+                            </select>
+
+                            <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
+                                <option value="">Mặc định</option>
+                                <option value="pAsc"  ${param.sortStock == 'pAsc'  ? 'selected' : ''}>Điểm giảm dần</option>
+                                <option value="pDesc" ${param.sortStock == 'pDesc' ? 'selected' : ''}>Điểm tăng dần</option>
+                                <option value="mAsc"  ${param.sortStock == 'mAsc'  ? 'selected' : ''}>Tổng tiền giảm dần</option>
+                                <option value="mDesc" ${param.sortStock == 'mDesc' ? 'selected' : ''}>Tổng tiền tăng dần</option>
+                            </select>
+
+                        </div>
                 </div>
 
             </form>
@@ -148,56 +156,116 @@
     <div id="overlay"></div>
     <div id="custom-toast"></div>
     <form id="tangVoucherForm" method="post" action="${pageContext.request.contextPath}/gift-voucher">
-        <h3>TẶNG VOUCHER</h3>
-        <div class="form-group">
-            <label>Mã Voucher</label>
-            <input type="text" name="voucherCode" placeholder="Nhập mã voucher " required>
-        </div>
-        <div class="form-group">
-            <label>Chọn Khách Hàng</label>
-            <div class="cacluaChon">
-                <div class="chonAll"><input type="radio" name="chon" value="all" selected><label>Tất cả khách hàng</label></div>
-                <div class="dieukien"><input type="radio" name="chon" value="selected"><input type="text" name="userIds" placeholder="Nhập mã khách hàng (ngăn cách bởi dấu phẩy)"></div>
+            <h3 class="popup-title">TẶNG VOUCHER</h3>
+
+            <div class="gift-container">
+                <div class="gift-column">
+                    <h4><i class="fas fa-users"></i> Chọn Khách Hàng</h4>
+
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="chon" value="all" id="chonTatCaU" onchange="toggleUserListGift()">
+                            Tất cả khách hàng
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="chon" value="selected" id="chonMotSoU" checked onchange="toggleUserListGift()">
+                            Chọn từ danh sách
+                        </label>
+                    </div>
+
+                    <div id="userSelectionBlock" class="selection-block">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchUserGift" placeholder="Tìm tên/email khách hàng..." onkeyup="filterGiftList('searchUserGift', 'listUserGift')">
+                        </div>
+
+                        <div class="gift-list-box">
+                            <div class="gift-list-header">
+                                <label><input type="checkbox" id="selectAllUGift" onchange="toggleSelectAllGift('listUserGift', this)"> Chọn tất cả</label>
+                            </div>
+                            <div id="listUserGift" class="gift-list-content">
+                                <c:forEach var="u" items="${users}">
+                                    <label class="gift-item">
+                                        <input type="checkbox" name="userIds" value="KH${u.id}">
+                                        <span><strong>${u.name}</strong> - ${u.email}</span>
+                                    </label>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gift-column">
+                    <h4><i class="fas fa-ticket-alt"></i> Chọn Voucher</h4>
+                    <div style="height: 40px;"></div>
+                    <div class="selection-block">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchVoucherGift" placeholder="Tìm mã voucher..." onkeyup="filterGiftList('searchVoucherGift', 'listVoucherGift')">
+                        </div>
+
+                        <div class="gift-list-box">
+                            <div class="gift-list-header">
+                                <label><input type="checkbox" id="selectAllVGift" onchange="toggleSelectAllGift('listVoucherGift', this)"> Chọn tất cả</label>
+                            </div>
+                            <div id="listVoucherGift" class="gift-list-content">
+                                <c:forEach items="${listVoucher}" var="v">
+                                    <label class="gift-item">
+                                        <input type="checkbox" name="voucherCodes" value="${v.code}">
+                                        <span><strong>${v.code}</strong> - ${v.description}</span>
+                                    </label>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <c:if test="${param.error == 'invalid_code'}">
-            <p class="error">Mã voucher không hợp lệ</p>
-        </c:if>
 
-        <c:if test="${param.error == 'no_user_selected'}">
-            <p class="error">Chưa chọn khách hàng</p>
-        </c:if>
-        <c:if test="${param.success == 'notify'}">
-            <script>
-                alert("Tạo thông báo thành công");
-            </script>
-        </c:if>
-        <button type="submit" class="confirm">Xác nhận</button>
-    </form>
+            <div class="gift-actions">
+                <button type="button" class="btn-cancel" onclick="document.getElementById('overlay').click()">Hủy</button>
+                <button type="submit" class="btn-submit">Xác nhận tặng</button>
+            </div>
+        </form>
 
-    <form id="taoThongBao" method="post" action="${pageContext.request.contextPath}/notify-user">
-        <h3>THÔNG BÁO</h3>
-
-        <div class="form-group">
-            <label>Tiêu Đề</label>
-            <input type="text" name="title" placeholder="Nhập tiêu đề" required>
-        </div>
-
-        <div class="form-group">
-            <label>Mô tả</label>
-            <textarea name="content" class="mota" placeholder="Nhập mô tả"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Người nhận</label>
-            <select name="userIds" class="mota" multiple required>
-                <c:forEach items="${users}" var="u">
-                    <option value="${u.id}">${u.email}</option>
-                </c:forEach>
-            </select>
-        </div>
-
-        <button type="submit" class="confirm">Xác nhận</button>
+    <form id="taoThongBao" method="post" action="${pageContext.request.contextPath}/notify-user" style="width: 550px; max-width: 95vw;">
+            <h3 class="popup-title">TẠO THÔNG BÁO</h3>
+            <div class="form-group">
+                <label style="font-weight: bold; color: #0d3164;">Tiêu Đề</label>
+                <input type="text" name="title" placeholder="Nhập tiêu đề" required style="margin-top: 8px;">
+            </div>
+            <div class="form-group">
+                <label style="font-weight: bold; color: #0d3164;">Mô tả</label>
+                <textarea name="content" class="mota" placeholder="Nhập nội dung thông báo..." required style="margin-top: 8px; height: 80px; resize: none;"></textarea>
+            </div>
+            <div class="form-group">
+                <label style="font-weight: bold; color: #0d3164;"><i class="fas fa-users"></i> Chọn Người Nhận</label>
+                <div class="selection-block" style="margin-top: 10px;">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchUserNotify" placeholder="Tìm tên/email người nhận..." onkeyup="filterGiftList('searchUserNotify', 'listUserNotify')">
+                    </div>
+                    <div class="gift-list-box">
+                        <div class="gift-list-header">
+                            <label>
+                                <input type="checkbox" id="selectAllUNotify" onchange="toggleSelectAllGift('listUserNotify', this)">
+                                Chọn tất cả
+                            </label>
+                        </div>
+                        <div id="listUserNotify" class="gift-list-content" style="max-height: 200px;">
+                            <c:forEach items="${users}" var="u">
+                                <label class="gift-item">
+                                    <input type="checkbox" name="userIds" value="${u.id}">
+                                    <span><strong>${u.name}</strong> - ${u.email}</span>
+                                </label>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gift-actions">
+                <button type="button" class="btn-cancel" onclick="document.getElementById('overlay').click()">Hủy</button>
+                <button type="submit" class="btn-submit">Xác nhận gửi</button>
+            </div>
     </form>
 
     <form id="taoTaiKhoanForm" method="post" action="${pageContext.request.contextPath}/admin-add-user">
@@ -349,6 +417,37 @@
                 errorAddDiv.innerText = "Có lỗi xảy ra phía máy chủ, vui lòng thử lại!";
             });
     });
+
+        function filterGiftList(inputId, listId) {
+            let filter = document.getElementById(inputId).value.toLowerCase();
+            let labels = document.getElementById(listId).getElementsByTagName('label');
+            for (let i = 0; i < labels.length; i++) {
+                let text = labels[i].innerText.toLowerCase();
+                labels[i].style.display = text.includes(filter) ? "block" : "none";
+            }
+        }
+
+        function toggleSelectAllGift(listId, masterCheckbox) {
+            let list = document.getElementById(listId);
+            let checkboxes = list.querySelectorAll('input[type="checkbox"]');
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].parentElement.style.display !== "none") {
+                    checkboxes[i].checked = masterCheckbox.checked;
+                }
+            }
+        }
+
+        function toggleUserListGift() {
+            const isAll = document.getElementById("chonTatCaU").checked;
+            const block = document.getElementById("userSelectionBlock");
+            if(isAll) {
+                block.style.opacity = "0.4";
+                block.style.pointerEvents = "none";
+            } else {
+                block.style.opacity = "1";
+                block.style.pointerEvents = "auto";
+            }
+        }
 </script>
 
 </body>

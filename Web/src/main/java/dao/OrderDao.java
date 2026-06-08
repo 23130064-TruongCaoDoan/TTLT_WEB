@@ -318,5 +318,121 @@ public class OrderDao extends BaseDao {
         });
     }
 
+    public int countSearchOrder(String q, String fromDate, String toDate, String statusFilter) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("""
+                        SELECT COUNT(o.id)
+                        FROM orders o
+                        JOIN `user` u ON o.user_id = u.id
+                        JOIN shipping s ON o.id = s.order_id
+                        WHERE 1=1
+                    """);
+
+            if (q != null && !q.isBlank()) {
+                sql.append(" AND (u.name LIKE :q OR o.id LIKE :q OR o.status LIKE :q) ");
+            }
+
+            if (fromDate != null && !fromDate.isBlank()) {
+                sql.append(" AND o.order_date >= :fromDate ");
+            }
+
+            if (toDate != null && !toDate.isBlank()) {
+                sql.append(" AND o.order_date <= :toDate ");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("all") && !statusFilter.isBlank()) {
+                sql.append(" AND o.status = :statusFilter ");
+            }
+
+            var query = handle.createQuery(sql.toString());
+
+            if (q != null && !q.isBlank()) {
+                query.bind("q", "%" + q + "%");
+            }
+
+            if (fromDate != null && !fromDate.isBlank()) {
+                query.bind("fromDate", fromDate + " 00:00:00");
+            }
+            if (toDate != null && !toDate.isBlank()) {
+                query.bind("toDate", toDate + " 23:59:59");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("all") && !statusFilter.isBlank()) {
+                query.bind("statusFilter", statusFilter);
+            }
+
+            return query.mapTo(int.class).one();
+        });
+    }
+
+    public List<OrderView> searchOrderPaginated(String q, String sortDate, String fromDate, String toDate, String statusFilter, int limit, int offset) {
+        return getJdbi().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("""
+                        SELECT
+                            o.id            AS id,
+                            o.user_id       AS userId,
+                            u.name          AS userName,
+                            s.phone         AS phone,
+                            CONCAT_WS(', ',
+                                s.specificAddress,
+                                s.ward,
+                                s.districts,
+                                s.city
+                            ) AS address,
+                            o.order_date    AS orderDate,
+                            o.status        AS status,
+                            o.total_amount  AS totalAmount,
+                            o.note          AS note
+                        FROM orders o
+                        JOIN `user` u ON o.user_id = u.id
+                        JOIN shipping s ON o.id = s.order_id
+                        WHERE 1=1
+                    """);
+
+            if (q != null && !q.isBlank()) {
+                sql.append(" AND (u.name LIKE :q OR o.id LIKE :q OR o.status LIKE :q) ");
+            }
+
+            if (fromDate != null && !fromDate.isBlank()) {
+                sql.append(" AND o.order_date >= :fromDate ");
+            }
+
+            if (toDate != null && !toDate.isBlank()) {
+                sql.append(" AND o.order_date <= :toDate ");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("all") && !statusFilter.isBlank()) {
+                sql.append(" AND o.status = :statusFilter ");
+            }
+
+            if ("asc".equals(sortDate)) {
+                sql.append(" ORDER BY o.order_date ASC");
+            } else {
+                sql.append(" ORDER BY o.order_date DESC");
+            }
+
+            // Gắn trực tiếp limit và offset vào chuỗi SQL thay vì dùng query.bind()
+            sql.append(" LIMIT ").append(limit).append(" OFFSET ").append(offset);
+
+            var query = handle.createQuery(sql.toString());
+
+            if (q != null && !q.isBlank()) {
+                query.bind("q", "%" + q + "%");
+            }
+
+            if (fromDate != null && !fromDate.isBlank()) {
+                query.bind("fromDate", fromDate + " 00:00:00");
+            }
+            if (toDate != null && !toDate.isBlank()) {
+                query.bind("toDate", toDate + " 23:59:59");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("all") && !statusFilter.isBlank()) {
+                query.bind("statusFilter", statusFilter);
+            }
+
+            return query.mapToBean(OrderView.class).list();
+        });
+    }
 
 }

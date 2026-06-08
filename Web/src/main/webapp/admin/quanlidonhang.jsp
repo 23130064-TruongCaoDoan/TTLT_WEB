@@ -10,7 +10,7 @@
     <title>Hoá đơn</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-    <link rel="stylesheet" href="assets/css_admin/quanlidonhang.css">
+    <link rel="stylesheet" href="assets/css_admin/quanlidonhang.css?v=2">
     <link rel="stylesheet" href="assets/css_admin/admin.css">
     <link rel="stylesheet" href="assets/css_admin/notifySuccess.css">
 
@@ -128,6 +128,31 @@
                         </c:forEach>
                         </tbody>
                     </table>
+                </div>
+                    <c:if test="${totalPages > 1}">
+                        <div class="pagination-container">
+                            <ul class="pagination">
+                                <li class="${currentPage == 1 ? 'disabled' : ''}">
+                                    <a href="OrderManagerServlet?page=${currentPage - 1}&q=${param.q}&fromDate=${param.fromDate}&toDate=${param.toDate}&statusFilter=${param.statusFilter}&sortDate=${param.sortDate}">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <li class="${currentPage == i ? 'active' : ''}">
+                                        <a href="OrderManagerServlet?page=${i}&q=${param.q}&fromDate=${param.fromDate}&toDate=${param.toDate}&statusFilter=${param.statusFilter}&sortDate=${param.sortDate}">
+                                            ${i}
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                                    <li class="${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a href="OrderManagerServlet?page=${currentPage + 1}&q=${param.q}&fromDate=${param.fromDate}&toDate=${param.toDate}&statusFilter=${param.statusFilter}&sortDate=${param.sortDate}">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                            </ul>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>

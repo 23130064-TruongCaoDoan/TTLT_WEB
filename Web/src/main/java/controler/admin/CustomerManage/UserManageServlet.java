@@ -2,6 +2,7 @@ package controler.admin.CustomerManage;
 
 import DTO.UserWithTotalSpentDTO;
 import Service.UserService;
+import Service.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -39,13 +40,18 @@ public class UserManageServlet extends HttpServlet {
             q = q.trim();
             if (q.isEmpty()) q = null;
         }
-
         String stock = request.getParameter("sortStock");
         stock = (stock == null || stock.isEmpty()) ? null : stock;
-        List<UserWithTotalSpentDTO> lsUser = userService.getUserWithTotalSpent(q,stock);
+        String roleFilter = request.getParameter("roleFilter");
+        roleFilter = (roleFilter == null || roleFilter.isEmpty()) ? null : roleFilter;
+        String statusFilter = request.getParameter("statusFilter");
+        statusFilter = (statusFilter == null || statusFilter.isEmpty()) ? null : statusFilter;
+        List<UserWithTotalSpentDTO> lsUser = userService.getUserWithTotalSpent(q, stock, roleFilter, statusFilter);
         List<Role> listRoles = userService.getAllRoles();
         request.setAttribute("users", lsUser);
         request.setAttribute("roles", listRoles);
+        VoucherService voucherService = new VoucherService();
+        request.setAttribute("listVoucher", voucherService.getListVoucherStillValid());
         request.getRequestDispatcher("admin/user.jsp").forward(request,response);
     }
 

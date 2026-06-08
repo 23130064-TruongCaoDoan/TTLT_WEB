@@ -52,8 +52,29 @@ public class OrderManagerServlet extends HttpServlet {
         if (toDate != null && toDate.trim().isEmpty()) {
             toDate = null;
         }
-
-        List<OrderView> list = orderService.searchOrder(q, sortDate, fromDate, toDate, statusFilter);
+        int pageSize = 5;
+        int currentPage = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isBlank()) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage <= 0) {
+                    currentPage = 1;
+                }
+            } catch (Exception e) {
+                currentPage = 1;
+            }
+        }
+        int totalOrders = orderService.countSearchOrder(q, fromDate, toDate, statusFilter);
+        int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+        int offset = (currentPage - 1) * pageSize;
+        if (offset < 0) {
+            offset = 0;
+        }
+        List<OrderView> list = orderService.searchOrderPaginated(q, sortDate, fromDate, toDate, statusFilter, pageSize, offset);
 
         Map<String, List<String>> transitions = Map.of(
                 "PENDING", List.of("PROCESSING", "CANCELLED"),
@@ -66,6 +87,8 @@ public class OrderManagerServlet extends HttpServlet {
 
         request.setAttribute("transitions", transitions);
         request.setAttribute("orders", list);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("admin/quanlidonhang.jsp").forward(request, response);
     }
 
