@@ -261,9 +261,68 @@ textarea {
     z-index: 2;
 }
 
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination li a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    text-decoration: none;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination li a:hover {
+    background-color: #f4f7f6;
+    border-color: #0d3164;
+    color: #0d3164;
+}
+
+.pagination li.active a {
+    background-color: #0d3164;
+    color: #fff;
+    border-color: #0d3164;
+    cursor: default;
+    pointer-events: none;
+}
+
+.pagination li.disabled a {
+    color: #bbb;
+    background-color: #f9f9f9;
+    border-color: #e6e6e6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 
 .order-list .table-wrapper {
-    max-height: 250px;
+    max-height: 55vh;
     overflow-y: auto;
     width: 100%;
     border: 1px solid #ccc;
