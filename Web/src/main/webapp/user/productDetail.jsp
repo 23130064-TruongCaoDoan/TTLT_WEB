@@ -216,8 +216,16 @@
                         <div class="comment-item">
                             <div class="comment-header">
                                 <span class="comment-author">${cmt.name}</span>
-                                <span class="comment-date">${cmt.createAt}</span>
+                                <div>
+                                    <span class="comment-date">${cmt.createAt}</span>
+                                    <c:if test="${isStaff}">
+                                        <input type="checkbox" ${cmt.active ? "checked" : ""}
+                                               data-id="${cmt.id}"
+                                               onchange="toggleActive(this)">
+                                    </c:if>
+                                </div>
                             </div>
+
                             <p class="comment-rating" style="color: #FFD700">
                                 <c:forEach begin="1" end="${cmt.rating}">
                                     ★
@@ -392,6 +400,18 @@
             })
             .catch(err => console.error(err));
     });
+</script>
+
+<script>
+    function toggleActive(el) {
+        const id = el.dataset.id;
+
+        fetch('${pageContext.request.contextPath}/hidden', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'id=' + id
+        });
+    }
 </script>
 </body>
 </html>
