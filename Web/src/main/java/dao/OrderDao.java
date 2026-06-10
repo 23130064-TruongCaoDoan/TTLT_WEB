@@ -229,7 +229,7 @@ public class OrderDao extends BaseDao {
     }
     public void updateOrderStatus(int orderId, String orderStatus) {
         getJdbi().withHandle(handle ->
-                handle.createUpdate("UPDATE orders SET status = :orderStatus WHERE id = :orderId")
+                handle.createUpdate("UPDATE orders SET status = :orderStatus, cancel_time=NOW() WHERE id = :orderId")
                         .bind("orderId", orderId)
                         .bind("orderStatus", orderStatus)
                         .execute()
@@ -435,4 +435,19 @@ public class OrderDao extends BaseDao {
         });
     }
 
+    public int countCancelledOrdersLastHour(int id) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM ORDERS WHERE user_id= :id AND status ='CANCELLED' AND cancel_time > DATE_SUB(NOW(), INTERVAL 1 HOUR)")
+                        .bind("id",id)
+                        .mapTo(Integer.class).one()
+                );
+    }
+
+    public void setOrderBlockUntil(int id) {
+        getJdbi().useHandle(handle ->
+                handle.createUpdate("UPDATE user SET order_block_until = DATE_ADD(NOW(), INTERVAL 24 HOUR) WHERE id = :id")
+                        .bind("id",id)
+                        .execute()
+                );
+    }
 }
