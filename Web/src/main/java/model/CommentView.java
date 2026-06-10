@@ -2,11 +2,13 @@ package model;
 
 
 public class CommentView {
+    private int id;
     private  String name;
     private  int rating;
     private  String content;
     private String createAt;
     private String imgComment;
+    private boolean active;
 
     public CommentView(String name, int rating, String content, String createAt, String imgComment) {
         this.name = name;
@@ -56,13 +58,27 @@ public class CommentView {
         this.imgComment = imgComment;
     }
 
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "CommentView{" +
                 "name='" + name + '\'' +
                 ", rating=" + rating +
                 ", content='" + content + '\'' +
-                ", createAt=" + createAt +
+                ", createAt=" + createAt + active+
                 '}';
     }
 }
