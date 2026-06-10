@@ -1,5 +1,6 @@
 package controler.user.ThanhToan;
 
+import Service.UserService;
 import cart.Cart;
 import Service.AddressService;
 import Service.CartSerive;
@@ -12,6 +13,7 @@ import model.User;
 import model.Voucher;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @WebServlet(name = "ThanhToan", value = "/ThanhToan")
@@ -20,6 +22,13 @@ public class ThanhToan extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        UserService userService = new UserService();
+        Timestamp blockUntil = userService.getBlockUntil(user.getId());
+        if (blockUntil != null && blockUntil.after(new Timestamp(System.currentTimeMillis()))) {
+            request.setAttribute("toastMessage", "Tài khoản đang bị khóa đặt hàng");
+            request.getRequestDispatcher("/home").forward(request, response);
+            return;
+        }
         String mode = request.getParameter("mode");
 
         Cart cartGuest = null;
@@ -33,23 +42,21 @@ public class ThanhToan extends HttpServlet {
         } else if ("rebuy".equals(mode)) {
             cartGuest = (Cart) request.getSession().getAttribute("rebuyCart");
         } else {
-            if(user != null){
+            if (user != null) {
                 cartDb = cartSerive.getCart(user.getId());
                 session.setAttribute("cart", cartDb);
                 isDbCart = true;
-            }
-            else {
+            } else {
                 cartGuest = (Cart) request.getSession().getAttribute("cart");
             }
         }
-        if(isDbCart){
-            if(!cartSerive.checkCart(cartDb)){
+        if (isDbCart) {
+            if (!cartSerive.checkCart(cartDb)) {
                 request.setAttribute("toastMessage", "Một số sản phẩm trong giỏ hàng không hợp lệ đã bị xóa");
                 request.getRequestDispatcher("/home").forward(request, response);
                 return;
             }
-        }
-        else {
+        } else {
             if (!cartSerive.checkCart(cartGuest)) {
                 request.setAttribute("toastMessage", "Một số sản phẩm trong giỏ hàng không hợp lệ đã bị xóa");
                 request.getRequestDispatcher("/home").forward(request, response);
@@ -128,8 +135,7 @@ public class ThanhToan extends HttpServlet {
                     session.setAttribute("numApplyVoucher", numApplyVoucher);
                 }
             }
-        }
-        else{
+        } else {
             if (voucherDis != null) {
                 boolean valid = voucherService.isVoucherValid(cartGuest, voucherDis);
                 if (!valid) {
@@ -162,8 +168,7 @@ public class ThanhToan extends HttpServlet {
         }
 
 
-
-        double finalTotal = totalBill  - discountMoney;
+        double finalTotal = totalBill - discountMoney;
         if (finalTotal < 0) finalTotal = 0;
         if (isDbCart) {
             request.setAttribute("cart", cartDb);
@@ -178,11 +183,10 @@ public class ThanhToan extends HttpServlet {
 
         int userId = user.getId();
 
-        if(isDbCart){
+        if (isDbCart) {
             request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherDiscountUser(userId)));
             request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cartDb, totalBill, voucherService.listVoucherShipUser(userId)));
-        }
-        else{
+        } else {
             request.setAttribute("listVoucherDiscount", voucherService.filterVoucherValid(cartGuest, totalBill, voucherService.listVoucherDiscountUser(userId)));
             request.setAttribute("listVoucherShip", voucherService.filterVoucherValid(cartGuest, totalBill, voucherService.listVoucherShipUser(userId)));
         }

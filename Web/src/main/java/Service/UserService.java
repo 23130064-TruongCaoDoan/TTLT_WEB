@@ -9,6 +9,7 @@ import model.User;
 import org.springframework.cglib.core.Local;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,5 +154,9 @@ public class UserService {
     }
     public List<User> getAllEmployeeImportProduct() {
         return userDao.getAllEmployeeImportProduct();
+    }
+
+    public Timestamp getBlockUntil(int id) {
+        return userDao.getBlockUntil(id);
     }
 }

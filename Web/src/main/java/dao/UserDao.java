@@ -5,6 +5,7 @@ import model.Role;
 import model.User;
 import org.jdbi.v3.core.result.ResultIterable;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -285,4 +286,12 @@ public class UserDao extends BaseDao {
                         .list()
         );
      }
+
+    public Timestamp getBlockUntil(int id) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT order_block_until FROM user WHERE id=:id")
+                        .bind("id",id)
+                        .mapTo(Timestamp.class).one()
+                );
+    }
 }
