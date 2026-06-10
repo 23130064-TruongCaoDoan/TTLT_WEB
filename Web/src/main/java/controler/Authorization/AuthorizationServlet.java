@@ -20,13 +20,14 @@ public class AuthorizationServlet implements Filter {
 
         HttpSession session = req.getSession(false);
 
+
         User user = null;
 
         if (session != null) {
             user = (User) session.getAttribute("user");
         }
 
-        if (user != null) {
+        if (session!= null && user != null) {
             int role = user.getRole();
             request.setAttribute("canViewStatistic", RolesGroup.canViewStatistic(role));
             request.setAttribute("canSale", RolesGroup.canSale(role));

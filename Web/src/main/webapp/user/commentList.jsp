@@ -6,7 +6,14 @@
     <div class="comment-item">
         <div class="comment-header">
             <span class="comment-author">${cmt.name}</span>
-            <span class="comment-date">${cmt.createAt}</span>
+            <div>
+                <span class="comment-date">${cmt.createAt}</span>
+                <c:if test="${isStaff}">
+                <input type="checkbox" ${cmt.active ? "checked" : ""}
+                       data-id="${cmt.id}"
+                       onchange="toggleActive(this)">
+                </c:if>
+            </div>
         </div>
 
         <p class="comment-rating" style="color: #FFD700">

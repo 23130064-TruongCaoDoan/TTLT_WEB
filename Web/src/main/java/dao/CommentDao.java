@@ -14,11 +14,12 @@ import java.util.stream.Collectors;
 public class CommentDao extends BaseDao{
     public List<CommentView> getAllComment(int bookId) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery(
-                                "SELECT  u.name AS name , c.rating AS rating, c.content  AS content, DATE_FORMAT(c.create_at, '%d/%m/%Y') AS createAt, c.img_comment AS imgComment" +
-                                        " FROM comments c" +
-                                        " INNER JOIN USER u ON u.id = c.user_id" +
-                                        " WHERE c.book_id = :book_id  AND c.is_active=1 ORDER BY c.create_at DESC")
+                handle.createQuery("""
+                                SELECT  c.id AS id, u.name AS name , c.rating AS rating, c.content  AS content, DATE_FORMAT(c.create_at, '%d/%m/%Y') AS createAt, c.img_comment AS imgComment, c.is_active AS active
+                                FROM comments c
+                                INNER JOIN USER u ON u.id = c.user_id
+                                WHERE c.book_id = :book_id  AND c.is_active=1 ORDER BY c.create_at DESC
+                           """)
                         .bind("book_id", bookId)
                         .mapToBean(CommentView.class)
                         .list()
@@ -96,11 +97,12 @@ public class CommentDao extends BaseDao{
     }
     public List<CommentView> getCommentByRating(int bookId, int rating) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery(
-                                "SELECT  u.name AS name , c.rating AS rating, c.content  AS content, DATE_FORMAT(c.create_at, '%d/%m/%Y') AS createAt, c.img_comment AS imgComment" +
-                                        " FROM comments c" +
-                                        " INNER JOIN USER u ON u.id = c.user_id" +
-                                        " WHERE c.book_id = :book_id AND c.rating = :rating AND c.is_active=1 ORDER BY c.create_at DESC")
+                handle.createQuery("""
+                                SELECT  c.id AS id, u.name AS name , c.rating AS rating, c.content  AS content, DATE_FORMAT(c.create_at, '%d/%m/%Y') AS createAt, c.img_comment AS imgComment, c.is_Active AS active
+                                FROM comments c
+                                INNER JOIN USER u ON u.id = c.user_id
+                                WHERE c.book_id = :book_id AND c.rating = :rating AND c.is_active=1 ORDER BY c.create_at DESC
+                                """)
                         .bind("book_id", bookId)
                         .bind("rating", rating)
                         .mapToBean(CommentView.class)
@@ -396,9 +398,8 @@ public class CommentDao extends BaseDao{
 
     public static void main(String[] args) {
         CommentDao dao = new CommentDao();
-        List<RatingStartView> comments = dao.getRatingStartView(2);
-        LocalDate from =  LocalDate.of(2018, 1, 1);
-        LocalDate to =  LocalDate.now();
+        System.out.println(dao.getAllComment(1));
+
     }
 
 }
