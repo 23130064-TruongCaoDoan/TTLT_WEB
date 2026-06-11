@@ -154,70 +154,65 @@ public class BookService {
 
         Book old = hd.getBookById(id);
         if (old == null) return;
-
+        Map<String,Object> changeParams = new HashMap<>();
         Book incoming = buildBookFromParams(new Book(), params);
         incoming.setId(id);
 
         if (!old.getBookCode().equals(incoming.getBookCode()))
-            old.setBookCode(incoming.getBookCode());
+            changeParams.put("book_code", incoming.getBookCode());
 
         if (!old.getTitle().equals(incoming.getTitle()))
-            old.setTitle(incoming.getTitle());
+            changeParams.put("title", incoming.getTitle());
 
         if (old.getAuthorId() != incoming.getAuthorId())
-            old.setAuthorId(incoming.getAuthorId());
-
-        if (old.getPriceImport() != incoming.getPriceImport())
-            old.setPriceImport(incoming.getPriceImport());
+            changeParams.put("author_id", incoming.getAuthorId());
 
         if (old.getPrice() != incoming.getPrice())
-            old.setPrice(incoming.getPrice());
+            changeParams.put("price", incoming.getPrice());
 
         if (old.getPriceDiscounted() != incoming.getPriceDiscounted())
-            old.setPriceDiscounted(incoming.getPriceDiscounted());
+            changeParams.put("price_discounted", incoming.getPriceDiscounted());
 
         if (!old.getType().equals(incoming.getType()))
-            old.setType(incoming.getType());
-
+            changeParams.put("type", incoming.getType());
         if (old.getAge() != incoming.getAge())
-            old.setAge(incoming.getAge());
+            changeParams.put("age", incoming.getAge());
 
         if (old.getStock() != incoming.getStock())
-            old.setStock(incoming.getStock());
+            changeParams.put("stock", incoming.getStock());
 
         if (!old.getPublisher().equals(incoming.getPublisher()))
-            old.setPublisher(incoming.getPublisher());
+            changeParams.put("publisher", incoming.getPublisher());
 
         if (!old.getProvider().equals(incoming.getProvider()))
-            old.setProvider(incoming.getProvider());
+            changeParams.put("provider", incoming.getProvider());
 
         if (!old.getFormat().equals(incoming.getFormat()))
-            old.setFormat(incoming.getFormat());
+            changeParams.put("format", incoming.getFormat());
 
         if (!old.getDescription().equals(incoming.getDescription()))
-            old.setDescription(incoming.getDescription());
+            changeParams.put("description", incoming.getDescription());
 
         if (old.getPagesNumber() != incoming.getPagesNumber())
-            old.setPagesNumber(incoming.getPagesNumber());
+            changeParams.put("pages_number", incoming.getPagesNumber());
 
         if (Double.compare(old.getWeight(), incoming.getWeight()) != 0)
-            old.setWeight(incoming.getWeight());
+            changeParams.put("weight", incoming.getWeight());
 
         if (!old.getBookSize().equals(incoming.getBookSize()))
-            old.setBookSize(incoming.getBookSize());
+            changeParams.put("book_size", incoming.getBookSize());
 
-        if (incoming.getPublishedDate() != 0 &&
-                old.getPublishedDate() != incoming.getPublishedDate()) {
-            old.setPublishedDate(incoming.getPublishedDate());
+        if (incoming.getPublishedDate() != 0 && old.getPublishedDate() != incoming.getPublishedDate()) {
+            changeParams.put("published_date", incoming.getPublishedDate());
         }
 
 
         if (mainImage != null && mainImage.getSize() > 0) {
             String newCover = uploadService.upload(mainImage, "books/main");
-            old.setCoverImgUrl(newCover);
+            changeParams.put("cover_img_url", newCover);
         }
 
-        hd.update(old);
+        hd.update(old.getId(),changeParams);
 
         if (detailImages != null && !detailImages.isEmpty()) {
             hd.deleteDetailImages(id);
@@ -231,11 +226,10 @@ public class BookService {
         book.setTitle(p.get("title")[0]);
         book.setAuthorId(Integer.parseInt(p.get("author_id")[0]));
         book.setPrice(Integer.parseInt(p.get("price")[0]));
-        book.setPriceImport(Integer.parseInt(p.get("price_import")[0]));
         String pd = p.get("price_discounted")[0];
         book.setPriceDiscounted(
                 (pd == null || pd.isBlank())
-                        ? book.getPrice()
+                        ? 0
                         : Integer.parseInt(pd)
         );
 
