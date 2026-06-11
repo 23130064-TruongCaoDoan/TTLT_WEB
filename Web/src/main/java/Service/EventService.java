@@ -103,10 +103,11 @@ public class EventService {
         );
     }
 
-    public List<Event> searchAndFilter(String q, String stock) {
+    public List<Event> searchAndFilter(String q, String stock, String sortActivity) {
         if (q != null && q.isBlank()) q = null;
         if (stock != null && stock.isBlank()) stock = null;
+        if (sortActivity != null && sortActivity.isBlank()) stock = null;
 
-        return eventDao.searchAndFilter(q, stock);
+        return eventDao.searchAndFilter(q, stock,sortActivity);
     }
 }
