@@ -43,6 +43,7 @@ public class OrderCancelled extends HttpServlet {
             if(!order.getPaymentMethod().equalsIgnoreCase("COD")) {
                 orderService.updatePaymentStatus(orderId,"REFUNDED");
             }
+            orderService.blockFunctionOrder(user.getId());
             for (OrderItemsView item : listItem){
                 bookService.updateQuantityOrderCancelled(item.getBookId(), item.getQuantity());
             }

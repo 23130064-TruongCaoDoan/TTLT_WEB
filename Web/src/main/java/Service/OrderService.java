@@ -132,4 +132,15 @@ public class OrderService {
     public List<OrderView> searchOrderPaginated(String q, String sortDate, String fromDate, String toDate, String statusFilter, int limit, int offset) {
         return orderDao.searchOrderPaginated(q, sortDate, fromDate, toDate, statusFilter, limit, offset);
     }
+
+    public void blockFunctionOrder(int id) {
+        int i=countCancelledOrdersLastHour(id);
+        if(i>=5){
+            orderDao.setOrderBlockUntil(id);
+        }
+    }
+
+    private int countCancelledOrdersLastHour(int id) {
+        return orderDao.countCancelledOrdersLastHour( id);
+    }
 }
