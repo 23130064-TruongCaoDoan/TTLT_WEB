@@ -22,6 +22,24 @@
         <c:import url="MenuFunctionAdmin.jsp"></c:import>
         <div class="event-container">
             <h2>Quản lý Sự kiện</h2>
+            <div class="thongke-container">
+                <div class="cards" >
+                    <div class="card card-active">
+                        <h3 style="color: #1e8e3e; font-weight: bold" >Đang hoạt động</h3>
+                        <p style="font-weight: bold">${countActive != null ? countActive : 0}</p>
+                    </div>
+
+                    <div class="card card-inactive">
+                        <h3 style="color: #666666; font-weight: bold" >Không hoạt động</h3>
+                        <p style="font-weight: bold">${countInactive != null ? countInactive : 0}</p>
+                    </div>
+                    <div class="card card-total">
+                        <h3 style="font-weight: bold">Tổng sự kiện</h3>
+                        <p style="font-weight: bold">${totalEvent != null ? totalEvent : 0}</p>
+                    </div>
+
+                </div>
+            </div>
             <form method="get" action="Event">
                 <div class="function">
                     <button id="addEvent" type="button">Thêm sự kiện</button>

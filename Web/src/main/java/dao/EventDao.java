@@ -275,4 +275,17 @@ public class EventDao extends BaseDao {
             return query.mapToBean(Event.class).list();
         });
     }
+
+    public int getCountActiveEvent() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM events WHERE CURDATE() BETWEEN start_date AND end_date ")
+                        .mapTo(Integer.class).one()
+                );
+    }
+    public int getCountInactiveEvent() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM events WHERE NOT (CURDATE() BETWEEN start_date AND end_date) ")
+                        .mapTo(Integer.class).one()
+        );
+    }
 }
