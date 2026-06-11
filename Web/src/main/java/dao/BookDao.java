@@ -5,11 +5,14 @@ import model.Book;
 import model.CommentView;
 import model.RatingStartView;
 import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.statement.Update;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class BookDao extends BaseDao {
     public List<String> getAllCategories() {
@@ -56,21 +59,21 @@ public class BookDao extends BaseDao {
                                     SELECT b.*
                                     FROM BOOKS b
                                     LEFT JOIN comments r
-                                           ON b.id = r.book_id 
+                                           ON b.id = r.book_id
                                           AND r.is_active = 1
                                     WHERE b.is_sell = 1
                                       AND b.type = :type
-                                    GROUP BY 
+                                    GROUP BY
                                         b.id, b.title, b.author_id, b.publisher,
                                         b.price, b.price_discounted, b.quantity_sold,
                                         b.published_date, b.stock, b.is_sell, b.type
                                     ORDER BY
                                         AVG(r.rating) DESC,
-                                        COUNT(*) DESC,
+                                        COUNT(b.id) DESC,
                                         b.quantity_sold DESC,
-                                        CASE 
-                                            WHEN b.price_discounted > 0 THEN 1 
-                                            ELSE 0 
+                                        CASE
+                                            WHEN b.price_discounted > 0 THEN 1
+                                            ELSE 0
                                         END DESC,
                                         b.published_date DESC
                                 """)
@@ -347,51 +350,24 @@ public class BookDao extends BaseDao {
         });
     }
 
-    public void update(Book book) {
-        getJdbi().useHandle(h ->
-                h.createUpdate("""
-                                    UPDATE books SET
-                                        book_code = :code,
-                                        title = :title,
-                                        author_id = :authorId,
-                                        price = :price,
-                                        price_discounted = :priceDiscounted,
-                                        price_import =  :priceImport,
-                                        type = :type,
-                                        age = :age,
-                                        cover_img_url = :cover,
-                                        description = :description,
-                                        publisher = :publisher,
-                                        provider = :provider,
-                                        published_date = :published,
-                                        weight = :weight,
-                                        book_size = :size,
-                                        pages_number = :pages,
-                                        format = :format,
-                                        stock = :stock
-                                    WHERE id = :id
-                                """)
-                        .bind("id", book.getId())
-                        .bind("code", book.getBookCode())
-                        .bind("title", book.getTitle())
-                        .bind("authorId", book.getAuthorId())
-                        .bind("price", book.getPrice())
-                        .bind("priceDiscounted", book.getPriceDiscounted())
-                        .bind("priceImport", book.getPriceImport())
-                        .bind("type", book.getType())
-                        .bind("age", book.getAge())
-                        .bind("cover", book.getCoverImgUrl())
-                        .bind("description", book.getDescription())
-                        .bind("publisher", book.getPublisher())
-                        .bind("provider", book.getProvider())
-                        .bind("published", book.getPublishedDate())
-                        .bind("weight", book.getWeight())
-                        .bind("size", book.getBookSize())
-                        .bind("pages", book.getPagesNumber())
-                        .bind("format", book.getFormat())
-                        .bind("stock", book.getStock())
-                        .execute()
-        );
+    public void update(int bookId, Map<String, Object> changes) {
+        StringBuilder sql = new StringBuilder("UPDATE BOOKS SET ");
+        for (var entry : changes.entrySet()) {
+            sql.append(entry.getKey())
+                    .append("=:")
+                    .append(entry.getKey())
+                    .append(",");
+        }
+        sql.deleteCharAt(sql.length() - 1);
+        sql.append(" WHERE id = :bookId");
+        getJdbi().useHandle(handle ->{
+            Update update = handle.createUpdate(sql.toString());
+            update.bind("bookId", bookId);
+            for (var entry : changes.entrySet()) {
+                update.bind(entry.getKey(), entry.getValue());
+            }
+            update.execute();
+        });
     }
 
 
@@ -879,7 +855,7 @@ public class BookDao extends BaseDao {
     public double salesPercentageTheMostRecentImport(int bookId){
         return getJdbi().withHandle(handle -> {
             LocalDateTime latestRecentImportDate = handle.createQuery("""
-                    SELECT O.import_date
+                    SELECT o.import_date
                     FROM IMPORT_ORDERS o
                     INNER JOIN IMPORT_ORDER_DETAILS od ON o.id = od.import_order_id
                     WHERE od.book_id = :bookId
@@ -915,13 +891,13 @@ public class BookDao extends BaseDao {
                             .bind("importDate", latestRecentImportDate)
                             .mapTo(Integer.class)
                             .one();
-            return ((double)soldQuantity/importedQuantity)*100 ;
+            return Math.round(((double) soldQuantity / importedQuantity) * 10000) / 100.0 ;
         });
 
     }
     public static void main(String[] args) {
         BookDao dao = new BookDao();
-        System.out.println(dao.findBookByBookCode("8935074134141"));
+        System.out.println(Math.round(((double) 55 / 102) * 10000) / 100.0);
     }
 
     public List<Integer> getAllAges() {
