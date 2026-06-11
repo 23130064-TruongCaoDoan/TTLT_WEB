@@ -110,4 +110,11 @@ public class EventService {
 
         return eventDao.searchAndFilter(q, stock,sortActivity);
     }
+
+    public int getCountActiveEvent() {
+        return eventDao.getCountActiveEvent();
+    }
+    public int getCountInactiveEvent() {
+        return eventDao.getCountActiveEvent();
+    }
 }

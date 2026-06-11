@@ -44,6 +44,12 @@ public class Event extends HttpServlet {
         String sortActivity = request.getParameter("sortActivity");
 
         List<model.Event> listEvent = eventService.searchAndFilter(q, sortDate, sortActivity);
+        int countActive = eventService.getCountActiveEvent();
+        int countInactive = eventService.getCountInactiveEvent();
+        int totalEvent = countActive + countInactive;
+        request.setAttribute("countActive", countActive);
+        request.setAttribute("countInactive", countInactive);
+        request.setAttribute("totalEvent", totalEvent);
 
         BookService bookService = new BookService();
         VoucherService voucherService = new VoucherService();
