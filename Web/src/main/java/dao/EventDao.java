@@ -243,17 +243,23 @@ public class EventDao extends BaseDao {
         );
     }
 
-    public List<Event> searchAndFilter(String q, String stock) {
+    public List<Event> searchAndFilter(String q, String stock, String sortActivity) {
         return getJdbi().withHandle(handle -> {
 
             StringBuilder sql = new StringBuilder(
                     "SELECT * " +
-                            "FROM events "
+                            "FROM events WHERE 1=1"
             );
 
             if (q != null) {
-                sql.append(" WHERE (title LIKE :q OR event_code LIKE :q OR type_book_apply LIKE :q OR pulisher_apply LIKE :q  OR age_apply LIKE :q)");
+                sql.append(" AND (title LIKE :q OR event_code LIKE :q OR type_book_apply LIKE :q OR pulisher_apply LIKE :q  OR age_apply LIKE :q)");
             }
+            if ("activity".equals(sortActivity)) {
+                sql.append(" AND CURDATE() BETWEEN start_date AND end_date ");
+            } else if ("inactive".equals(sortActivity)) {
+                sql.append(" AND NOT ( CURDATE() BETWEEN start_date AND end_date )");
+            }
+
             if ("asc".equals(stock)) {
                 sql.append(" ORDER BY end_date ASC");
             } else if ("desc".equals(stock)) {

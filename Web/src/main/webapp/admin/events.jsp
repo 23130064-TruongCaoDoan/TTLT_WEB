@@ -38,6 +38,7 @@
                 <div class="event-list">
                     <div class="title">
                         <h3>Danh sách sự kiện</h3>
+                        <div>
                         <select class="locEvent" name="sortDate" onchange="this.form.submit()">
                             <option value="all">Tất cả</option>
                             <option value="asc" ${param.sortDate == 'asc' ? 'selected' : ''}>
@@ -47,6 +48,16 @@
                                 Sự kiện mới nhất
                             </option>
                         </select>
+                        <select class="locEvent" name="sortActivity" onchange="this.form.submit()">
+                            <option value="all">Tất cả</option>
+                            <option value="activity" ${param.sortActivity == 'activity' ? 'selected' : ''}>
+                                Sự kiện đang hoạt động
+                            </option>
+                            <option value="inactive" ${param.sortActivity == 'inactive' ? 'selected' : ''}>
+                                Sự kiện không hoạt động
+                            </option>
+                        </select>
+                        </div>
                     </div>
                 </div>
             </form>

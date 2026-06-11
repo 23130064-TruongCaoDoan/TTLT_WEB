@@ -41,8 +41,9 @@ public class Event extends HttpServlet {
 
         String q = request.getParameter("q");
         String sortDate = request.getParameter("sortDate");
+        String sortActivity = request.getParameter("sortActivity");
 
-        List<model.Event> listEvent = eventService.searchAndFilter(q, sortDate);
+        List<model.Event> listEvent = eventService.searchAndFilter(q, sortDate, sortActivity);
 
         BookService bookService = new BookService();
         VoucherService voucherService = new VoucherService();
