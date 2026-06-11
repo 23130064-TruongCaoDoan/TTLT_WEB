@@ -124,7 +124,6 @@
                                    data-code="${p.bookCode}"
                                    data-title="${p.title}"
                                    data-author="${p.authorId}"
-                                   data-price-import="${p.priceImport}"
                                    data-price="${p.price}"
                                    data-price-discounted="${p.priceDiscounted}"
                                    data-age="${p.age}"
@@ -196,7 +195,7 @@
                     </c:forEach>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group hiddenWhenFix">
                 <label>Giá nhập</label>
                 <input type="number" name="price_import" placeholder="VD: 40000" required>
             </div>
@@ -360,9 +359,9 @@
             document.getElementById("code").value = btn.dataset.code;
             document.getElementById("title").value = btn.dataset.title;
             document.querySelector("select[name='author_id']").value = btn.dataset.author;
-            document.querySelector("input[name='price_import']").value = btn.dataset.priceImport;
             document.querySelector("input[name='price']").value = btn.dataset.price;
             document.querySelector("input[name='price_discounted']").value = btn.dataset.priceDiscounted;
+            document.querySelector(".hiddenWhenFix").remove();
             document.querySelector("input[name='age']").value = btn.dataset.age;
             document.querySelector("input[name='stock']").value = btn.dataset.stock;
             document.getElementById("type").value = btn.dataset.type;
@@ -378,6 +377,7 @@
             document.querySelector(".btn-save").innerText = "Cập nhật sản phẩm";
         });
     });
+
     add.addEventListener('click', () => {
         overlay.style.display = "block";
         popup.style.display = "block";
