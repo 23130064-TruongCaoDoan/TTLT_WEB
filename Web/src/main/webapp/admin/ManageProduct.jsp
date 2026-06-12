@@ -361,7 +361,9 @@
             document.querySelector("select[name='author_id']").value = btn.dataset.author;
             document.querySelector("input[name='price']").value = btn.dataset.price;
             document.querySelector("input[name='price_discounted']").value = btn.dataset.priceDiscounted;
-            document.querySelector(".hiddenWhenFix").remove();
+            document.querySelector(".hiddenWhenFix").style.display = 'none';
+            document.querySelector("input[name='price_import']").required = false;
+
             document.querySelector("input[name='age']").value = btn.dataset.age;
             document.querySelector("input[name='stock']").value = btn.dataset.stock;
             document.getElementById("type").value = btn.dataset.type;
@@ -386,6 +388,8 @@
         document.querySelector(".btn-save").innerText = "Thêm sản phẩm";
         document.getElementById("img-main").required = true;
         document.getElementById("start_date").required = true;
+        document.querySelector(".hiddenWhenFix").style.display = 'block';
+        document.querySelector("input[name='price_import']").required = true;
     });
 
     document.addEventListener("click", function (e) {
