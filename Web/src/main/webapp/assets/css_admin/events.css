@@ -299,3 +299,24 @@ textarea {
     max-width: 500px;
     word-break: break-word;
 }
+.event-container .thongke-container {
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+    flex: none;
+}
+.thongke-container .card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: 0.2s;
+}
+.thongke-container .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
