@@ -101,7 +101,7 @@ public class AdminLogFilter implements Filter {
             else if (uri.contains("notify")) {
                 action = "TẠO THÔNG BÁO";
                 String title = request.getParameter("title");
-                if (uri.contains("notify-user")) { // Gửi nhiều người cùng lúc (NotifyUserServlet)
+                if (uri.contains("notify-user")) {
                     String[] userIds = request.getParameterValues("userIds");
                     int count = (userIds != null) ? userIds.length : 0;
                     logContent = "Bạn đã gửi thông báo '" + title + "' đến " + count + " khách hàng";
@@ -130,7 +130,7 @@ public class AdminLogFilter implements Filter {
             else if (uri.contains("createorderforcustomer")) {
                 action = "TẠO ĐƠN HỘ";
                 String receiverName = request.getParameter("receiverName");
-                String finalTotal = request.getParameter("finalTotal"); // hoặc lấy các thông tin cần thiết
+                String finalTotal = request.getParameter("finalTotal");
                 logContent = "Bạn đã tạo hộ đơn hàng cho khách: " + (receiverName != null ? receiverName : "") + " từ trang quản trị";
             }
             else if (uri.contains("addvoucher")) {
@@ -198,6 +198,28 @@ public class AdminLogFilter implements Filter {
                     logContent = "Bạn đã xóa nhà xuất bản: " + name + " (ID: " + id + ")";
                 } else {
                     logContent = "Bạn đã xóa nhà xuất bản có ID: " + id;
+                }
+            }
+            else if (uri.contains("admin-add-provider")) {
+                action = "THÊM NHÀ PHÂN PHỐI";
+                String name = request.getParameter("name");
+                String code = request.getParameter("code");
+                logContent = "Bạn đã thêm nhà phân phối: " + (name != null ? name : "") + " (" + code + ")";
+            }
+            else if (uri.contains("admin-edit-provider")) {
+                action = "SỬA NHÀ PHÂN PHỐI";
+                String id = request.getParameter("id");
+                String name = request.getParameter("name");
+                logContent = "Bạn đã cập nhật nhà phân phối ID " + id + " thành: " + (name != null ? name : "");
+            }
+            else if (uri.contains("admin-delete-provider")) {
+                action = "XÓA NHÀ PHÂN PHỐI";
+                String id = request.getParameter("id");
+                String name = request.getParameter("providerName");
+                if (name != null && !name.trim().isEmpty()) {
+                    logContent = "Bạn đã xóa nhà phân phối: " + name + " (ID: " + id + ")";
+                } else {
+                    logContent = "Bạn đã xóa nhà phân phối có ID: " + id;
                 }
             }
             else if (uri.contains("add") || uri.contains("create") || uri.contains("insert")
