@@ -178,6 +178,28 @@ public class AdminLogFilter implements Filter {
                 String status = request.getParameter("status");
                 logContent = "Bạn đã chỉnh sửa đơn hàng ID " + orderId + ", trạng thái mới: [" + status + "]";
             }
+            else if (uri.contains("admin-add-publisher")) {
+                action = "THÊM NHÀ XUẤT BẢN";
+                String name = request.getParameter("name");
+                String code = request.getParameter("code");
+                logContent = "Bạn đã thêm nhà xuất bản mới: " + (name != null ? name : "") + " (Mã: " + (code != null ? code : "") + ")";
+            }
+            else if (uri.contains("admin-edit-publisher")) {
+                action = "SỬA NHÀ XUẤT BẢN";
+                String id = request.getParameter("id");
+                String name = request.getParameter("name");
+                logContent = "Bạn đã cập nhật thông tin nhà xuất bản ID " + id + " thành: " + (name != null ? name : "");
+            }
+            else if (uri.contains("admin-delete-publisher")) {
+                action = "XÓA NHÀ XUẤT BẢN";
+                String id = request.getParameter("id");
+                String name = request.getParameter("publisherName"); // lấy từ form ẩn
+                if (name != null && !name.trim().isEmpty()) {
+                    logContent = "Bạn đã xóa nhà xuất bản: " + name + " (ID: " + id + ")";
+                } else {
+                    logContent = "Bạn đã xóa nhà xuất bản có ID: " + id;
+                }
+            }
             else if (uri.contains("add") || uri.contains("create") || uri.contains("insert")
                     || (uri.contains("product-manage") && (request.getParameter("id") == null || request.getParameter("id").isBlank()))) {
                 action = "THÊM";
