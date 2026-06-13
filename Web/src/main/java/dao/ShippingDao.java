@@ -34,24 +34,51 @@ public class ShippingDao extends BaseDao {
     }
 
     public void addShipping(int orderId, String receiverName, String receiverPhone, String province, String district, String ward, String specificAddress, String shipName, double shipFee, String deliveryRange) {
-             getJdbi().useHandle(handle ->
-                    handle.createUpdate("""
-                                        INSERT INTO SHIPPING
-                                        (order_id, receiver, phone, ward, districts, city, specificAddress, shipping_type, shipping_cost, delivered_date, status)
-                                        VALUES (:order_id, :receiver, :phone, :ward, :districts, :city, :specificAddress, :shipping_type, :shipping_cost, :delivered_date, :status)
-                                    """)
-                            .bind("order_id", orderId)
-                            .bind("receiver",receiverName)
-                            .bind("phone",receiverPhone)
-                            .bind("ward", ward)
-                            .bind("districts", district)
-                            .bind("city", province)
-                            .bind("specificAddress", specificAddress)
-                            .bind("shipping_type", shipName)
-                            .bind("shipping_cost", shipFee)
-                            .bind("delivered_date", deliveryRange)
-                            .bind("status", "PENDING")
-                            .execute()
-            );
+        getJdbi().useHandle(handle ->
+                handle.createUpdate("""
+                                    INSERT INTO SHIPPING
+                                    (order_id, receiver, phone, ward, districts, city, specificAddress, shipping_type, shipping_cost, delivered_date, status)
+                                    VALUES (:order_id, :receiver, :phone, :ward, :districts, :city, :specificAddress, :shipping_type, :shipping_cost, :delivered_date, :status)
+                                """)
+                        .bind("order_id", orderId)
+                        .bind("receiver", receiverName)
+                        .bind("phone", receiverPhone)
+                        .bind("ward", ward)
+                        .bind("districts", district)
+                        .bind("city", province)
+                        .bind("specificAddress", specificAddress)
+                        .bind("shipping_type", shipName)
+                        .bind("shipping_cost", shipFee)
+                        .bind("delivered_date", deliveryRange)
+                        .bind("status", "PENDING")
+                        .execute()
+        );
     }
+
+    public void updateTrackingCode(int orderId, String trackingCode) {
+        getJdbi().useHandle(handle ->
+                handle.createUpdate("""
+                                    UPDATE shipping 
+                                    SET tracking_code = :trackingCode 
+                                    WHERE order_id = :orderId
+                                """)
+                        .bind("trackingCode", trackingCode)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
+    public void updateShippingStatusByTrackingCode(String trackingCode, String newStatus) {
+        getJdbi().useHandle(handle ->
+                handle.createUpdate("""
+                                    UPDATE shipping 
+                                    SET status = :status 
+                                    WHERE tracking_code = :trackingCode
+                                """)
+                        .bind("status", newStatus)
+                        .bind("trackingCode", trackingCode)
+                        .execute()
+        );
+    }
+
 }

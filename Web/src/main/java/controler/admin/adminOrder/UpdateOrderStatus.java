@@ -48,7 +48,16 @@ public class UpdateOrderStatus extends HttpServlet {
         orderService.updateOrderStatus(orderId, orderStatus);
 
         try {
-            Order order = orderService.getOrderDetail(orderId).getOrder();
+            DTO.OrderDetailDTO orderDetail = orderService.getOrderDetail(orderId);
+            Order order = orderDetail.getOrder();
+            model.Shipping shipping = orderDetail.getShipping();
+            if ("PROCESSING".equalsIgnoreCase(orderStatus) && (shipping.getTrackingCode() == null || shipping.getTrackingCode().isEmpty())) {
+                String trackingCode = Util.GHNApiUtil.createOrder(order, shipping);
+                if (trackingCode != null) {
+                    dao.ShippingDao shipDao = new dao.ShippingDao();
+                    shipDao.updateTrackingCode(orderId, trackingCode);
+                }
+            }
             if (order != null) {
                 int customerId = order.getUserId();
 
