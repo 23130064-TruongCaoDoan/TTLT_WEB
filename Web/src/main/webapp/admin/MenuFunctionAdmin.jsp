@@ -21,6 +21,8 @@
         <c:if test="${canSale}">
             <a href="<c:url value="/OrderManagerServlet" />" class="function qldonhang">Quản lý đơn hàng</a>
             <a href="<c:url value="/admin-return-manager" />" class="function qltrahang">Quản lý trả hàng</a>
+            <a href="<c:url value="/publisher-manage" />" class="function qlnxb">Quản lý nhà xuất bản</a>
+            <a href="<c:url value="/provider-manage" />" class="function qlnpp">Quản lý nhà phân phối</a>
             <a href="<c:url value="/author-manage" />" class="function qltacgia">Quản lý tác giả</a>
             <a href="<c:url value="/KhoVoucher" />" class="function storeVoucher">Kho Voucher</a>
             <a href="<c:url value="/Event" />" class="function event">Sự kiện</a>
