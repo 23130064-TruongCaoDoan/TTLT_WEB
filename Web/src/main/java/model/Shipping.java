@@ -11,13 +11,14 @@ public class Shipping {
     private String status;
     private String receiver, ward, districts, city, specificAddress;
     private int phone;
+    private String trackingCode;
 
 
     public Shipping() {
     }
 
 
-    public Shipping(int orderId, String shippingType, Double shippingCost, Date shippingDate, String deliveredDate, String status, String receiver, String ward, String districts, String city, String specificAddress, int phone) {
+    public Shipping(int orderId, String shippingType, Double shippingCost, Date shippingDate, String deliveredDate, String status, String receiver, String ward, String districts, String city, String specificAddress, int phone, String trackingCode) {
         this.orderId = orderId;
         this.shippingType = shippingType;
         this.shippingCost = shippingCost;
@@ -30,6 +31,7 @@ public class Shipping {
         this.city = city;
         this.specificAddress = specificAddress;
         this.phone = phone;
+        this.trackingCode = trackingCode;
     }
 
     public int getOrderId() {
@@ -128,6 +130,14 @@ public class Shipping {
         this.phone = phone;
     }
 
+    public String getTrackingCode() {
+        return trackingCode;
+    }
+
+    public void setTrackingCode(String trackingCode) {
+        this.trackingCode = trackingCode;
+    }
+
     @Override
     public String toString() {
         return "Shipping{" +
@@ -143,6 +153,7 @@ public class Shipping {
                 ", city='" + city + '\'' +
                 ", specificAddress='" + specificAddress + '\'' +
                 ", phone=" + phone +
+                ", trackingCode='" + trackingCode + '\'' +
                 '}';
     }
 }
