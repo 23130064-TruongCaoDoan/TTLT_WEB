@@ -41,6 +41,7 @@
                     </div>
                     <button type="submit" class="buttonSearch">Thống kê</button>
                 </form>
+                <button type="button" class="buttonSearch" onclick="exportExcel()" style="margin-left: 10px; background-color: #28a745; padding: 10px 15px; border: none; color: white; cursor: pointer; border-radius: 4px; font-weight: bold; height: fit-content; align-self: center;">Xuất Excel</button>
             </div>
             <div id="thongke-content">
                 <div class="cards" id="cards">
@@ -331,6 +332,20 @@
         loadThongKe("ThongKe?type=day&fromDate=" + from + "&toDate=" + to);
 
     });
+
+    function exportExcel() {
+        let type = document.getElementById("filter").value;
+        let url = "ExportThongKeExcel?type=" + type;
+        if (type === "year") {
+            let year = document.getElementById("yearSelect").value;
+            url += "&year=" + year;
+        } else {
+            let from = document.getElementById("fromDate").value;
+            let to = document.getElementById("toDate").value;
+            url += "&fromDate=" + from + "&toDate=" + to;
+        }
+        window.location.href = url;
+    }
 </script>
 
 <script>
