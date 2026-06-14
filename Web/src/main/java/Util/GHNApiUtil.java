@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class GHNApiUtil {
 
-    private static final String BASE_URL ="https://online-gateway.ghn.vn/shiip/public-api";
+    private static final String BASE_URL = "https://dev-online-gateway.ghn.vn/shiip/public-api";
 
     private static String TOKEN;
     private static int SHOP_ID;
@@ -23,8 +23,7 @@ public class GHNApiUtil {
     static {
         try {
             Properties prop = new Properties();
-            InputStream input = GHNApiUtil.class.getClassLoader()
-                    .getResourceAsStream("GHN.properties");
+            InputStream input = GHNApiUtil.class.getClassLoader().getResourceAsStream("GHN.properties");
 
             InputStreamReader reader = new InputStreamReader(input, "UTF-8");
             prop.load(reader);
@@ -49,6 +48,7 @@ public class GHNApiUtil {
 
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Token", TOKEN);
+        conn.setRequestProperty("ShopId", String.valueOf(SHOP_ID));
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
 
@@ -72,14 +72,13 @@ public class GHNApiUtil {
     public static int getProvinceIdByName(String provinceName) throws Exception {
 
         JSONObject body = new JSONObject();
-        JSONObject response =sendPostRequest("/master-data/province", body);
+        JSONObject response = sendPostRequest("/master-data/province", body);
 
         JSONArray provinces = response.getJSONArray("data");
 
         for (int i = 0; i < provinces.length(); i++) {
             JSONObject province = provinces.getJSONObject(i);
-            if (normalize(province.getString("ProvinceName"))
-                    .equals(normalize(provinceName))) {
+            if (normalize(province.getString("ProvinceName")).equals(normalize(provinceName))) {
                 return province.getInt("ProvinceID");
             }
         }
@@ -91,13 +90,12 @@ public class GHNApiUtil {
         JSONObject body = new JSONObject();
         body.put("province_id", provinceId);
 
-        JSONObject response =sendPostRequest("/master-data/district", body);
+        JSONObject response = sendPostRequest("/master-data/district", body);
         JSONArray districts = response.getJSONArray("data");
 
         for (int i = 0; i < districts.length(); i++) {
             JSONObject district = districts.getJSONObject(i);
-            if (normalize(district.getString("DistrictName"))
-                    .equals(normalize(districtName))) {
+            if (normalize(district.getString("DistrictName")).equals(normalize(districtName))) {
                 return district.getInt("DistrictID");
             }
         }
@@ -107,15 +105,14 @@ public class GHNApiUtil {
     public static String getWardCodeByName(String wardName, int districtId) throws Exception {
         JSONObject body = new JSONObject();
         body.put("district_id", districtId);
-        JSONObject response =sendPostRequest("/master-data/ward", body);
+        JSONObject response = sendPostRequest("/master-data/ward", body);
 
         JSONArray wards = response.getJSONArray("data");
 
         for (int i = 0; i < wards.length(); i++) {
             JSONObject ward = wards.getJSONObject(i);
 
-            if (normalize(ward.getString("WardName"))
-                    .equals(normalize(wardName))) {
+            if (normalize(ward.getString("WardName")).equals(normalize(wardName))) {
                 return ward.getString("WardCode");
             }
         }
@@ -141,7 +138,7 @@ public class GHNApiUtil {
         throw new Exception("No service available");
     }
 
-    public static int calculateShippingFee(int toDistrictId,String toWardCode,int weight,int serviceId) throws Exception {
+    public static int calculateShippingFee(int toDistrictId, String toWardCode, int weight, int serviceId) throws Exception {
 
         JSONObject body = new JSONObject();
         body.put("shop_id", SHOP_ID);
@@ -154,11 +151,12 @@ public class GHNApiUtil {
         body.put("width", 20);
         body.put("weight", weight);
 
-        JSONObject response =sendPostRequest("/v2/shipping-order/fee", body);
+        JSONObject response = sendPostRequest("/v2/shipping-order/fee", body);
 
         return response.getJSONObject("data").getInt("total");
     }
-    public static long getLeadTime(int toDistrictId,String toWardCode,int serviceId) throws Exception {
+
+    public static long getLeadTime(int toDistrictId, String toWardCode, int serviceId) throws Exception {
         JSONObject body = new JSONObject();
         body.put("from_district_id", FROM_DISTRICT_ID);
         body.put("from_ward_code", FROM_WARD_CODE);
@@ -166,8 +164,7 @@ public class GHNApiUtil {
         body.put("to_ward_code", toWardCode);
         body.put("service_id", serviceId);
 
-        JSONObject response =
-                sendPostRequest("/v2/shipping-order/leadtime", body);
+        JSONObject response = sendPostRequest("/v2/shipping-order/leadtime", body);
 
         return response.getJSONObject("data").getLong("leadtime");
     }
@@ -183,21 +180,11 @@ public class GHNApiUtil {
 
         return response.getJSONArray("data");
     }
+
     public static String normalize(String s) {
         if (s == null) return "";
 
-        return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "")
-                .toLowerCase()
-                .replace("thanh pho", "")
-                .replace("tp", "")
-                .replace("tinh", "")
-                .replace("quan", "")
-                .replace("huyen", "")
-                .replace("phuong", "")
-                .replace("xa", "")
-                .replaceAll("\\s+", " ")
-                .trim();
+        return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase().replace("thanh pho", "").replace("tp", "").replace("tinh", "").replace("quan", "").replace("huyen", "").replace("phuong", "").replace("xa", "").replaceAll("\\s+", " ").trim();
     }
 
 
@@ -259,5 +246,86 @@ public class GHNApiUtil {
 //
 //        System.out.println(calculateShippingFee(toDistrictId,toWardCode,300,53321));
     }
+
+    public static String createOrder(model.Order order, model.Shipping shippingInfo) {
+        try {
+            int toProvinceId = getProvinceIdByName(shippingInfo.getCity());
+            int toDistrictId = getDistrictIdByName(
+                    shippingInfo.getDistricts(),
+                    toProvinceId
+            );
+            String toWardCode = getWardCodeByName(
+                    shippingInfo.getWard(),
+                    toDistrictId
+            );
+
+            int serviceId = getServiceId(toDistrictId);
+
+            String phone = String.valueOf(shippingInfo.getPhone());
+            if (!phone.startsWith("0")) {
+                phone = "0" + phone;
+            }
+
+            JSONObject body = new JSONObject();
+            body.put("payment_type_id", 2);
+            body.put("required_note", "CHOXEMHANGKHONGTHU");
+            body.put("note", order.getNote() == null ? "" : order.getNote());
+
+            body.put("client_order_code", String.valueOf(order.getId()));
+
+            body.put("to_name", shippingInfo.getReceiver());
+            body.put("to_phone", phone);
+            body.put("to_address", shippingInfo.getSpecificAddress());
+
+            body.put("to_ward_code", toWardCode);
+            body.put("to_district_id", toDistrictId);
+
+            body.put("cod_amount", (int) order.getTotalAmount());
+
+            body.put("weight", 500);
+            body.put("length", 15);
+            body.put("width", 15);
+            body.put("height", 15);
+
+            body.put("service_id", serviceId);
+            JSONArray items = new JSONArray();
+
+            JSONObject item = new JSONObject();
+            item.put("name", "Đơn hàng #" + order.getId());
+            item.put("quantity", 1);
+            item.put("price", (int) order.getTotalAmount());
+            item.put("length", 15);
+            item.put("width", 15);
+            item.put("height", 15);
+            item.put("weight", 500);
+
+            items.put(item);
+
+            body.put("items", items);
+            System.out.println("===== GHN REQUEST =====");
+            System.out.println(body.toString(2));
+
+            JSONObject response = sendPostRequest(
+                    "/v2/shipping-order/create",
+                    body
+            );
+            System.out.println("===== GHN RESPONSE =====");
+            System.out.println(response.toString(2));
+
+            if (response.has("code") && response.getInt("code") == 200) {
+                return response.getJSONObject("data")
+                        .getString("order_code");
+            }
+
+            throw new RuntimeException(
+                    "GHN Error: " + response.toString()
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

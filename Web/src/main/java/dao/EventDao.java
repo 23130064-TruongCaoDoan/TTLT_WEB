@@ -30,7 +30,7 @@ public class EventDao extends BaseDao {
                 handle.createQuery("""
                 SELECT *
                 FROM events
-                WHERE start_date <= NOW()
+                WHERE is_deleted=0 AND start_date <= NOW()
                   AND end_date >= NOW()
                 ORDER BY start_date ASC
             """)
@@ -67,14 +67,9 @@ public class EventDao extends BaseDao {
 
     public boolean deleteEvent(int id) {
         return getJdbi().inTransaction(handle -> {
-            int count1 = handle.createUpdate(
-                    "DELETE FROM event_books WHERE event_id = :id"
-            ).bind("id", id).execute();
-
             int count = handle.createUpdate(
-                    "DELETE FROM events WHERE id = :id"
+                    "UPDATE events SET is_deleted = 1 WHERE id = :id"
             ).bind("id", id).execute();
-
             return count > 0;
         });
     }
@@ -248,7 +243,7 @@ public class EventDao extends BaseDao {
 
             StringBuilder sql = new StringBuilder(
                     "SELECT * " +
-                            "FROM events WHERE 1=1"
+                            "FROM events WHERE is_deleted=0"
             );
 
             if (q != null) {
@@ -278,13 +273,13 @@ public class EventDao extends BaseDao {
 
     public int getCountActiveEvent() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*) FROM events WHERE CURDATE() BETWEEN start_date AND end_date ")
+                handle.createQuery("SELECT COUNT(*) FROM events WHERE is_deleted=0 AND CURDATE() BETWEEN start_date AND end_date ")
                         .mapTo(Integer.class).one()
                 );
     }
     public int getCountInactiveEvent() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*) FROM events WHERE NOT (CURDATE() BETWEEN start_date AND end_date) ")
+                handle.createQuery("SELECT COUNT(*) FROM events WHERE is_deleted=0 AND NOT (CURDATE() BETWEEN start_date AND end_date) ")
                         .mapTo(Integer.class).one()
         );
     }

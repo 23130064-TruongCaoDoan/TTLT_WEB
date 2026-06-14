@@ -115,6 +115,6 @@ public class EventService {
         return eventDao.getCountActiveEvent();
     }
     public int getCountInactiveEvent() {
-        return eventDao.getCountActiveEvent();
+        return eventDao.getCountInactiveEvent();
     }
 }
