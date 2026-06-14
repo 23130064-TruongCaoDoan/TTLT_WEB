@@ -24,8 +24,6 @@ public class UserThongBaoServlet extends HttpServlet {
             return;
         }
 
-//        service.readAll(user.getId());
-//        req.getSession().setAttribute("numNotiFy", 0);
 
         List<Notification> list =
                 service.getUserNotifications(user.getId());

@@ -29,7 +29,7 @@ public class UserDao extends BaseDao {
 
     public List<User> getListUser() {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT * FROM User")
+                handle.createQuery("SELECT u.* , r.role_name FROM USER u INNER JOIN ROLES r ON r.id = u.role")
                         .mapToBean(User.class)
                         .list()
         );
@@ -67,10 +67,10 @@ public class UserDao extends BaseDao {
 
     public List<UserWithTotalSpentDTO> getUserWithTotalSpent(String q, String sortStock, String roleFilter, String statusFilter) {
         StringBuilder sql = new StringBuilder("""
-            SELECT u.id, u.name, u.email, u.point, u.role, COALESCE(SUM(o.total_amount), 0) AS total_spent, u.status 
+            SELECT u.id, u.name, u.email, u.point, u.role, COALESCE(SUM(o.total_amount), 0) AS total_spent, u.status
             FROM user u 
-            LEFT JOIN orders o ON u.id = o.user_id 
-            WHERE 1=1 
+            LEFT JOIN orders o ON u.id = o.user_id
+            WHERE 1=1
         """);
 
         if (q != null && !q.trim().isEmpty()) {
@@ -293,5 +293,10 @@ public class UserDao extends BaseDao {
                         .bind("id",id)
                         .mapTo(Timestamp.class).one()
                 );
+    }
+
+    public static void main(String[] args) {
+        UserDao userDao = new UserDao();
+        System.out.println(userDao.getListUser());
     }
 }

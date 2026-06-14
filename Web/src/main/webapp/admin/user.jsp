@@ -108,12 +108,9 @@
                                                 this.form.submit();
                                                 ">
                                             <c:forEach var="r" items="${roles}">
-                                                <c:if test="${!(sessionScope.user.role == 2 && (r.id == 1 || r.id == 2))}">
-                                                    <option value="${r.id}"
-                                                            <c:if test="${r.id == u.role}">selected</c:if>>
+                                                    <option value="${r.id}"${r.id == u.role ? 'selected' : ''}>
                                                             ${r.roleName}
                                                     </option>
-                                                </c:if>
                                             </c:forEach>
                                         </select>
                                     </form>
@@ -290,8 +287,14 @@
             <div style="flex: 1;">
                 <label>Phân quyền</label>
                 <select name="role">
-                    <option value="0">USER</option>
-                    <option value="1">ADMIN</option>
+                    <c:forEach var="r" items="${roles}">
+                        <c:if test="${!(sessionScope.user.role == 2 && (r.id == 1 || r.id == 2))}">
+                            <option value="${r.id}"
+                                    <c:if test="${r.id == u.role}">selected</c:if>>
+                                    ${r.roleName}
+                            </option>
+                        </c:if>
+                    </c:forEach>
                 </select>
             </div>
             <div style="flex: 1;">
@@ -448,6 +451,9 @@
                 block.style.pointerEvents = "auto";
             }
         }
+</script>
+<script>
+    alert(err)
 </script>
 
 </body>

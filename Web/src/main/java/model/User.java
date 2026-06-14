@@ -117,7 +117,7 @@ public class User {
 
     @Override
     public String toString() {
-        return name;
+        return name + roleName+"role: "+ role;
     }
 
     public String getDisplayName() {
