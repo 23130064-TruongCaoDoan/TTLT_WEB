@@ -50,6 +50,9 @@
                     <c:if test="${canImport}">
                         <button id="add" type="button">Thêm sản phẩm</button>
                     </c:if>
+                    <a href="downloadTemplateFileExcel" class="btn-downloadFile">
+                        Tải mẫu nhập sách excel
+                    </a>
                     <div class="find">
                     <div class="search-wrapper admin-search">
                         <input type="text"
