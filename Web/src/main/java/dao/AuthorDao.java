@@ -43,7 +43,7 @@ public class AuthorDao extends BaseDao {
         );
     }
     public Integer addAuthorFromFile(Author author) {
-        String penName = author.getPenName()==null?author.getName():author.getPenName();
+        String penName = author.getPenName().isEmpty()?author.getName():author.getPenName();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         LocalDate localDate = LocalDate.parse(author.getBirthday(), formatter);
