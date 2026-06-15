@@ -65,32 +65,33 @@
     <c:import url="/user/footerUser.jsp"></c:import>
 </div>
 <script>
+
     document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", function () {
             const id = this.dataset.id;
             const card = this.closest(".address-card");
 
-            if (!confirm("Bạn có chắc muốn xóa địa chỉ này không?")) return;
-
-            fetch("deleteAddress", {
-                method: "POST",
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                body: "id=" + encodeURIComponent(id)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        card.remove();
-                        checkEmpty();
-                        alert("Xóa địa chỉ thành công!");
-                    } else {
-                        alert("Lỗi: " + data.message);
-                    }
+            showConfirm("Bạn có chắc muốn xóa địa chỉ này không?", () => {
+                fetch("deleteAddress", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: "id=" + encodeURIComponent(id)
                 })
-                .catch(err => {
-                    console.error(err);
-                    alert("Có lỗi xảy ra khi xóa!");
-                });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            card.remove();
+                            checkEmpty();
+                            showToast("Xóa địa chỉ thành công!");
+                        } else {
+                            showToast("Lỗi: " + data.message, false);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast("Có lỗi xảy ra khi xóa!", false);
+                    });
+            });
         });
     });
 

@@ -1,3 +1,7 @@
+.Menu .menfunction .rating {
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
 .dashboard {
     flex: 5;
     padding: 25px 35px;

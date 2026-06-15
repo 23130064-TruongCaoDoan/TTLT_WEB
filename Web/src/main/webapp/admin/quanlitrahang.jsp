@@ -64,8 +64,22 @@
         </div>
     </div>
 </main>
-
 <script>
+function show(message, isSuccess = true) {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.classList.remove("success", "error");
+    if (isSuccess) {
+        toast.classList.add("success");
+    } else {
+        toast.classList.add("error");
+    }
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
+
 function processReturn(requestId, action) {
     let data = new URLSearchParams();
     data.append("requestId", requestId);
@@ -81,8 +95,10 @@ function processReturn(requestId, action) {
         method: 'POST',
         body: data
     }).then(res => res.json()).then(data => {
-        alert(data.message);
-        if(data.success) location.reload();
+        show(data.message, data.success);
+        if(data.success) {
+            setTimeout(() => location.reload(), 1500);
+        }
     });
 }
 </script>

@@ -1,10 +1,11 @@
-.detail-container{
+.detail-container {
     width: 80%;
     height: fit-content;
     color: #0d3164;
     font-family: Arial, sans-serif;
 }
-.detail-container .detail{
+
+.detail-container .detail {
     width: 100%;
     height: fit-content;
     align-content: center;
@@ -44,10 +45,12 @@
     object-fit: cover;
     cursor: pointer;
 }
+
 .detail-container .detail .thumbnail.active {
     border: 2px solid #007bff;
     opacity: 0.8;
 }
+
 .detail-container .detail .main-img {
     float: none;
     flex-grow: 1;
@@ -64,7 +67,8 @@
     object-fit: contain;
     box-shadow: 0 4px 15px rgba(226, 225, 225, 0.4);
 }
-.detail-container .detail .describe{
+
+.detail-container .detail .describe {
     width: 44%;
     float: right;
     display: flex;
@@ -73,7 +77,7 @@
     margin-top: -730px;
 }
 
-.detail-container .detail .book-name{
+.detail-container .detail .book-name {
     float: left;
     text-align: left;
     font-size: 30px;
@@ -82,22 +86,26 @@
     font-weight: bold;
     margin-top: 14px;
 }
-.detail-container .detail .rating{
+
+.detail-container .detail .rating {
     float: left;
     margin-top: 0;
 }
-.detail-container .detail .price-cart{
+
+.detail-container .detail .price-cart {
     width: 100%;
     gap: 20px;
     display: flex;
     justify-content: space-between;
 }
+
 .detail-container .quantity {
     text-align: center;
     width: 80px;
     height: fit-content;
 }
-.detail-container  .quantity .number-input {
+
+.detail-container .quantity .number-input {
     margin: 0;
     display: flex;
     align-items: center;
@@ -105,67 +113,80 @@
     height: 25px;
     overflow: hidden;
 }
-.detail-container  .quantity .number-input input {
+
+.detail-container .quantity .number-input input {
     width: 100%;
     text-align: center;
     border: none;
     outline: none;
 }
-.detail-container  .quantity .number-input button {
+
+.detail-container .quantity .number-input button {
     border: none;
     background-color: white;
     height: 20px;
 }
-.detail-container  .quantity .number-input button:hover {
+
+.detail-container .quantity .number-input button:hover {
     background-color: #0d3164;
     color: white;
     cursor: pointer;
 }
-.detail-container .detail .price-cart button{
+
+.detail-container .detail .price-cart button {
     height: 40px;
     border-radius: 10px;
     border: none;
     font-weight: bold;
     color: #0d3164;
 }
-.detail-container .detail .price-cart button:hover{
+
+.detail-container .detail .price-cart button:hover {
     cursor: pointer;
 }
-.detail-container .detail .price-cart #cart a{
+
+.detail-container .detail .price-cart #cart a {
     text-decoration: none;
     color: #0d3164;
 }
-.detail-container .detail #buy{
+
+.detail-container .detail #buy {
     width: 100px;
     background-color: orangered;
     color: white;
 }
-.detail-container .detail a{
+
+.detail-container .detail a {
     text-decoration: none;
     color: white;
 }
-.detail-container .detail #buy:hover{
+
+.detail-container .detail #buy:hover {
     cursor: pointer;
 }
-.detail-container .detail .price{
+
+.detail-container .detail .price {
     line-height: 1.8px;
     margin-top: 15px;
     color: #008000;
 }
-.detail-container .detail .price strike{
+
+.detail-container .detail .price strike {
     color: gray;
 }
-.detail-container .detail .program{
+
+.detail-container .detail .program {
     margin-top: 10px;
     line-height: 2px;
     height: fit-content;
-    width:100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background-color: #d5ebdb;
     font-weight: bold;
 }
-.detail-container .book-content{
+
+.detail-container .book-content {
     width: 100%;
     margin-left: 10%;
     line-height: 1.1;
@@ -175,15 +196,18 @@
     border-radius: 4px;
     color: #0d3164;
 }
-.detail-container .book-content h5{
+
+.detail-container .book-content h5 {
     line-height: 1.2px;
     color: #0d3164;
 }
-.detail-container .book-content p{
+
+.detail-container .book-content p {
     line-height: 1.3;
     margin-left: 15px;
     color: #0d3164;
 }
+
 /*chi tiết sản phẩm*/
 .detail-container .product-info {
     background: #fff;
@@ -194,6 +218,7 @@
     margin: 30px auto;
 
 }
+
 .detail-container .product-info h3 {
     font-size: 18px;
     font-weight: 700;
@@ -236,6 +261,7 @@
 .detail-container .product-info .link:hover {
     text-decoration: underline;
 }
+
 /* --- CSS Chung cho Khu vực Đánh giá --- */
 .reviews-section {
     font-family: Arial, sans-serif;
@@ -262,11 +288,13 @@
 .rating-score h2 {
     font-size: 48px;
     margin: 0;
-    color: #4CAF50; /* Màu xanh lá cho điểm cao */
+    color: #4CAF50;
+    /* Màu xanh lá cho điểm cao */
 }
 
 .rating-score .stars {
-    color: #FFD700; /* Màu vàng cho sao */
+    color: #FFD700;
+    /* Màu vàng cho sao */
     font-size: 20px;
     margin: 5px 0;
 }
@@ -338,7 +366,8 @@
     gap: 25px;
     margin-top: 15px;
     padding-bottom: 8px;
-    border-bottom: 2px solid #0056b3; /* Màu xanh đậm cho tab active */
+    border-bottom: 2px solid #0056b3;
+    /* Màu xanh đậm cho tab active */
 }
 
 .nav-item {
@@ -351,8 +380,10 @@
 
 .nav-item.active {
     color: #0056b3;
-    border-bottom: 2px solid #0056b3; /* Tạo viền dưới cho tab active */
-    margin-bottom: -2px; /* Dịch chuyển để viền trùng khớp */
+    border-bottom: 2px solid #0056b3;
+    /* Tạo viền dưới cho tab active */
+    margin-bottom: -2px;
+    /* Dịch chuyển để viền trùng khớp */
 }
 
 /* --- Khu vực sắp xếp --- */
@@ -367,49 +398,61 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 /*slogan*/
-.recommend{
+.recommend {
     text-align: center;
     margin-top: 20px;
 }
-.recommend .slogan h3{
+
+.recommend .slogan h3 {
     font-weight: bold;
     font-size: 35px;
     color: #0d3164;
 }
-.recommend .valua-container img{
+
+.recommend .valua-container img {
     height: 150px;
     width: 150px;
     border-radius: 50%;
 }
-.recommend .valua-container figcaption{
+
+.recommend .valua-container figcaption {
     margin-top: 10px;
 }
-.recommend .valua-container{
+
+.recommend .valua-container {
     display: flex;
     justify-content: center;
 }
-.recommend .list-product{
+
+.recommend .list-product {
     display: flex;
     justify-content: center;
     gap: 12px;
 }
-.recommend .list-product .card{
+
+.recommend .list-product .card {
     border: 1px solid #0d3164;
     border-radius: 0;
 }
-.recommend .list-product .card img{
+
+.recommend .list-product .card img {
     height: 150px;
     width: 100px;
 }
-.detail .describe .fa-heart{
+
+.detail .describe .fa-heart {
     font-size: 25px;
 }
-.detail .describe .fa-heart:hover{
+
+.detail .describe .fa-heart:hover {
     cursor: pointer;
 }
+
 #reviewForm {
-    display: none; /* ẩn mặc định */
+    display: none;
+    /* ẩn mặc định */
     margin-top: 20px;
 }
 
@@ -420,7 +463,9 @@
     padding: 8px;
     margin: 8px 0;
 }
-#reviewStars option,#reviewStars{
+
+#reviewStars option,
+#reviewStars {
     color: #FFD700;
 }
 
@@ -432,9 +477,11 @@
     border: none;
     border-radius: 5px;
 }
-#submitReview:hover{
+
+#submitReview:hover {
     cursor: pointer;
 }
+
 .comment-list {
     padding-top: 20px;
 }
@@ -468,6 +515,7 @@
 .comment-text {
     font-style: italic;
 }
+
 /* Ẩn các nút mũi tên trong input type="number" */
 .no-spinners {
     /* Cho Chrome, Edge, Safari */
@@ -484,14 +532,17 @@
     -webkit-appearance: none;
     margin: 0;
 }
-#commentSection{
+
+#commentSection {
     max-height: 500px;
     overflow: scroll;
 }
-#imgComment{
+
+#imgComment {
     max-width: 254px;
     max-height: 371px;
 }
+
 input[type="file"] {
     padding: 6px 10px;
     border: 1px solid #ccc;
@@ -511,6 +562,7 @@ input[type="file"]:focus {
     box-shadow: 0 0 3px 1px rgba(100, 150, 250, 0.5);
     border-color: #6496FA;
 }
+
 #addHeart {
     color: #aaa;
     cursor: pointer;
@@ -518,5 +570,67 @@ input[type="file"]:focus {
 }
 
 #addHeart.active {
-    color: red;
+}
+
+/* ===== HEART FAVOURITE ANIMATION ===== */
+#addHeart {
+    color: #bbb;
+    cursor: pointer;
+    font-size: 28px;
+    display: inline-block;
+    transition: color 0.25s ease, transform 0.15s ease;
+    user-select: none;
+    position: relative;
+}
+
+#addHeart:hover {
+    color: #ff8080;
+    transform: scale(1.2);
+}
+
+#addHeart.active {
+    color: #e53935;
+}
+
+#addHeart.heart-pop {
+    animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes heartPop {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(0.75); }
+    60%  { transform: scale(1.5); }
+    80%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* Trái tim bay lên kiểu Facebook */
+.float-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    font-size: 20px;
+    color: #e53935;
+    opacity: 0;
+    animation: floatUp var(--dur, 1.2s) ease-out forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes floatUp {
+    0%   {
+        opacity: 1;
+        transform: translateY(0) translateX(0) scale(0.5) rotate(var(--rot, 0deg));
+    }
+    20%  {
+        opacity: 1;
+        transform: translateY(-30px) translateX(var(--sway1, 5px)) scale(1.1);
+    }
+    60%  {
+        opacity: 0.8;
+        transform: translateY(-90px) translateX(var(--sway2, -8px)) scale(0.9);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-150px) translateX(var(--sway3, 10px)) scale(0.5);
+    }
 }

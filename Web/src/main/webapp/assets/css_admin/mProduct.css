@@ -295,12 +295,13 @@ textarea {
 
 .btn-import {
     display: inline-block;
-    padding: 10px 16px;
+    margin: 0;
+    padding: 7px 16px;
     background: #0d3164;
     color: white;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
 }
 #toast-container {
     position: fixed;

@@ -99,7 +99,7 @@
     </div>
 
     <div id="overlay"></div>
-    <div id="custom-toast"></div>
+
 
     <form id="taoNXBForm" method="post" action="${pageContext.request.contextPath}/admin-add-publisher">
         <h3>TẠO NHÀ XUẤT BẢN MỚI</h3>
@@ -167,11 +167,10 @@
     const suaNXBForm = document.getElementById("suaNXBForm");
 
     function showToast(message, type) {
-        const toast = document.getElementById("custom-toast");
+        const toast = document.getElementById("toast");
         toast.innerText = message;
         toast.classList.remove("success", "error", "show");
         toast.classList.add(type, "show");
-
         setTimeout(() => {
             toast.classList.remove("show");
         }, 3000);
@@ -215,12 +214,12 @@
     });
 
     function confirmDelete(id, name) {
-            if (confirm("Bạn có chắc chắn muốn xóa nhà xuất bản '" + name + "' không?")) {
-                document.getElementById("deleteId").value = id;
-                document.getElementById("deletePublisherName").value = name;
-                document.getElementById("deletePublisherForm").submit();
-            }
-        }
+        showConfirm("Bạn có chắc chắn muốn xóa nhà xuất bản '" + name + "' không?", () => {
+            document.getElementById("deleteId").value = id;
+            document.getElementById("deletePublisherName").value = name;
+            document.getElementById("deletePublisherForm").submit();
+        });
+    }
 
         addPublisherBtn.addEventListener("click", () => {
             overlay.style.display = "block";

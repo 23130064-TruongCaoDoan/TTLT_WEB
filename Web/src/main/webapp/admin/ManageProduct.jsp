@@ -25,74 +25,79 @@
                 <div class="cards">
                     <div class="card">
                         <i class="fa-solid fa-cart-shopping"></i>
-                            <h3>Số lượng sản phẩm đã bán</h3>
-                                <p><fmt:formatNumber value="${totalSoldProducts}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
+                        <h3>Số lượng sản phẩm đã bán</h3>
+                        <p><fmt:formatNumber value="${totalSoldProducts}" type="number" groupingUsed="true"
+                                             maxFractionDigits="0"/></p>
                     </div>
                     <div class="card">
                         <i class="fa-solid fa-warehouse"></i>
-                            <h3>Tổng tồn kho</h3>
-                                <p><fmt:formatNumber value="${totalStock}" type="number" groupingUsed="true" maxFractionDigits="0"/></p>
+                        <h3>Tổng tồn kho</h3>
+                        <p><fmt:formatNumber value="${totalStock}" type="number" groupingUsed="true"
+                                             maxFractionDigits="0"/></p>
                     </div>
                     <div class="card out-of-stock-card" title="Bấm để xem danh sách">
                         <i class="fa-solid fa-triangle-exclamation"></i>
-                            <h3>Sản phẩm đã hết</h3>
-                                <p>${outOfStockCount} sản phẩm</p>
+                        <h3>Sản phẩm đã hết</h3>
+                        <p>${outOfStockCount} sản phẩm</p>
                     </div>
                     <div class="card unsold-card" title="Bấm để xem danh sách" style="cursor: pointer;">
                         <i class="fa-solid fa-box-archive" style="color: #f39c12;"></i>
-                            <h3>Sản phẩm không bán được</h3>
-                                <p>${unsoldBooksCount} sản phẩm</p>
+                        <h3>Sản phẩm không bán được</h3>
+                        <p>${unsoldBooksCount} sản phẩm</p>
                     </div>
                 </div>
             </div>
-            <form class="uploadExcel" action="${pageContext.request.contextPath}/UploadFileExcel" method="post" enctype="multipart/form-data">
-                <label for="fileBooks" class="btn-import">Chọn file excel để import</label>
-                <input type="file" id="fileBooks" name="fileBooks" accept=".xlsx,.xls" hidden>
-            </form>
-            <form method="get" action="${pageContext.request.contextPath}/product-manage">
-                <div class="function">
-                    <c:if test="${canImport}">
-                        <button id="add" type="button">Thêm sản phẩm</button>
-                    </c:if>
-                    <a href="downloadTemplateFileExcel" class="btn-downloadFile">
-                        Tải mẫu nhập sách excel
-                    </a>
-                    <div class="find">
-                    <div class="search-wrapper admin-search">
-                        <input type="text"
-                               class="search-input"
-                               name="q"
-                               placeholder="Tìm kiếm sản phẩm"
-                               autocomplete="off"
-                               value="${param.q}"/>
-                               <div class="suggest-box"></div>
+            <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+                <form class="uploadExcel" action="${pageContext.request.contextPath}/UploadFileExcel" method="post"
+                      enctype="multipart/form-data">
+                    <label for="fileBooks" class="btn-import">Chọn file excel để import</label>
+                    <input type="file" id="fileBooks" name="fileBooks" accept=".xlsx,.xls" hidden>
+                </form>
+                <form method="get" action="${pageContext.request.contextPath}/product-manage">
+                    <div class="function">
+                        <c:if test="${canImport}">
+                            <button id="add" type="button" >Thêm sản phẩm</button>
+                        </c:if>
+                        <a href="downloadTemplateFileExcel" class="btn-downloadFile">
+                            Tải mẫu nhập sách excel
+                        </a>
+                        <div class="find">
+                            <div class="search-wrapper admin-search">
+                                <input type="text"
+                                       class="search-input"
+                                       name="q"
+                                       placeholder="Tìm kiếm sản phẩm"
+                                       autocomplete="off"
+                                       value="${param.q}"/>
+                                <div class="suggest-box"></div>
+                            </div>
+                            <button class="buttonSearch" type="submit">Tìm kiếm</button>
                         </div>
-                        <button class="buttonSearch" type="submit">Tìm kiếm</button>
                     </div>
-                </div>
-                <div class="title">
-                    <h3>Danh sách sản phẩm</h3>
-                    <div>
-                        <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
-                            <option value="">Tất cả</option>
-                            <option value="asc" ${param.sortStock == 'asc' ? 'selected' : ''}>
-                                Số lượng tăng dần
-                            </option>
-                            <option value="desc" ${param.sortStock == 'desc' ? 'selected' : ''}>
-                                Số lượng giảm dần
-                            </option>
-                        </select>
+            </div>
+            <div class="title">
+                <h3>Danh sách sản phẩm</h3>
+                <div>
+                    <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <option value="asc" ${param.sortStock == 'asc' ? 'selected' : ''}>
+                            Số lượng tăng dần
+                        </option>
+                        <option value="desc" ${param.sortStock == 'desc' ? 'selected' : ''}>
+                            Số lượng giảm dần
+                        </option>
+                    </select>
 
-                        <select class="filter-sp" name="type" onchange="this.form.submit()">
-                            <option value="">Tất cả</option>
-                            <c:forEach var="t" items="${types}">
-                                <option value="${t}" ${param.type == t ? 'selected' : ''}>
-                                        ${t}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
+                    <select class="filter-sp" name="type" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <c:forEach var="t" items="${types}">
+                            <option value="${t}" ${param.type == t ? 'selected' : ''}>
+                                    ${t}
+                            </option>
+                        </c:forEach>
+                    </select>
                 </div>
+            </div>
             </form>
             <div class="table-wrapper">
                 <table>
@@ -116,8 +121,9 @@
                             <td>${p.bookCode}</td>
                             <td>${p.title}</td>
                             <td>${p.author}</td>
-                            <td style="white-space: nowrap;" ><p><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"
-                                                  maxFractionDigits="0"/> đ</p></td>
+                            <td style="white-space: nowrap;"><p><fmt:formatNumber value="${p.price}" type="number"
+                                                                                  groupingUsed="true"
+                                                                                  maxFractionDigits="0"/> đ</p></td>
                             <td>${p.stock}</td>
                             <td>${p.salesPercentage}%</td>
                             <td>${p.type}</td>
@@ -178,170 +184,175 @@
 </main>
 
 <div id="overlay"></div>
-    <form id="bookForm" method="post" action="${pageContext.request.contextPath}/product-manage"
-          enctype="multipart/form-data">
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Mã Sách</label>
-                <input type="text" id="code" name="code" placeholder="Nhập mã sách" required>
-            </div>
+<form id="bookForm" method="post" action="${pageContext.request.contextPath}/product-manage"
+      enctype="multipart/form-data">
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Mã Sách</label>
+            <input type="text" id="code" name="code" placeholder="Nhập mã sách" required>
+        </div>
 
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Tên sách</label>
-                <input type="text" id="title" name="title" placeholder="Nhập tên sách">
-            </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Tên sách</label>
+            <input type="text" id="title" name="title" placeholder="Nhập tên sách">
+        </div>
 
-            <div class="form-group hiddenWhenCodeExist" >
-                <label>Tác giả</label>
-                <select name="author_id" required>
-                    <c:forEach var="a" items="${authors}">
-                        <option value="${a.id}">${a.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-            <div class="form-group hiddenWhenFix">
-                <label>Giá nhập</label>
-                <input type="number" name="price_import" placeholder="VD: 40000" required>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Giá bán</label>
-                <input type="number" name="price" placeholder="VD: 50000" required>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Giá khuyến mãi</label>
-                <input type="number" name="price_discounted" placeholder="VD: 45000">
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Độ tuổi</label>
-                <input type="number" name="age" placeholder="VD: 6" required>
-            </div>
-            <div class="form-group">
-                <label>Nhà cung cấp</label>
-                <input type="text" name="provider" placeholder="VD: Tên nhà cung cấp">
-            </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Tác giả</label>
+            <select name="author_id" required>
+                <c:forEach var="a" items="${authors}">
+                    <option value="${a.id}">${a.name}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="form-group hiddenWhenFix">
+            <label>Giá nhập</label>
+            <input type="number" name="price_import" placeholder="VD: 40000" required>
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Giá bán</label>
+            <input type="number" name="price" placeholder="VD: 50000" required>
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Giá khuyến mãi</label>
+            <input type="number" name="price_discounted" placeholder="VD: 45000">
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Độ tuổi</label>
+            <input type="number" name="age" placeholder="VD: 6" required>
+        </div>
+        <div class="form-group">
+            <label>Nhà cung cấp</label>
+            <input type="text" name="provider" placeholder="VD: Tên nhà cung cấp">
+        </div>
 
-            <div class="form-group ">
-                <label>Số lượng</label>
-                <input type="number" id="quantity" name="stock" placeholder="VD: 50" required>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Ảnh bìa</label>
-                <input type="file" id="img-main" name="img-main" accept="image/*" placeholder="link ảnh">
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Hình ảnh chi tiết</label>
-                <input type="file" name="imgDetail" multiple>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Loại sách</label>
-                <input type="text" id="type" name="type" placeholder="Truyện tranh, sách ảnh...." required>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Nhà xuất bản</label>
-                <input type="text" id="publisher" name="publisher" placeholder="Tên nhà xuất bản" required>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Trọng lượng sách</label>
-                <input type="number" id="weight" name="weight" placeholder="VD: 10 gram">
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Kích thước</label>
-                <input type="text" id="size" name="size" placeholder="VD: 17x14">
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Số Trang</label>
-                <input type="number" id="page_number" name="pageNumber" placeholder="VD: 30">
-            </div>
-            <div class="form-group-inline hiddenWhenCodeExist" >
-                <div>
-                    <label>Ngày xuất bản</label>
-                    <input type="date" id="start_date" name="startDate" required>
-                </div>
-            </div>
-            <div class="form-group hiddenWhenCodeExist">
-                <label>Định dạng</label>
-                <input type="text" name="format" placeholder="Bìa mềm / Bìa cứng" required>
+        <div class="form-group ">
+            <label>Số lượng</label>
+            <input type="number" id="quantity" name="stock" placeholder="VD: 50" required>
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Ảnh bìa</label>
+            <input type="file" id="img-main" name="img-main" accept="image/*" placeholder="link ảnh">
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Hình ảnh chi tiết</label>
+            <input type="file" name="imgDetail" multiple>
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Loại sách</label>
+            <input type="text" id="type" name="type" placeholder="Truyện tranh, sách ảnh...." required>
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Nhà xuất bản</label>
+            <input type="text" id="publisher" name="publisher" placeholder="Tên nhà xuất bản" required>
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Trọng lượng sách</label>
+            <input type="number" id="weight" name="weight" placeholder="VD: 10 gram">
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Kích thước</label>
+            <input type="text" id="size" name="size" placeholder="VD: 17x14">
+        </div>
+        <div class="form-group hiddenWhenCodeExist">
+            <label>Số Trang</label>
+            <input type="number" id="page_number" name="pageNumber" placeholder="VD: 30">
+        </div>
+        <div class="form-group-inline hiddenWhenCodeExist">
+            <div>
+                <label>Ngày xuất bản</label>
+                <input type="date" id="start_date" name="startDate" required>
             </div>
         </div>
         <div class="form-group hiddenWhenCodeExist">
-            <label>Mô tả</label>
-            <textarea name="description" id="description" cols="10" rows="4" placeholder="mô tả về sách"></textarea>
-        </div>
-        <input type="hidden" name="id" id="bookId">
-        <c:if test="${canImport}">
-            <button type="submit" class="btn-save">Thêm sản phẩm</button>
-        </c:if>
-    </form>
-
-    <div id="out-of-stock-panel">
-            <div id="out-of-stock-container">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Mã sách</th>
-                            <th>Tên sách</th>
-                            <th>Tác giả</th>
-                            <th>Giá</th>
-                            <th>Số lượng</th>
-                            <th>Loại sách</th>
-                            <th>Độ tuổi</th>
-                            <th>Hình ảnh</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${outOfStockBooks}" var="b">
-                            <tr>
-                                <td>${b.bookCode}</td>
-                                <td>${b.title}</td>
-                                <td>—</td>
-                                <td><fmt:formatNumber value="${b.price}" type="number"
-                                                      groupingUsed="true" maxFractionDigits="0"/></td>
-                                <td style="color: red; font-weight: bold;">0</td>
-                                <td>${b.type}</td>
-                                <td>${b.age}+</td>
-                                <td><img src="${b.coverImgUrl}" width="60"></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-    </div>
-
-    <div id="unsold-panel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 9999;">
-        <div id="unsold-container" style="background: #fff; padding: 25px; height: 80%; border-radius: 12px; width: 80%; overflow-y: auto;">
-            <h2 style="color: #0d3164; text-align: center; margin-bottom: 20px;">Danh sách sản phẩm không bán được</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Mã sách</th>
-                            <th>Tên sách</th>
-                            <th>Giá</th>
-                            <th>Tồn kho</th>
-                            <th>Loại sách</th>
-                            <th>Độ tuổi</th>
-                            <th>Hình ảnh</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${unsoldBooks}" var="b">
-                            <tr>
-                                <td>${b.bookCode}</td>
-                                <td>${b.title}</td>
-                                <td><fmt:formatNumber value="${b.price}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
-                                <td>${b.stock}</td> <td>${b.type}</td>
-                                <td>${b.age}+</td>
-                                <td><img src="${b.coverImgUrl}" width="60"></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
+            <label>Định dạng</label>
+            <input type="text" name="format" placeholder="Bìa mềm / Bìa cứng" required>
         </div>
     </div>
-<div id="toast-container"></div>
+    <div class="form-group hiddenWhenCodeExist">
+        <label>Mô tả</label>
+        <textarea name="description" id="description" cols="10" rows="4" placeholder="mô tả về sách"></textarea>
+    </div>
+    <input type="hidden" name="id" id="bookId">
+    <c:if test="${canImport}">
+        <button type="submit" class="btn-save">Thêm sản phẩm</button>
+    </c:if>
+</form>
+
+<div id="out-of-stock-panel">
+    <div id="out-of-stock-container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã sách</th>
+                    <th>Tên sách</th>
+                    <th>Tác giả</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Loại sách</th>
+                    <th>Độ tuổi</th>
+                    <th>Hình ảnh</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${outOfStockBooks}" var="b">
+                    <tr>
+                        <td>${b.bookCode}</td>
+                        <td>${b.title}</td>
+                        <td>—</td>
+                        <td><fmt:formatNumber value="${b.price}" type="number"
+                                              groupingUsed="true" maxFractionDigits="0"/></td>
+                        <td style="color: red; font-weight: bold;">0</td>
+                        <td>${b.type}</td>
+                        <td>${b.age}+</td>
+                        <td><img src="${b.coverImgUrl}" width="60"></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="unsold-panel"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 9999;">
+    <div id="unsold-container"
+         style="background: #fff; padding: 25px; height: 80%; border-radius: 12px; width: 80%; overflow-y: auto;">
+        <h2 style="color: #0d3164; text-align: center; margin-bottom: 20px;">Danh sách sản phẩm không bán được</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã sách</th>
+                    <th>Tên sách</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Loại sách</th>
+                    <th>Độ tuổi</th>
+                    <th>Hình ảnh</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${unsoldBooks}" var="b">
+                    <tr>
+                        <td>${b.bookCode}</td>
+                        <td>${b.title}</td>
+                        <td><fmt:formatNumber value="${b.price}" type="number" groupingUsed="true"
+                                              maxFractionDigits="0"/> đ
+                        </td>
+                        <td>${b.stock}</td>
+                        <td>${b.type}</td>
+                        <td>${b.age}+</td>
+                        <td><img src="${b.coverImgUrl}" width="60"></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="toast"></div>
 
 <script>
 
@@ -398,35 +409,35 @@
     });
 
     document.addEventListener("click", function (e) {
-            if (e.target.closest(".out-of-stock-card")) {
-                document.getElementById("out-of-stock-panel").style.display = "flex";
-            }
-            if (e.target.id === "out-of-stock-panel") {
-                e.target.style.display = "none";
-            }
-            if (e.target.closest(".unsold-card")) {
-                document.getElementById("unsold-panel").style.display = "flex";
-            }
-            if (e.target.id === "unsold-panel") {
-                e.target.style.display = "none";
-            }
-        });
+        if (e.target.closest(".out-of-stock-card")) {
+            document.getElementById("out-of-stock-panel").style.display = "flex";
+        }
+        if (e.target.id === "out-of-stock-panel") {
+            e.target.style.display = "none";
+        }
+        if (e.target.closest(".unsold-card")) {
+            document.getElementById("unsold-panel").style.display = "flex";
+        }
+        if (e.target.id === "unsold-panel") {
+            e.target.style.display = "none";
+        }
+    });
 
 </script>
 <script>
     const existing = [];
 
     <c:forEach var="bookCode" items="${listBookCode}">
-        existing.push("${bookCode}".trim());
+    existing.push("${bookCode}".trim());
     </c:forEach>
 
     const bookCodeInput = document.getElementById("code");
-    bookCodeInput.addEventListener("input", ()=>{
+    bookCodeInput.addEventListener("input", () => {
         const code = bookCodeInput.value.trim().toLowerCase();
         const isExist = existing.some(c => c.toLowerCase() === code);
         const hiddenFields = document.querySelectorAll(".hiddenWhenCodeExist");
-        hiddenFields.forEach(field =>{
-            field.style.display = isExist? "none":"";
+        hiddenFields.forEach(field => {
+            field.style.display = isExist ? "none" : "";
             const inputs = field.querySelectorAll("input, select, textarea");
             inputs.forEach(input => {
                 input.required = !isExist;
@@ -438,22 +449,37 @@
 </script>
 <script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 <script>
-    document.getElementById("fileBooks").addEventListener("change", function (){
+    document.getElementById("fileBooks").addEventListener("change", function () {
         if (!this.files.length) return;
         const form = document.querySelector(".uploadExcel");
         const formData = new FormData(form);
-        fetch(form.action,{
+        fetch(form.action, {
             method: "POST",
             body: formData
         })
-        .then(res => res.json())
-        .then(data => {
-            alert("Import thành công");
-        })
-        .catch(err => {
-            alert("Import thất bại");
-        });
+            .then(res => res.json())
+            .then(data => {
+                show("Import thành công");
+            })
+            .catch(err => {
+                show("Import thất bại", false);
+            });
     })
+
+    function show(message, isSuccess = true) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.classList.remove("success", "error");
+        if (isSuccess) {
+            toast.classList.add("success");
+        } else {
+            toast.classList.add("error");
+        }
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2000);
+    }
 </script>
 </body>
 </html>

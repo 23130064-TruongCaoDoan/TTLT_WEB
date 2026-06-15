@@ -91,7 +91,7 @@
                 if (data.success) {
                     btn.closest(".card").remove();
                 } else {
-                    alert(data.message);
+                    showToast(data.message, false);
                 }
             })
             .catch(err => console.error(err));

@@ -1,3 +1,11 @@
+.Menu .menfunction .import{
+    border-left: 3px solid #0d3164;
+    font-weight: bold;
+}
+.Menu .menfunction .qlsanpham {
+    border-left: none !important;
+    font-weight: normal !important;
+}
 #import-detail-popup {
     position: fixed;
     top: 50%;
