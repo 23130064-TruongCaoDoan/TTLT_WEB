@@ -45,6 +45,10 @@
                     </div>
                 </div>
             </div>
+            <form class="uploadExcel" action="${pageContext.request.contextPath}/UploadFileExcel" method="post" enctype="multipart/form-data">
+                <label for="fileBooks" class="btn-import">Chọn file excel để import</label>
+                <input type="file" id="fileBooks" name="fileBooks" accept=".xlsx,.xls" hidden>
+            </form>
             <form method="get" action="${pageContext.request.contextPath}/product-manage">
                 <div class="function">
                     <c:if test="${canImport}">
@@ -66,11 +70,9 @@
                         <button class="buttonSearch" type="submit">Tìm kiếm</button>
                     </div>
                 </div>
-
                 <div class="title">
                     <h3>Danh sách sản phẩm</h3>
                     <div>
-
                         <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
                             <option value="asc" ${param.sortStock == 'asc' ? 'selected' : ''}>
@@ -92,7 +94,6 @@
                     </div>
                 </div>
             </form>
-
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -340,6 +341,7 @@
                 </div>
         </div>
     </div>
+<div id="toast-container"></div>
 
 <script>
 
@@ -435,5 +437,23 @@
     });
 </script>
 <script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
+<script>
+    document.getElementById("fileBooks").addEventListener("change", function (){
+        if (!this.files.length) return;
+        const form = document.querySelector(".uploadExcel");
+        const formData = new FormData(form);
+        fetch(form.action,{
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Import thành công");
+        })
+        .catch(err => {
+            alert("Import thất bại");
+        });
+    })
+</script>
 </body>
 </html>

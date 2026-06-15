@@ -105,8 +105,11 @@ public class BookService {
         book.setQuantitySold(0);
         book.setAge(age);
         book.setIsSell(true);
-
-        hd.insert(book, detailImgUrls, employeeId);
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+        List<List<String>> allDetailImages = new ArrayList<>();
+        allDetailImages.add(detailImgUrls);
+        hd.insert(books, allDetailImages, employeeId);
     }
 
 
@@ -486,5 +489,8 @@ public class BookService {
 
     public List<Author> getAllAuthorsOb() {
         return hd.getAllAuthorsOb();
+    }
+    public void addBookFromFile(List<Book> books,List<List<String>> allDetailImage, int employeeId) {
+        hd.insert(books, allDetailImage, employeeId);
     }
 }

@@ -6,6 +6,7 @@ public class Author {
     private String name;
     private String bio;
     private String birthday;
+    private String penName;
 
     public Author() {
     }
@@ -40,5 +41,11 @@ public class Author {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+    public String getPenName() {
+        return penName;
+    }
+    public void setPenName(String penName) {
+        this.penName = penName;
     }
 }
