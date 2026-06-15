@@ -155,7 +155,7 @@ public class BookDao extends BaseDao {
                                                 ") VALUES (" +
                                                 ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
                                                 ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
-                                                ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
+                                                ":weight, :bookSize, :pagesNumber, :format, isSell, CURDATE(), :quantitySold, :stock" +
                                                 ")"
                                 )
                                 .bind("bookCode", book.getBookCode())
@@ -175,7 +175,7 @@ public class BookDao extends BaseDao {
                                 .bind("bookSize", book.getBookSize())
                                 .bind("pagesNumber", book.getPagesNumber())
                                 .bind("format", book.getFormat())
-                                .bind("isSell", book.getIsSell())          // 0 / 1
+                                .bind("isSell", 1)
                                 .bind("quantitySold", book.getQuantitySold())
                                 .bind("stock", book.getStock())
                                 .executeAndReturnGeneratedKeys("id")

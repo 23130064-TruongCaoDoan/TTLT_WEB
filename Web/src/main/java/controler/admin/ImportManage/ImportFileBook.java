@@ -93,28 +93,27 @@ public class ImportFileBook extends HttpServlet {
                 headerMap.put(normalizeString(cellValue), i);
             }
 
-            List<String> missingColumns = new ArrayList<>();
+            List<String> missingColum = new ArrayList<>();
 
             for (String col : requestColumns) {
                 if (!headerMap.containsKey(normalizeString(col))) {
-                    missingColumns.add(col);
-                }
-                if (!missingColumns.isEmpty()) {
-                    System.out.println("Thiếu cột: " + String.join(", ", missingColumns));
-                    request.getRequestDispatcher("admin/ManageProduct.jsp").forward(request, response);
-                    return;
+                    missingColum.add("Thiết cột "+col);
                 }
             }
-
+            if (!missingColum.isEmpty()) {
+                return;
+            }
             List<String> errors = new ArrayList<>();
+
             for (int i = 2; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                errors = validateBookRow(row, headerMap);
-                if (!errors.isEmpty()) {
-                    System.out.println("errorMessage"+ String.join(", ", errors));
-                    request.getRequestDispatcher("admin/ManageProduct.jsp").forward(request, response);
-                    return;
+                List<String> rowErrors = validateBookRow(row, headerMap);
+                for(String error : rowErrors){
+                    errors.add("Dòng " + (i + 1) + ": " + error);
                 }
+            }
+            if (!errors.isEmpty()) {
+                return;
             }
 
 

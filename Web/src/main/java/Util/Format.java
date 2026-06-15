@@ -2,6 +2,7 @@ package Util;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.text.DateFormat;
@@ -23,16 +24,17 @@ public class Format {
         return s == null ? "" : s.trim().toLowerCase();
     }
     public static String getCellString(Row row, Map<String, Integer> headerMap, String col) {
-        Cell cell = row.getCell(headerMap.get(normalizeString(col)));
+        Integer index = headerMap.get(normalizeString(col));
+        if (index == null) return "";
+        Cell cell = row.getCell(index);
         if (cell == null) return "";
+        DataFormatter formatter = new DataFormatter();
 
-        cell.setCellType(CellType.STRING);
-        return cell.getStringCellValue().trim();
+        return formatter.formatCellValue(cell).trim();
     }
     public static int getCellInt(Row row, Map<String, Integer> headerMap, String col) {
         Cell cell = row.getCell(headerMap.get(normalizeString(col)));
         if (cell == null) return 0;
-
         return (int) cell.getNumericCellValue();
     }
     public static double getCellDouble(Row row, Map<String, Integer> headerMap, String col) {
@@ -65,6 +67,7 @@ public class Format {
         if (priceImport == null || priceImport <= 0) {
             errors.add("Giá nhập phải > 0");
         }
+
         Integer quantity = getCellInt(row, headerMap, "số lượng");
         if (quantity == null || priceImport <= 0) {
             errors.add("Số lượng phải > 0");
