@@ -227,7 +227,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+
 </main>
 <div id="deleteOrderPopup" class="delete-popup">
     <p>Bạn có chắc chắn muốn xóa đơn hàng này không?</p>
@@ -257,37 +257,36 @@
         const sortDate = document.querySelector('select[name="sortDate"]')?.value || "all";
         const statusFilter = document.querySelector('select[name="statusFilter"]')?.value || "all";
 
-        if (!confirm("Bạn chắc chắn muốn thay đổi trạng thái?")) {
-            location.reload();
-            return;
-        }
+        showConfirm("Bạn chắc chắn muốn thay đổi trạng thái?", () => {
+            const data = new URLSearchParams();
+            data.append("orderId", orderId);
+            data.append("orderStatus", statusSelected);
+            data.append("q", q);
+            data.append("fromDate", fromDate);
+            data.append("toDate", toDate);
+            data.append("sortDate", sortDate);
+            data.append("statusFilter", statusFilter);
 
-        const data = new URLSearchParams();
-                data.append("orderId", orderId);
-                data.append("orderStatus", statusSelected);
-                data.append("q", q);
-                data.append("fromDate", fromDate);
-                data.append("toDate", toDate);
-                data.append("sortDate", sortDate);
-                data.append("statusFilter", statusFilter);
-
-        fetch(contextPath + "/UpdateOrderStatus", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: data.toString()
-        })
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById("wrapper").innerHTML = html;
-
-                bindStatusEvents();
+            fetch(contextPath + "/UpdateOrderStatus", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: data.toString()
             })
-            .catch(err => {
-                alert("Lỗi!");
-                console.error(err);
-            });
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("wrapper").innerHTML = html;
+
+                    bindStatusEvents();
+                })
+                .catch(err => {
+                    show("Lỗi!", false);
+                    console.error(err);
+                });
+        }, () => {
+            location.reload();
+        });
     }
 </script>
 <script>

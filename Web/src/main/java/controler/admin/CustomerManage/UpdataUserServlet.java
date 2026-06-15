@@ -50,6 +50,8 @@ public class UpdataUserServlet extends HttpServlet {
                 break;
             }
             case "role": {
+                int role = Integer.parseInt(value);
+                success = userService.updateRole(userId, role);
                 break;
             }
         }

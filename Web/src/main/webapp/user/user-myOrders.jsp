@@ -195,27 +195,27 @@
 
         const orderId = this.getAttribute("data-order-id");
 
-        if (!confirm("Bạn có chắc chắn muốn hủy đơn này?")) return;
-
-        fetch("cancel-order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "id=" + orderId
-        })
-            .then(res => {
-                if (res.ok) {
-                    alert("Đơn hàng hủy thành công");
-                    location.reload();
-                } else {
-                    alert("Đơn hàng không thể hủy!");
-                }
+        showConfirm("Bạn có chắc chắn muốn hủy đơn này?", () => {
+            fetch("cancel-order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "id=" + orderId
             })
-            .catch(err => {
-                console.error(err);
-                alert("Có lỗi xảy ra!");
-            });
+                .then(res => {
+                    if (res.ok) {
+                        showToast("Đơn hàng hủy thành công");
+                        location.reload();
+                    } else {
+                        showToast("Đơn hàng không thể hủy!", false);
+                    }
+                })
+                .catch(err => {
+                    console.error("Lỗi khi hủy đơn hàng:", err);
+                    showToast("Có lỗi xảy ra!", false);
+                });
+        });
     });
 </script>
 <script>
@@ -245,18 +245,18 @@
         .then(response => response.json())
         .then(data => {
             if(data.success) {
-                alert(data.message);
+                showToast(data.message);
                 closeReturnModal();
                 location.reload();
             } else {
-                alert(data.message);
+                showToast(data.message, false);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Gửi yêu cầu';
             }
         })
         .catch(err => {
             console.error(err);
-            alert("Lỗi khi tải ảnh hoặc kết nối server!");
+            showToast("Lỗi khi tải ảnh hoặc kết nối server!", false);
             submitBtn.disabled = false;
             submitBtn.textContent = 'Gửi yêu cầu';
         });

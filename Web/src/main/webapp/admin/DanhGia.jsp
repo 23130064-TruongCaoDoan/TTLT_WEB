@@ -199,13 +199,13 @@
 </main>
 <script>
     function deleteReview(id) {
-        if (!confirm("Bạn chắc chắn muốn xóa đánh giá này?")) return;
-
-        fetch('${pageContext.request.contextPath}/deleteRate', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: 'id=' + id
-        }).then(() => location.reload());
+        showConfirm("Bạn chắc chắn muốn xóa đánh giá này?", () => {
+            fetch('${pageContext.request.contextPath}/deleteRate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'id=' + id
+            }).then(() => location.reload());
+        });
     }
 
     function toggleActive(el) {

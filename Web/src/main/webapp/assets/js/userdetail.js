@@ -306,6 +306,15 @@ function saveInline(field) {
         input.focus();
         return;
     }
+
+    if (field === "role" && window.userId == window.loggedInUserId && value == "0") {
+        show("Bạn không thể tự bỏ quyền quản trị của chính mình", false);
+        return;
+    }
+    if (field === "status" && window.userId == window.loggedInUserId && value == "0") {
+        show("Bạn không thể tự bỏ trạng thái hoạt động của chính mình", false);
+        return;
+    }
     if (field === "email") {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {

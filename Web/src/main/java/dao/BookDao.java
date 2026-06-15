@@ -671,9 +671,9 @@ public class BookDao extends BaseDao {
             if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
             if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
             if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
-            if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
-            if (author != null && !author.isBlank()) sql.append("AND a.name = :author ");
-            if (publisher != null && !publisher.isBlank()) sql.append("AND b.publisher = :publisher ");
+            if (category != null && !category.isBlank()) sql.append("AND FIND_IN_SET(b.type, :category) > 0 ");
+            if (author != null && !author.isBlank()) sql.append("AND FIND_IN_SET(a.name, :author) > 0 ");
+            if (publisher != null && !publisher.isBlank()) sql.append("AND FIND_IN_SET(b.publisher, :publisher) > 0 ");
             if (age != null && !age.isBlank()) {
                 String[] parts = age.split("-");
                 sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
@@ -720,9 +720,9 @@ public class BookDao extends BaseDao {
             if (type == 2) sql.append("AND b.add_date IS NOT NULL ");
             if (type == 3) sql.append("AND b.id IN (SELECT book_id FROM favourite_books) ");
             if (type == 4 && idEvent > 0) sql.append("AND e.id = :idEvent ");
-            if (category != null && !category.isBlank()) sql.append("AND b.type = :category ");
-            if (author != null && !author.isBlank()) sql.append("AND a.name = :author ");
-            if (publisher != null && !publisher.isBlank()) sql.append("AND b.publisher = :publisher ");
+            if (category != null && !category.isBlank()) sql.append("AND FIND_IN_SET(b.type, :category) > 0 ");
+            if (author != null && !author.isBlank()) sql.append("AND FIND_IN_SET(a.name, :author) > 0 ");
+            if (publisher != null && !publisher.isBlank()) sql.append("AND FIND_IN_SET(b.publisher, :publisher) > 0 ");
             if (age != null && !age.isBlank()) {
                 String[] parts = age.split("-");
                 sql.append("AND b.age BETWEEN :ageFrom AND :ageTo ");
