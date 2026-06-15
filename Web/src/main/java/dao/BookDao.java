@@ -129,67 +129,70 @@ public class BookDao extends BaseDao {
     }
 
 
-    public void insert(Book book, List<String> detailImages, int employeeId) {
-        Integer bookIdOld = findBookByBookCode(book.getBookCode());
+    public void insert(List<Book> books, List<List<String>> allDetailImages, int employeeId) {
         getJdbi().useTransaction(h -> {
-            if(bookIdOld!=null){
-                h.createUpdate("""
-                        UPDATE books
-                        SET stock = stock + :quantity
-                        WHERE id = :bookId
-                        """)
-                        .bind("quantity", book.getStock())
-                        .bind("bookId", bookIdOld)
-                        .execute();
-                insertHistoryBookImport(h,bookIdOld,book, employeeId);
-                return;
-            }
-            else{
-                int bookId = h.createUpdate(
-                                "INSERT INTO books (" +
-                                        "book_code, title, author_id, price, price_discounted,price_import, type, age, " +
-                                        "cover_img_url, description, publisher, provider, published_date, " +
-                                        "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
-                                        ") VALUES (" +
-                                        ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
-                                        ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
-                                        ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
-                                        ")"
-                        )
-                        .bind("bookCode", book.getBookCode())
-                        .bind("title", book.getTitle())
-                        .bind("authorId", book.getAuthorId())
-                        .bind("price", book.getPrice())
-                        .bind("priceDiscounted", book.getPriceDiscounted())
-                        .bind("priceImport",book.getPriceImport())
-                        .bind("type", book.getType())
-                        .bind("age", book.getAge())
-                        .bind("coverImgUrl", book.getCoverImgUrl())
-                        .bind("description", book.getDescription())
-                        .bind("publisher", book.getPublisher())
-                        .bind("provider", book.getProvider())
-                        .bind("publishedDate", book.getPublishedDate())
-                        .bind("weight", book.getWeight())
-                        .bind("bookSize", book.getBookSize())
-                        .bind("pagesNumber", book.getPagesNumber())
-                        .bind("format", book.getFormat())
-                        .bind("isSell", book.getIsSell())          // 0 / 1
-                        .bind("quantitySold", book.getQuantitySold())
-                        .bind("stock", book.getStock())
-                        .executeAndReturnGeneratedKeys("id")
-                        .mapTo(int.class)
-                        .one();
+            for (int i = 0; i < books.size(); i++) {
+                Book book = books.get(i);
+                List<String> detailImages = allDetailImages.get(i);
+                Integer bookIdOld = findBookByBookCode(book.getBookCode());
 
-                for (String img : detailImages) {
-                    h.createUpdate(
-                                    "INSERT INTO book_image_details (book_id, img_url) VALUES (:bookId, :img)"
-                            )
-                            .bind("bookId", bookId)
-                            .bind("img", "assets/img/books/" + img)
-                            .execute();
-                }
-                insertHistoryBookImport(h,bookId,book, employeeId);
+                    if(bookIdOld!=null){
+                        h.createUpdate("""
+                            UPDATE books
+                            SET stock = stock + :quantity
+                            WHERE id = :bookId
+                            """)
+                                .bind("quantity", book.getStock())
+                                .bind("bookId", bookIdOld)
+                                .execute();
+                    }
+                    else{
+                        int bookId = h.createUpdate(
+                                        "INSERT INTO books (" +
+                                                "book_code, title, author_id, price, price_discounted,price_import, type, age, " +
+                                                "cover_img_url, description, publisher, provider, published_date, " +
+                                                "weight, book_size, pages_number, format, is_sell, add_date, quantity_sold, stock" +
+                                                ") VALUES (" +
+                                                ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
+                                                ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
+                                                ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
+                                                ")"
+                                )
+                                .bind("bookCode", book.getBookCode())
+                                .bind("title", book.getTitle())
+                                .bind("authorId", book.getAuthorId())
+                                .bind("price", book.getPrice())
+                                .bind("priceDiscounted", book.getPriceDiscounted())
+                                .bind("priceImport",book.getPriceImport())
+                                .bind("type", book.getType())
+                                .bind("age", book.getAge())
+                                .bind("coverImgUrl", book.getCoverImgUrl())
+                                .bind("description", book.getDescription())
+                                .bind("publisher", book.getPublisher())
+                                .bind("provider", book.getProvider())
+                                .bind("publishedDate", book.getPublishedDate())
+                                .bind("weight", book.getWeight())
+                                .bind("bookSize", book.getBookSize())
+                                .bind("pagesNumber", book.getPagesNumber())
+                                .bind("format", book.getFormat())
+                                .bind("isSell", book.getIsSell())          // 0 / 1
+                                .bind("quantitySold", book.getQuantitySold())
+                                .bind("stock", book.getStock())
+                                .executeAndReturnGeneratedKeys("id")
+                                .mapTo(int.class)
+                                .one();
+
+                        for (String img : detailImages) {
+                            h.createUpdate(
+                                            "INSERT INTO book_image_details (book_id, img_url) VALUES (:bookId, :img)"
+                                    )
+                                    .bind("bookId", bookId)
+                                    .bind("img", "assets/img/books/" + img)
+                                    .execute();
+                        }
+                    }
             }
+            insertHistoryBookImport(h,books, employeeId);
         });
     }
 
@@ -806,29 +809,40 @@ public class BookDao extends BaseDao {
             return query.mapToBean(Book.class).list();
         });
     }
-    public void insertHistoryBookImport(Handle handle,int bookId, Book book, int employeeId) {
-           int subtotal = book.getPriceImport()*book.getStock();
+    public void insertHistoryBookImport(Handle handle, List<Book> books, int employeeId) {
+            Book book = books.get(0);
+            String provider = book.getProvider();
+            double totalPrice = 0;
+            for (Book b : books) {
+                totalPrice += b.getPriceImport()*b.getStock();
+            }
+
            int importOrderId = handle.createUpdate("""
                 INSERT INTO import_orders(provider, import_date, total_amount, note, employee_id_import)
                 VALUES(:provider, NOW(), :totalAmount, :note, :employeeIdImport)
                 """)
-                    .bind("provider", book.getProvider())
-                    .bind("totalAmount", book.getPriceImport() * book.getStock())
+                    .bind("provider", provider)
+                    .bind("totalAmount", totalPrice)
                     .bind("note", "sách mới về")
                     .bind("employeeIdImport", employeeId)
                     .executeAndReturnGeneratedKeys("id")
                     .mapTo(int.class)
                     .one();
-            handle.createUpdate("""
+            for (int i = 0; i <books.size(); i++) {
+                Book b = books.get(i);
+                int bookId = findBookByBookCode(b.getBookCode());
+                int subtotal = b.getPriceImport()*b.getStock();
+                handle.createUpdate("""
                 INSERT INTO import_order_details(import_order_id,book_id,quantity, price_import,subtotal)
                 VALUES(:importOrderId,:bookId,:quantity,:priceImport,:subtotal)
                 """)
-                    .bind("importOrderId", importOrderId)
-                    .bind("bookId", bookId)
-                    .bind("quantity", book.getStock())
-                    .bind("priceImport", book.getPriceImport())
-                    .bind("subtotal", subtotal)
-                    .execute();
+                        .bind("importOrderId", importOrderId)
+                        .bind("bookId", bookId)
+                        .bind("quantity", b.getStock())
+                        .bind("priceImport", b.getPriceImport())
+                        .bind("subtotal", subtotal)
+                        .execute();
+            }
     }
     public Integer findBookByBookCode(String bookCode) {
         return getJdbi().withHandle(handle ->

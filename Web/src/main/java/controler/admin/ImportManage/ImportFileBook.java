@@ -4,6 +4,7 @@ import Service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import model.Author;
 import model.Book;
 import model.User;
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,8 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static Util.Format.normalizeString;
-import static Util.Format.requestColumns;
+import static Util.Format.*;
 import static Util.RolesGroup.IMPORT_ROLE;
 import static org.apache.poi.ss.usermodel.TableStyleType.headerRow;
 
@@ -82,7 +82,31 @@ public class ImportFileBook extends HttpServlet {
                     continue;
                 }
                 Book book = new Book();
-                book.setBookCode(row.getCell(headerMap.get("book code")).getStringCellValue());
+                book.setBookCode(getCellString(row, headerMap, "mã sản phẩm"));
+                book.setTitle(getCellString(row, headerMap, "tiêu đề"));
+                book.setPrice(getCellInt(row, headerMap, "giá"));
+                book.setPriceImport(getCellInt(row, headerMap, "giá nhập"));
+
+                book.setType(getCellString(row, headerMap, "thể loại"));
+                book.setAge(getCellInt(row, headerMap, "độ tuổi"));
+                book.setDescription(getCellString(row, headerMap, "mô tả"));
+
+                book.setPublisher(getCellString(row, headerMap, "nhà xuất bản"));
+                book.setProvider(getCellString(row, headerMap, "nhà cung cấp"));
+                book.setPublishedDate(getCellInt(row, headerMap, "năm xuất bản"));
+
+                book.setWeight(getCellDouble(row, headerMap, "trọng lượng(g)"));
+                book.setBookSize(getCellString(row, headerMap, "kích thước"));
+                book.setFormat(getCellString(row, headerMap, "loại bìa"));
+
+                book.setCoverImgUrl(getCellString(row, headerMap, "ảnh bìa"));
+//                book.set(getCellString(row, headerMap, "ảnh chi tiết"));
+
+                Author author = new Author();
+                book.setAuthor(getCellString(row, headerMap, "tên tác giả"));
+                author.setName(getCellString(row, headerMap, "tên tác giả"));
+                author.setBirthday(getCellString(row, headerMap, "ngày sinh tác giả"));
+                author.setPenName(getCellString(row, headerMap, "bút danh"));
             }
         }catch(Exception e){
             response.sendRedirect("login");

@@ -105,8 +105,11 @@ public class BookService {
         book.setQuantitySold(0);
         book.setAge(age);
         book.setIsSell(true);
-
-        hd.insert(book, detailImgUrls, employeeId);
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+        List<List<String>> allDetailImages = new ArrayList<>();
+        allDetailImages.add(detailImgUrls);
+        hd.insert(books, allDetailImages, employeeId);
     }
 
 
