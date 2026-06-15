@@ -97,7 +97,6 @@
 
     <div id="overlay"></div>
 
-    <div id="custom-toast"></div>
     <form id="deleteAuthorForm" method="post" action="${pageContext.request.contextPath}/admin-delete-author" style="display:none;">
         <input type="hidden" name="id" id="deleteId">
         <input type="hidden" name="authorName" id="deleteAuthorName">
@@ -139,13 +138,12 @@
     const suaTacGiaForm = document.getElementById("suaTacGiaForm");
 
     function showToast(message, type) {
-        const toast = document.getElementById("custom-toast");
+        const toast = document.getElementById("toast");
         toast.innerText = message;
         toast.classList.remove("success", "error", "show");
         toast.classList.add(type, "show");
-
         setTimeout(() => {
-                toast.classList.remove("show");
+            toast.classList.remove("show");
         }, 3000);
         const url = new URL(window.location);
         url.searchParams.delete('success');
@@ -178,11 +176,11 @@
     });
 
     function confirmDelete(id, name) {
-        if (confirm("Bạn có chắc chắn muốn xóa tác giả '" + name + "' không?")) {
+        showConfirm("Bạn có chắc chắn muốn xóa tác giả '" + name + "' không?", () => {
             document.getElementById("deleteId").value = id;
             document.getElementById("deleteAuthorName").value = name;
             document.getElementById("deleteAuthorForm").submit();
-        }
+        });
     }
 
     addAuthorBtn.addEventListener("click", () => {

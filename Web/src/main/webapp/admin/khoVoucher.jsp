@@ -128,6 +128,7 @@
             </div>
         </div>
     </div>
+
     <div id="overlay"></div>
     <div id="deletePopup" class="delete-popup">
         <p>Bạn có chắc chắn muốn xóa voucher này không?</p>
@@ -590,7 +591,7 @@
                     show(data.message);
                     setTimeout(() => location.reload(), 1200);
                 } else {
-                    alert(data.message, false);
+                    show(data.message, false);
                 }
             })
             .catch(err => console.log(err));

@@ -88,7 +88,39 @@
 </div>
 <div id="toast" class="toast"></div>
 
+<!-- Global Confirm Popup cho User -->
+<div class="overlay" id="globalConfirmOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;"></div>
+<div id="globalConfirmPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:25px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.3); z-index:9999; text-align:center; min-width: 320px;">
+    <p style="margin-bottom:25px; font-size:16px; color:#333; font-weight: 500;" id="globalConfirmMessage"></p>
+    <div style="display:flex; justify-content:center; gap:15px;">
+        <button id="btnGlobalConfirmYes" style="background:#d9534f; color:white; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight: bold; font-size: 14px; transition: background 0.3s;">Xác nhận</button>
+        <button id="btnGlobalConfirmNo" style="background:#f0f0f0; color:#333; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight: bold; font-size: 14px; transition: background 0.3s;">Hủy</button>
+    </div>
+</div>
+
 <script>
+    let globalConfirmCallback = null;
+
+    function showConfirm(message, callback) {
+        document.getElementById("globalConfirmMessage").innerText = message;
+        document.getElementById("globalConfirmOverlay").style.display = "block";
+        document.getElementById("globalConfirmPopup").style.display = "block";
+        globalConfirmCallback = callback;
+    }
+
+    function closeGlobalConfirm() {
+        document.getElementById("globalConfirmOverlay").style.display = "none";
+        document.getElementById("globalConfirmPopup").style.display = "none";
+        globalConfirmCallback = null;
+    }
+
+    document.getElementById("btnGlobalConfirmNo").addEventListener("click", closeGlobalConfirm);
+    document.getElementById("globalConfirmOverlay").addEventListener("click", closeGlobalConfirm);
+    document.getElementById("btnGlobalConfirmYes").addEventListener("click", function() {
+        if (globalConfirmCallback) globalConfirmCallback();
+        closeGlobalConfirm();
+    });
+
     const toast = document.getElementById("toast");
 
     <c:if test="${not empty sessionScope.loginSuccess}">
@@ -124,6 +156,18 @@
             }, 3000);
         }
     });
+
+    function showToast(message, isSuccess = true) {
+        const t = document.getElementById("toast");
+        if (t) {
+            t.innerText = message;
+            t.classList.remove("success", "error");
+            if (isSuccess) t.classList.add("success");
+            else t.classList.add("error");
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 3000);
+        }
+    }
 </script>
 <script src="${pageContext.request.contextPath}/assets/js/search-suggest.js"></script>
 </body>

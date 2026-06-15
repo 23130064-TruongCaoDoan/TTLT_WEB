@@ -101,7 +101,7 @@
                                         <input type="hidden" name="userId" value="${u.id}">
                                         <select name="role" onchange="
                                                 if (${u.id == sessionScope.user.id} && this.value == '0') {
-                                                alert('Bạn không thể tự bỏ quyền quản trị của chính mình');
+                                                showToast('Bạn không thể tự bỏ quyền quản trị của chính mình', 'error');
                                                 this.value = '1';
                                                 return false;
                                                 }
@@ -120,7 +120,7 @@
                                         <input type="hidden" name="userId" value="${u.id}">
                                         <select name="status" onchange="
                                                 if (${u.id == sessionScope.user.id} && this.value == '0') {
-                                                alert('Bạn không thể tự bỏ trạng thái hoạt động của chính mình');
+                                                showToast('Bạn không thể tự bỏ trạng thái hoạt động của chính mình', 'error');
                                                 this.value = '1';
                                                 return false;
                                                 }
@@ -151,7 +151,7 @@
         </div>
     </div>
     <div id="overlay"></div>
-    <div id="custom-toast"></div>
+
     <form id="tangVoucherForm" method="post" action="${pageContext.request.contextPath}/gift-voucher">
             <h3 class="popup-title">TẶNG VOUCHER</h3>
 
@@ -312,24 +312,24 @@
 </main>
 <c:if test="${param.error == 'invalid_code'}">
     <script>
-        alert(" Mã voucher không hợp lệ");
+        document.addEventListener('DOMContentLoaded', () => showToast("Mã voucher không hợp lệ", "error"));
     </script>
 </c:if>
 
 <c:if test="${param.error == 'no_user_selected'}">
     <script>
-        alert(" Chưa chọn khách hàng");
+        document.addEventListener('DOMContentLoaded', () => showToast("Chưa chọn khách hàng", "error"));
     </script>
 </c:if>
 
 <c:if test="${param.success == 'gifted'}">
     <script>
-        alert(" Tặng voucher thành công");
+        document.addEventListener('DOMContentLoaded', () => showToast("Tặng voucher thành công", "success"));
     </script>
 </c:if>
 <c:if test="${param.success == 'notify'}">
     <script>
-        alert(" Tạo thông báo thành công");
+        document.addEventListener('DOMContentLoaded', () => showToast("Tạo thông báo thành công", "success"));
     </script>
 </c:if>
 
@@ -365,15 +365,14 @@
     });
 
     function showToast(message, type) {
-            const toast = document.getElementById("custom-toast");
-            toast.innerText = message;
-            toast.className = "";
-            toast.classList.add("show", type);
-
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
-        }
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.classList.remove("success", "error", "show");
+        toast.classList.add(type, "show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000);
+    }
 
         const formTaoTaiKhoan = document.getElementById("taoTaiKhoanForm");
         const errorAddDiv = document.querySelector(".errorAdd");
@@ -451,9 +450,6 @@
                 block.style.pointerEvents = "auto";
             }
         }
-</script>
-<script>
-    alert(err)
 </script>
 
 </body>

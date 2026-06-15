@@ -647,7 +647,7 @@
                 if (data.success) {
                     location.reload();
                 } else {
-                    alert(data.message);
+                    showToast(data.message, false);
                 }
 
             })

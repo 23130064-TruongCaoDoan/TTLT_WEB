@@ -323,7 +323,7 @@
                 return response.text();
             })
             .then(data => {
-                alert("Đánh giá của bạn đã được gửi thành công!");
+                showToast("Đánh giá của bạn đã được gửi thành công!");
                 closePopup();
 
                 setTimeout(() => {
@@ -332,7 +332,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert("Có lỗi xảy ra. Vui lòng thử lại!");
+                showToast("Có lỗi xảy ra. Vui lòng thử lại!", false);
             })
             .finally(() => {
                 submitBtn.disabled = false;

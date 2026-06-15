@@ -327,7 +327,7 @@
                 if (data.success) {
                     heart.classList.toggle("active", data.active);
                 } else {
-                    alert(data.message);
+                    showToast(data.message, false);
                 }
             })
             .catch(err => console.error(err))

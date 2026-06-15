@@ -108,7 +108,6 @@
     </div>
 
     <div id="overlay"></div>
-    <div id="custom-toast"></div>
 
     <form id="taoProviderForm" method="post" action="${pageContext.request.contextPath}/admin-add-provider" class="modal-form" style="display: none;">
         <h3>TẠO NHÀ PHÂN PHỐI MỚI</h3>
@@ -177,15 +176,13 @@
     const suaProviderForm = document.getElementById("suaProviderForm");
 
     function showToast(message, type) {
-        const toast = document.getElementById("custom-toast");
+        const toast = document.getElementById("toast");
         toast.innerText = message;
         toast.classList.remove("success", "error", "show");
         toast.classList.add(type, "show");
-
         setTimeout(() => {
             toast.classList.remove("show");
         }, 3000);
-
         const url = new URL(window.location);
         url.searchParams.delete('success');
         url.searchParams.delete('error');
@@ -245,11 +242,11 @@
     }
 
     function confirmDelete(id, name) {
-        if (confirm("Bạn có chắc chắn muốn xóa nhà phân phối '" + name + "' không?")) {
+        showConfirm("Bạn có chắc chắn muốn xóa nhà phân phối '" + name + "' không?", () => {
             document.getElementById("deleteId").value = id;
             document.getElementById("deleteProviderName").value = name;
             document.getElementById("deleteProviderForm").submit();
-        }
+        });
     }
 
     overlay.addEventListener("click", () => {

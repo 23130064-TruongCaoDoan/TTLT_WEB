@@ -231,7 +231,7 @@
 <c:if test="${not empty error}">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            alert("${error}");
+            showToast("${error}", false);
         });
     </script>
 </c:if>
