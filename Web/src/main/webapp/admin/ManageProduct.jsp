@@ -448,7 +448,7 @@
         })
         .then(res => res.json())
         .then(data => {
-            alert("Import thất bại");
+            alert("Import thành công");
         })
         .catch(err => {
             alert("Import thất bại");
