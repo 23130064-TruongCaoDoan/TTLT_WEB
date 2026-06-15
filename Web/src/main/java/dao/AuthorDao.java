@@ -32,12 +32,24 @@ public class AuthorDao extends BaseDao {
     }
 
     public boolean add(Author author) {
+        String penName = author.getPenName()==null?author.getName():author.getPenName();
         return getJdbi().withHandle(h ->
-                h.createUpdate("INSERT INTO authors(name, birthday) VALUES(:name, :birthday)")
+                h.createUpdate("INSERT INTO authors(name, birthday, pen_name) VALUES(:name, :birthday, :penName)")
                         .bindBean(author)
                         .execute() > 0
         );
     }
+    public boolean findAuthorByPenName(String penName) {
+        return  getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                SELECT EXISTS(SELECT 1 FROM AUTHORS WHERE pen_name=:penName)
+                """)
+                .bind("penName", penName)
+                .mapToBean(Boolean.class)
+                .first()
+        );
+    }
+
 
     public boolean update(int id, String name, String birthday) {
         StringBuilder sql = new StringBuilder("UPDATE authors SET ");

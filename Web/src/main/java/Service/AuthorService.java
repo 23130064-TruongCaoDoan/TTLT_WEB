@@ -21,6 +21,12 @@ public class AuthorService {
         }
         return authorDao.search(keyword.trim());
     }
+    public void addAuthor(Author author) {
+        authorDao.add(author);
+    }
+    public boolean findAuthorByPenName(String penName) {
+        return authorDao.findAuthorByPenName(penName);
+    }
 
     public boolean addAuthor(String name, String birthday) {
         if (!isValidName(name)) {

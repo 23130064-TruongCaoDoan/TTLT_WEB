@@ -50,10 +50,6 @@
                     <c:if test="${canImport}">
                         <button id="add" type="button">Thêm sản phẩm</button>
                     </c:if>
-                    <form action="UploadFileExcel" method="post" enctype="multipart/form-data">
-                        <input type="file" name="fileBooks" accept=".xlsx,.xls">
-                        <button type="submit">Import file sản phẩm</button>
-                    </form>
                     <a href="downloadTemplateFileExcel" class="btn-downloadFile">
                         Tải mẫu nhập sách excel
                     </a>
@@ -95,6 +91,10 @@
                         </select>
                     </div>
                 </div>
+            </form>
+            <form action="${pageContext.request.contextPath}/UploadFileExcel" method="post" enctype="multipart/form-data">
+                <input type="file" name="fileBooks" accept=".xlsx,.xls">
+                <button type="submit">Import file sản phẩm</button>
             </form>
 
             <div class="table-wrapper">
