@@ -21,11 +21,11 @@ public class AuthorService {
         }
         return authorDao.search(keyword.trim());
     }
-    public void addAuthor(Author author) {
-        authorDao.add(author);
+    public Integer addAuthorFromFile(Author author) {
+        return authorDao.addAuthorFromFile(author);
     }
-    public boolean findAuthorByPenName(String penName) {
-        return authorDao.findAuthorByPenName(penName);
+    public Integer findAuthorByPenName(String name, String birtday, String penName) {
+        return authorDao.findAuthorByPenName(name, birtday,penName);
     }
 
     public boolean addAuthor(String name, String birthday) {

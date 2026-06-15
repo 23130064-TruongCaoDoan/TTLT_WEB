@@ -15,7 +15,7 @@ public class Format {
     public static DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
     public static List<String> requestColumns = List.of(
-            "Mã sản phẩm", "Tiêu đề", "Giá", "Giá nhập", "Thể loại",
+            "Mã sản phẩm", "Tiêu đề", "Giá", "Giá nhập", "Số lượng", "Thể loại",
             "Độ tuổi", "Ảnh bìa", "Mô tả", "Nhà xuất bản", "Nhà cung cấp", "Năm xuất bản",
             "Trọng lượng(g)", "Kích thước", "Loại bìa","Ảnh chi tiết", "Tên tác giả", "Ngày sinh tác giả", "Bút danh"
     );
@@ -64,6 +64,10 @@ public class Format {
         Integer priceImport = getCellInt(row, headerMap, "giá nhập");
         if (priceImport == null || priceImport <= 0) {
             errors.add("Giá nhập phải > 0");
+        }
+        Integer quantity = getCellInt(row, headerMap, "số lượng");
+        if (quantity == null || priceImport <= 0) {
+            errors.add("Số lượng phải > 0");
         }
 
         String type = getCellString(row, headerMap, "thể loại");
@@ -123,11 +127,6 @@ public class Format {
         String birthday = getCellString(row, headerMap, "ngày sinh tác giả");
         if (birthday == null || birthday.isBlank()) {
             errors.add("Ngày sinh tác giả bị trống");
-        }
-
-        String penName = getCellString(row, headerMap, "bút danh");
-        if (penName == null || penName.isBlank()) {
-            errors.add("Bút danh bị trống");
         }
 
         return errors;

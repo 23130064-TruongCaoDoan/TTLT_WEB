@@ -490,4 +490,7 @@ public class BookService {
     public List<Author> getAllAuthorsOb() {
         return hd.getAllAuthorsOb();
     }
+    public void addBookFromFile(List<Book> books,List<List<String>> allDetailImage, int employeeId) {
+        hd.insert(books, allDetailImage, employeeId);
+    }
 }

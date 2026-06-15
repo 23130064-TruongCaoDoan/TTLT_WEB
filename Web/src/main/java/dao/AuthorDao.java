@@ -2,6 +2,9 @@ package dao;
 
 import model.Author;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class AuthorDao extends BaseDao {
@@ -39,14 +42,41 @@ public class AuthorDao extends BaseDao {
                         .execute() > 0
         );
     }
-    public boolean findAuthorByPenName(String penName) {
+    public Integer addAuthorFromFile(Author author) {
+        String penName = author.getPenName()==null?author.getName():author.getPenName();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate localDate = LocalDate.parse(author.getBirthday(), formatter);
+        Date sqlDate = Date.valueOf(localDate);
+
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("""
+                            INSERT INTO authors(name,birthday,pen_name)
+                            VALUES(:name,:birthday,:penName)
+                        """)
+                        .bind("name", author.getName())
+                        .bind("birthday", sqlDate)
+                        .bind("penName", penName)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+    public Integer findAuthorByPenName(String name, String birthday, String penName) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate localDate = LocalDate.parse(birthday, formatter);
+        Date sqlDate = Date.valueOf(localDate);
+
         return  getJdbi().withHandle(handle ->
                 handle.createQuery("""
-                SELECT EXISTS(SELECT 1 FROM AUTHORS WHERE pen_name=:penName)
+                SELECT id FROM AUTHORS WHERE name=:name AND pen_name = :penName AND birthday = :birtday
                 """)
                 .bind("penName", penName)
-                .mapToBean(Boolean.class)
-                .first()
+                .bind("name", name)
+                .bind("birtday", sqlDate)
+                .mapTo(Integer.class)
+                .findOne()
+                .orElse(null)
         );
     }
 

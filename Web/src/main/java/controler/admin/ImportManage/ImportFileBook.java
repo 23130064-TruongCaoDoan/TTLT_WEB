@@ -1,5 +1,7 @@
 package controler.admin.ImportManage;
 
+import Service.AuthorService;
+import Service.BookService;
 import Service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -52,6 +54,8 @@ public class ImportFileBook extends HttpServlet {
         }
         List<Book> listBooks = new ArrayList<>();
         List<List<String>> allDetailImages = new ArrayList<>();
+        AuthorService authorService = new AuthorService();
+        BookService bookService = new BookService();
         try{
             Part filePart = request.getPart("fileBooks");
             InputStream inputStream = filePart.getInputStream();
@@ -124,6 +128,7 @@ public class ImportFileBook extends HttpServlet {
                 book.setTitle(getCellString(row, headerMap, "tiêu đề"));
                 book.setPrice(getCellInt(row, headerMap, "giá"));
                 book.setPriceImport(getCellInt(row, headerMap, "giá nhập"));
+                book.setStock(getCellInt(row, headerMap, "số lượng"));
 
                 book.setType(getCellString(row, headerMap, "thể loại"));
                 book.setAge(getCellInt(row, headerMap, "độ tuổi"));
@@ -142,14 +147,28 @@ public class ImportFileBook extends HttpServlet {
                 listBooks.add(book);
                 String[] splitImage = getCellString(row, headerMap, "ảnh chi tiết").split(",");
                 List<String> imageDetail = new ArrayList<>();
+                if (splitImage.length >0) {
+                    for (String image : splitImage) {
+                        imageDetail.add(image);
+                    }
+                }
+                allDetailImages.add(imageDetail);
 
-
-                Author author = new Author();
-                author.setName(getCellString(row, headerMap, "tên tác giả"));
-                author.setBirthday(getCellString(row, headerMap, "ngày sinh tác giả"));
-                author.setPenName(getCellString(row, headerMap, "bút danh"));
+                String authorName = getCellString(row, headerMap, "tên tác giả");
+                String birtday = getCellString(row, headerMap, "ngày sinh tác giả");
+                String penName = getCellString(row, headerMap, "bút danh");
+                Integer authorId = authorService.findAuthorByPenName(authorName, birtday, penName);
+                if (authorId == null) {
+                    Author author = new Author();
+                    author.setName(authorName);
+                    author.setBirthday(birtday);
+                    author.setPenName(penName);
+                    authorId = authorService.addAuthorFromFile(author);
+                }
+                book.setAuthorId(authorId);
 
             }
+            bookService.addBookFromFile(listBooks,allDetailImages, user.getId());
         }catch(Exception e){
             e.printStackTrace();
         }
