@@ -286,3 +286,43 @@ textarea {
 .pagination li i {
     font-size: 14px;
 }
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+    width: fit-content;
+}
+
+.btn-import {
+    display: inline-block;
+    margin: 0;
+    padding: 7px 16px;
+    background: #0d3164;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    min-width: 300px;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: white;
+    animation: slideIn .3s ease;
+}
+
+.toast-success {
+    background: #28a745;
+}
+
+.toast-error {
+    background: #dc3545;
+}
