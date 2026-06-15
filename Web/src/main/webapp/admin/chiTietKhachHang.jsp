@@ -145,9 +145,15 @@
                         <div class="info-item" id="field-role">
                             <label>Quyền tài khoản</label>
                             <div class="info-value-row">
-                                <span class="badge ${user.role}">${user.role}</span>
+                                <c:set var="userRoleName" value="${user.role}" />
+                                <c:forEach var="r" items="${roles}">
+                                    <c:if test="${r.id == user.role}">
+                                        <c:set var="userRoleName" value="${r.roleName}" />
+                                    </c:if>
+                                </c:forEach>
+                                <span class="badge ${user.role}">${userRoleName}</span>
                                 <button class="edit-icon-btn"
-                                        onclick="startEditSelect('role','${customer.role}',['admin:Admin','manager:Quản lý','accountant:Kế toán','staff:Nhân viên','user:Người dùng'])">
+                                        onclick="startEditSelect('role','${user.role}',[<c:forEach var="r" items="${roles}"><c:if test="${!(sessionScope.user.role == 2 && (r.id == 1 || r.id == 2))}">'${r.id}:${r.roleName}',</c:if></c:forEach>])">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
                             </div>
@@ -577,6 +583,7 @@
 </main>
 <script>
     window.userId = ${user.id};
+    window.loggedInUserId = ${sessionScope.user.id};
 </script>
 
 <script src="assets/js/userdetail.js"></script>

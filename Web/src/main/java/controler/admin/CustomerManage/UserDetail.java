@@ -45,6 +45,9 @@ public class UserDetail extends HttpServlet {
         int totalOrder = orderService.totalOrder(uid);
         double totalAmount = orderService.totalAmountOrder(uid);
 
+        List<Role> listRoles = userService.getAllRoles();
+        request.setAttribute("roles",listRoles);
+
         request.setAttribute("totalOrder",totalOrder);
         request.setAttribute("totalAmount",totalAmount);
 
