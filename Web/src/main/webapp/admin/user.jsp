@@ -391,7 +391,7 @@
 
             if (!checkPassword(passwordValue)) {
                 errorAddDiv.innerText = "Mật khẩu phải có ít nhất 8 ký tự, có số và kí tự đặc biệt";
-                    return; // Dừng lại không gửi dữ liệu
+                    return;
             }
 
             const formData = new FormData(this);
