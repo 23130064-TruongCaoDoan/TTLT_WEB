@@ -167,10 +167,12 @@ public class ImportFileBook extends HttpServlet {
                 book.setAuthorId(authorId);
 
             }
-            bookService.addBookFromFile(listBooks,allDetailImages, user.getId());
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"success\":true}");
         }catch(Exception e){
             e.printStackTrace();
         }
+
 
     }
 }

@@ -23,14 +23,13 @@ public class Format {
     public static String normalizeString(String s) {
         return s == null ? "" : s.trim().toLowerCase();
     }
-    public static String getCellString(Row row, Map<String, Integer> headerMap, String col) {
-        Integer index = headerMap.get(normalizeString(col));
-        if (index == null) return "";
-        Cell cell = row.getCell(index);
-        if (cell == null) return "";
-        DataFormatter formatter = new DataFormatter();
 
-        return formatter.formatCellValue(cell).trim();
+    public static String getCellString(Row row, Map<String, Integer> headerMap, String col) {
+        Cell cell = row.getCell(headerMap.get(normalizeString(col)));
+        if (cell == null) return "";
+
+        cell.setCellType(CellType.STRING);
+        return cell.getStringCellValue().trim();
     }
     public static int getCellInt(Row row, Map<String, Integer> headerMap, String col) {
         Cell cell = row.getCell(headerMap.get(normalizeString(col)));
