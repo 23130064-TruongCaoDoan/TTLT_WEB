@@ -140,7 +140,7 @@ public class ImportFileBook extends HttpServlet {
                 book.setWeight(getCellDouble(row, headerMap, "trọng lượng(g)"));
                 book.setBookSize(getCellString(row, headerMap, "kích thước"));
                 book.setFormat(getCellString(row, headerMap, "loại bìa"));
-                System.out.println(book);
+
 
                 book.setCoverImgUrl(getCellString(row, headerMap, "ảnh bìa"));
                 listBooks.add(book);
@@ -166,7 +166,9 @@ public class ImportFileBook extends HttpServlet {
                 }
                 book.setAuthorId(authorId);
 
+
             }
+            bookService.addBookFromFile(listBooks,allDetailImages,user.getId());
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write("{\"success\":true}");
         }catch(Exception e){
