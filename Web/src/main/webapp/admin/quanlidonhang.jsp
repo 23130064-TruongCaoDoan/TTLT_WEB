@@ -65,6 +65,7 @@
                         <tr>
                             <th>Mã đơn hàng</th>
                             <th>Tên khách hàng</th>
+                            <th>Loại Thanh Toán</th>
                             <th>Tổng tiền</th>
                             <th>Ngày đặt</th>
                             <th>Trạng thái</th>
@@ -77,6 +78,7 @@
                             <tr>
                                 <td>${o.id}</td>
                                 <td>${o.userName}</td>
+                                <td>${o.paymentMethod}</td>
                                 <td ><p><fmt:formatNumber value="${o.totalAmount}" type="number" groupingUsed="true"
                                                       maxFractionDigits="0"/> đ</p></td>
                                 <td>${o.orderDate}</td>
