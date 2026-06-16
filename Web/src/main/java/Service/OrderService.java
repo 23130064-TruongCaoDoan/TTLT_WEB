@@ -76,6 +76,10 @@ public class OrderService {
         return orderDao.updateOrder(orderId,orderTotalPrice,orderStatus);
     }
 
+    public boolean updateOrder(int orderId, Double orderTotalPrice) {
+        return orderDao.updateOrder(orderId,orderTotalPrice);
+    }
+
     public boolean deleteOrder(int id) {
         return orderDao.deleteOrder(id);
     }

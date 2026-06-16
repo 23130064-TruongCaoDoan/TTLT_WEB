@@ -187,26 +187,26 @@
             <input id="ageBook" placeholder="Nhập số điện thoại khách hàng..." disabled>
         </div>
 
-        <div class="form-group">
-            <label>Phương thức thanh toán</label>
-            <input id="bookCodes" placeholder="VD: Tiền mặt, Chuyển khoản..." disabled>
-        </div>
+<%--        <div class="form-group">--%>
+<%--            <label>Phương thức thanh toán</label>--%>
+<%--            <input id="bookCodes" placeholder="VD: Tiền mặt, Chuyển khoản..." disabled>--%>
+<%--        </div>--%>
 
         <div class="form-group">
             <label>Ghi chú</label>
             <textarea rows="4" cols="50" placeholder="Nhập nội dung..." disabled></textarea>
         </div>
 
-        <div class="form-group-inline">
-            <div>
-                <label>Trạng thái đơn hàng</label>
-                <select id="orderStatus">
-                    <option value="Chờ xử lý">Chờ xử lý</option>
-                    <option value="Completed">Đã giao</option>
-                    <option value="Đã Huỷ">Đã Huỷ</option>
-                </select>
-            </div>
-        </div>
+<%--        <div class="form-group-inline">--%>
+<%--            <div>--%>
+<%--                <label>Trạng thái đơn hàng</label>--%>
+<%--                <select id="orderStatus">--%>
+<%--                    <option value="Chờ xử lý">Chờ xử lý</option>--%>
+<%--                    <option value="Completed">Đã giao</option>--%>
+<%--                    <option value="Đã Huỷ">Đã Huỷ</option>--%>
+<%--                </select>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
         <button type="button" class="btn-save" id="btnSaveOrder">Lưu đơn hàng</button>
     </div>

@@ -83,7 +83,7 @@ public class ProductManageServlet extends HttpServlet {
         request.setAttribute("lsbook", lsBook);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
-        System.out.println(lsBook.get(1));
+        System.out.println(lsBook.size());
 
 
         ThongKeService thongKeService = new ThongKeService();

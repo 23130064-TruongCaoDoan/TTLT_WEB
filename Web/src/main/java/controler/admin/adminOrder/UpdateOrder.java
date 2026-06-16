@@ -27,7 +27,7 @@ public class UpdateOrder extends HttpServlet {
         Double orderTotalPrice = Double.parseDouble(totalPrice);
 
         OrderService orderService = new OrderService();
-        boolean success=orderService.updateOrder(orderId,orderTotalPrice,orderStatus);
+        boolean success=orderService.updateOrder(orderId,orderTotalPrice);
         if(success){
             request.setAttribute("logSuccess", true);
             response.getWriter().write(
