@@ -326,3 +326,7 @@ textarea {
 .toast-error {
     background: #dc3545;
 }
+.filter-status{
+    width: fit-content;
+    height: 49px;
+}

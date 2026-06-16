@@ -76,9 +76,14 @@
                     </div>
                 </form>
             </div>
+        <form method="get" action="${pageContext.request.contextPath}/product-manage">
             <div class="title">
                 <h3>Danh sách sản phẩm</h3>
                 <div>
+                    <select class="filter-status" name="filterStatus" onchange="this.form.submit()">
+                        <option value="1" ${param.filterStatus == '1' ? 'selected' : ''}>Đang bán</option>
+                        <option value="0" ${param.filterStatus == '0' ? 'selected' : ''}>Dừng bán</option>
+                    </select>
                     <select class="filter-sp" name="sortStock" onchange="this.form.submit()">
                         <option value="">Tất cả</option>
                         <option value="asc" ${param.sortStock == 'asc' ? 'selected' : ''}>
@@ -99,7 +104,7 @@
                     </select>
                 </div>
             </div>
-            </form>
+        </form>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -147,6 +152,7 @@
                                    data-size="${p.bookSize}"
                                    data-page="${p.pagesNumber}"
                                    data-format="${p.format}"
+                                   data-sell="${p.isSell}"
                                    data-description="${p.description}">
                             </i>
                             </td>
@@ -160,19 +166,19 @@
                 <div class="pagination-container">
                     <ul class="pagination">
                         <li class="${currentPage == 1 ? 'disabled' : ''}">
-                            <a href="?page=${currentPage - 1}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}">
+                            <a href="?page=${currentPage - 1}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}&filterStatus=${param.filterStatus}">
                                 <i class="fas fa-angle-left"></i>
                             </a>
                         </li>
 
                         <c:forEach begin="1" end="${totalPages}" var="i">
                             <li class="${currentPage == i ? 'active' : ''}">
-                                <a href="?page=${i}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}">${i}</a>
+                                <a href="?page=${i}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}&filterStatus=${param.filterStatus}">${i}</a>
                             </li>
                         </c:forEach>
 
                         <li class="${currentPage == totalPages ? 'disabled' : ''}">
-                            <a href="?page=${currentPage + 1}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}">
+                            <a href="?page=${currentPage + 1}&q=${param.q}&sortStock=${param.sortStock}&type=${param.type}&filterStatus=${param.filterStatus}">
                                 <i class="fas fa-angle-right"></i>
                             </a>
                         </li>
@@ -269,6 +275,15 @@
             <label>Định dạng</label>
             <input type="text" name="format" placeholder="Bìa mềm / Bìa cứng" required>
         </div>
+
+        <div class="form-group" id="statusBox" style="display: none;">
+            <Label>Trạng thái</Label>
+            <select name="status">
+                <option value="1">Đang bán</option>
+                <option value="0">Dừng bán</option>
+            </select>
+        </div>
+
     </div>
     <div class="form-group hiddenWhenCodeExist">
         <label>Mô tả</label>
@@ -370,6 +385,7 @@
         btn.addEventListener("click", () => {
             overlay.style.display = "block";
             popup.style.display = "block";
+
             document.getElementById("img-main").required = false;
             document.getElementById("start_date").required = false;
             document.getElementById("bookId").value = btn.dataset.id;
@@ -393,6 +409,9 @@
             document.getElementById("description").value = btn.dataset.description;
             document.getElementById("start_date").value =
                 btn.dataset.published + "-01-01";
+            document.getElementById("statusBox").style.display = "block";
+            document.querySelector("select[name='status']").value = btn.dataset.sell === "true"? "1" : "0";
+            console.log(btn.dataset.isSell)
             document.querySelector(".btn-save").innerText = "Cập nhật sản phẩm";
         });
     });
@@ -407,6 +426,7 @@
         document.getElementById("start_date").required = true;
         document.querySelector(".hiddenWhenFix").style.display = 'block';
         document.querySelector("input[name='price_import']").required = true;
+        document.getElementById("statusBox").style.display = "none";
     });
 
     document.addEventListener("click", function (e) {
