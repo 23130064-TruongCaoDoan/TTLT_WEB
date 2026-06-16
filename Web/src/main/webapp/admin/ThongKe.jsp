@@ -234,7 +234,6 @@
                                         <tr>
                                             <th>Mã sách</th>
                                             <th>Tên sách</th>
-                                            <th>Tác giả</th>
                                             <th>Giá</th>
                                             <th>Số lượng</th>
                                             <th>Loại sách</th>
@@ -247,7 +246,6 @@
                                             <tr>
                                                 <td>${b.bookCode}</td>
                                                 <td>${b.title}</td>
-                                                <td>—</td>
                                                 <td>
                                                     <fmt:formatNumber value="${b.price}" type="number"
                                                         groupingUsed="true" maxFractionDigits="0" />
