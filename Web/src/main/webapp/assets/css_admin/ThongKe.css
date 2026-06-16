@@ -1,19 +1,21 @@
-
 .main .content .Menu {
     width: 30%;
 }
+
 .main .content .Menu .menfunction .thongke {
     border-left: 3px solid #0d3164;
     font-weight: bold;
 }
-.thongke-container{
+
+.thongke-container {
     flex: 5;
     align-items: flex-start;
     background: #fff;
     padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
 .thongke-container h2 {
     color: #0d3164;
     font-size: 24px;
@@ -21,6 +23,7 @@
     margin-bottom: 20px;
     text-align: center;
 }
+
 .thongke-container .filter-bar {
     display: flex;
     align-items: center;
@@ -61,10 +64,11 @@
     background-color: #fff;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: 0.2s;
 }
+
 .thongke-container .card.top10-product:hover {
     cursor: pointer;
 }
@@ -72,9 +76,10 @@
 .thongke-container .card.top10-customer:hover {
     cursor: pointer;
 }
+
 .thongke-container card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .thongke-container .card i {
@@ -99,14 +104,14 @@
     background-color: #fff;
     border-radius: 12px;
     padding: 25px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .thongke-container .chart h2 {
     margin-bottom: 15px;
     text-align: center;
     color: #0d3164;
-;
+    ;
 }
 
 .thongke-container .bar-container {
@@ -117,6 +122,7 @@
     overflow-x: auto;
     border-bottom: 1px solid #ddd;
 }
+
 .thongke-container .bar-container .figure {
     color: #3b7ddd;
     margin-bottom: 10px;
@@ -140,6 +146,7 @@
     font-size: 14px;
     font-weight: bold;
 }
+
 #overlay {
     position: fixed;
     top: 0;
@@ -159,7 +166,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 /* Khung popup */
@@ -184,47 +191,51 @@ table {
     margin-top: 15px;
 }
 
-table th, table td {
+table th,
+table td {
     padding: 8px;
     border: 1px solid #ddd;
     text-align: center;
 }
 
 table thead {
-    background: #f5f5f5;
-    color: black;
+    background: #0d3164;
+    color: white;
 }
 
 #top10-customer-panel {
-    display:none;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
+
 #top10-customer-container {
     background: #fff;
     padding: 25px;
     border-radius: 12px;
     width: 60%;
 }
+
 #top10-product-panel {
-    display:none;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
+
 #top10-product-container {
     background: #fff;
     padding: 25px;
@@ -232,6 +243,56 @@ table thead {
     border-radius: 12px;
     width: 60%;
 }
+
+#sold-books-panel,
+#unsold-books-panel {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+#sold-books-container,
+#unsold-books-container {
+    background: #fff;
+    padding: 25px;
+    height: 80%;
+    border-radius: 12px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #0d3164;
+}
+
+.panel-header h3 {
+    margin: 0;
+}
+
+.panel-close {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #888;
+}
+
+.panel-close:hover {
+    color: #333;
+}
+
+
 #out-of-stock-panel {
     display: none;
     position: fixed;
@@ -239,11 +300,12 @@ table thead {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
+
 #out-of-stock-container {
     background: #fff;
     padding: 25px;
@@ -251,6 +313,7 @@ table thead {
     border-radius: 12px;
     width: 60%;
 }
+
 .table-wrapper {
     max-height: 100%;
     overflow-y: auto;
@@ -258,6 +321,7 @@ table thead {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
 #dateSelect {
     display: flex;
     align-items: center;
@@ -265,16 +329,19 @@ table thead {
     flex-wrap: wrap;
     margin: 0;
 }
-#dateSelect:hover{
+
+#dateSelect:hover {
     cursor: pointer;
 }
-#dateSelect button{
+
+#dateSelect button {
     background-color: #0a254b;
     color: white;
     border-radius: 5px;
 }
 
-#dateSelect div input:hover, button:hover{
+#dateSelect div input:hover,
+button:hover {
     cursor: pointer;
 }
 
@@ -313,6 +380,7 @@ table thead {
 #dateSelect button.buttonSearch:hover {
     background-color: #0a254b;
 }
+
 .chart-row {
     display: flex;
     gap: 20px;
@@ -325,7 +393,7 @@ table thead {
     background: #fff;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .chart-pie canvas,

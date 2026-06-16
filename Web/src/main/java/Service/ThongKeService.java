@@ -86,6 +86,12 @@ public class ThongKeService {
     public List<Book> getUnsoldBooks() {
         return dao.getUnsoldBooks();
     }
+    public List<Book> getUnsoldBooks(LocalDate from, LocalDate to) {
+        return dao.getUnsoldBooks(from, to);
+    }
+    public List<Book> getUnsoldBooks(String year) {
+        return dao.getUnsoldBooks(year);
+    }
     public List<Book> getOutOfStockBooks() {
         return dao.getOutOfStockBooks();
     }

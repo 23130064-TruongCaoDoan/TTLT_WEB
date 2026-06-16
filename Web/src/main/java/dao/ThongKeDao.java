@@ -503,6 +503,42 @@ public class ThongKeDao extends BaseDao {
                         .list());
     }
 
+    public List<Book> getUnsoldBooks(LocalDate from, LocalDate to) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT * FROM books
+                        WHERE id NOT IN (
+                            SELECT oi.book_id
+                            FROM order_items oi
+                            JOIN orders o ON o.id = oi.order_id
+                            WHERE o.status = 'COMPLETED'
+                              AND o.order_date BETWEEN :from AND :to
+                        )
+                        """)
+                        .bind("from", from)
+                        .bind("to", to)
+                        .mapToBean(Book.class)
+                        .list());
+    }
+
+    public List<Book> getUnsoldBooks(String year) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                        SELECT * FROM books
+                        WHERE id NOT IN (
+                            SELECT oi.book_id
+                            FROM order_items oi
+                            JOIN orders o ON o.id = oi.order_id
+                            WHERE o.status = 'COMPLETED'
+                              AND YEAR(o.order_date) = :year
+                        )
+                        """)
+                        .bind("year", year)
+                        .mapToBean(Book.class)
+                        .list());
+    }
+
+
     public List<String> listYears() {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT DISTINCT YEAR(o.order_date) FROM ORDERS o" )

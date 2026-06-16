@@ -37,6 +37,7 @@ public class ThongKeServlet extends HttpServlet {
         BookWithSoldDTO getBestSeller=null;
         BookWithSoldDTO getWorstSeller=null;
         List<BookWithSoldDTO> getTop10Books=null;
+        List<Book> unsoldBooks=null;
         String year=request.getParameter("year");
         List<RevenueDTO> getTotalRevenueChart= new ArrayList<>();
         Map<String, Double> getPercentTypeChart=new HashMap<>();
@@ -93,6 +94,7 @@ public class ThongKeServlet extends HttpServlet {
             getBestSeller = thongKeService.getBestSeller(year);
             getWorstSeller = thongKeService.getWorstSeller(year);
             getTop10Books = thongKeService.getTop10Books(year);
+            unsoldBooks = thongKeService.getUnsoldBooks(year);
             getTotalRevenueChart = thongKeService.getRevenueChart(year);
             getPercentTypeChart = thongKeService.getPercentTypeSold(year);
             totalSoldProducts = thongKeService.getTotalSoldProducts(year);
@@ -108,6 +110,7 @@ public class ThongKeServlet extends HttpServlet {
             getBestSeller = thongKeService.getBestSeller(from,to);
             getWorstSeller = thongKeService.getWorstSeller(from,to);
             getTop10Books = thongKeService.getTop10Books(from,to);
+            unsoldBooks = thongKeService.getUnsoldBooks(from, to);
             getTotalRevenueChart = thongKeService.getRevenueChart(from,to);
             getPercentTypeChart = thongKeService.getPercentTypeSold(from,to);
             totalSoldProducts = thongKeService.getTotalSoldProducts(from,to);
@@ -123,6 +126,7 @@ public class ThongKeServlet extends HttpServlet {
         request.setAttribute("bestBook", getBestSeller);
         request.setAttribute("worstBook", getWorstSeller);
         request.setAttribute("top10Books", getTop10Books);
+        request.setAttribute("unsoldBooks", unsoldBooks);
         request.setAttribute("listYear", thongKeService.getListYear());
         request.setAttribute("revenueChartData", getTotalRevenueChart);
         request.setAttribute("percentTypeSold", getPercentTypeChart);
