@@ -382,7 +382,8 @@ public class OrderDao extends BaseDao {
                             o.order_date    AS orderDate,
                             o.status        AS status,
                             o.total_amount  AS totalAmount,
-                            o.note          AS note
+                            o.note          AS note,
+                            o.payment_method AS paymentMethod
                         FROM orders o
                         JOIN `user` u ON o.user_id = u.id
                         JOIN shipping s ON o.id = s.order_id
