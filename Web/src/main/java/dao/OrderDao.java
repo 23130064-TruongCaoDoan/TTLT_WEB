@@ -105,6 +105,14 @@ public class OrderDao extends BaseDao {
                         .execute() > 0
         ));
     }
+    public boolean updateOrder(int id, Double orderTotalPrice) {
+        return getJdbi().withHandle(handle -> (
+                handle.createUpdate("UPDATE `ORDERS` set total_amount = :total where id=:id")
+                        .bind("total", orderTotalPrice)
+                        .bind("id", id)
+                        .execute() > 0
+        ));
+    }
 
     public boolean deleteOrder(int id) {
         getJdbi().withHandle(handle -> (

@@ -25,7 +25,7 @@ document.addEventListener("click", function (e) {
 document.getElementById("btnSaveOrder").addEventListener("click", () => {
     const id = document.getElementById("orderCode").value;
     const total = document.getElementById("orderValue").value;
-    const status = document.getElementById("orderStatus").value;
+    // const status = document.getElementById("orderStatus").value;
 
     fetch(contextPath+"/UpdateOrder", {
         method: "POST",
