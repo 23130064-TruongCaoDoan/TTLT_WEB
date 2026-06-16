@@ -74,6 +74,7 @@
                             <button class="buttonSearch" type="submit">Tìm kiếm</button>
                         </div>
                     </div>
+                </form>
             </div>
             <div class="title">
                 <h3>Danh sách sản phẩm</h3>

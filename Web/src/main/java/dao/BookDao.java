@@ -134,7 +134,7 @@ public class BookDao extends BaseDao {
             for (int i = 0; i < books.size(); i++) {
                 Book book = books.get(i);
                 List<String> detailImages = allDetailImages.get(i);
-                Integer bookIdOld = findBookByBookCode(book.getBookCode());
+                Integer bookIdOld = findBookByBookCode(h,book.getBookCode());
 
                     if(bookIdOld!=null){
                         h.createUpdate("""
@@ -155,7 +155,7 @@ public class BookDao extends BaseDao {
                                                 ") VALUES (" +
                                                 ":bookCode, :title, :authorId, :price, :priceDiscounted, :priceImport,:type, :age, " +
                                                 ":coverImgUrl, :description, :publisher, :provider, :publishedDate, " +
-                                                ":weight, :bookSize, :pagesNumber, :format, isSell, CURDATE(), :quantitySold, :stock" +
+                                                ":weight, :bookSize, :pagesNumber, :format, :isSell, CURDATE(), :quantitySold, :stock" +
                                                 ")"
                                 )
                                 .bind("bookCode", book.getBookCode())
@@ -830,7 +830,7 @@ public class BookDao extends BaseDao {
                     .one();
             for (int i = 0; i <books.size(); i++) {
                 Book b = books.get(i);
-                int bookId = findBookByBookCode(b.getBookCode());
+                int bookId = findBookByBookCode(handle,b.getBookCode());
                 int subtotal = b.getPriceImport()*b.getStock();
                 handle.createUpdate("""
                 INSERT INTO import_order_details(import_order_id,book_id,quantity, price_import,subtotal)
@@ -844,18 +844,16 @@ public class BookDao extends BaseDao {
                         .execute();
             }
     }
-    public Integer findBookByBookCode(String bookCode) {
-        return getJdbi().withHandle(handle ->
-                handle.createQuery("""
-                    SELECT id
-                    FROM books
-                    WHERE book_code = :bookCode
-                    """)
-                        .bind("bookCode", bookCode)
-                        .mapTo(Integer.class)
-                        .findOne()
-                        .orElse(null)
-        );
+    public Integer findBookByBookCode(Handle h, String bookCode) {
+        return h.createQuery("""
+            SELECT id
+            FROM books
+            WHERE book_code = :bookCode
+            """)
+                .bind("bookCode", bookCode)
+                .mapTo(Integer.class)
+                .findOne()
+                .orElse(null);
     }
     public List<String> getListBookCode(){
         return getJdbi().withHandle(handle ->

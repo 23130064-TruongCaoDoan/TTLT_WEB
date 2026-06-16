@@ -314,7 +314,6 @@
                                     <tr>
                                         <th>Mã sách</th>
                                         <th>Tên sách</th>
-                                        <th>Tác giả</th>
                                         <th>Giá</th>
                                         <th>Tồn kho</th>
                                         <th>Loại sách</th>
@@ -326,7 +325,6 @@
                                         <tr>
                                             <td>${b.bookCode}</td>
                                             <td>${b.title}</td>
-                                            <td>${b.author}</td>
                                             <td><fmt:formatNumber value="${b.price}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
                                             <td>${b.stock}</td>
                                             <td>${b.type}</td>

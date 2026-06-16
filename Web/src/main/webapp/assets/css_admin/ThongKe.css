@@ -199,8 +199,8 @@ table td {
 }
 
 table thead {
-    background: #0d3164;
-    color: white;
+    background: #f5f5f5;
+    color: black;
 }
 
 #top10-customer-panel {
