@@ -44,6 +44,11 @@ public class ProductManageServlet extends HttpServlet {
         String q = request.getParameter("q");
         String type = request.getParameter("type");
         String stock = request.getParameter("sortStock");
+        String isSell = request.getParameter("filterStatus");
+        int status = 1;
+        if(isSell!=null){
+            status = isSell.equals("1") ? 1 : 0;
+        }
 
         int pageSize = 20;
         int currentPage = 1;
@@ -59,7 +64,7 @@ public class ProductManageServlet extends HttpServlet {
             }
         }
 
-        int totalBooks = bookService.countSearchAndFilter(q, type);
+        int totalBooks = bookService.countSearchAndFilter(q, type,status);
         int totalPages = (int) Math.ceil((double) totalBooks / pageSize);
         if (currentPage > totalPages && totalPages > 0) {
             currentPage = totalPages;
@@ -68,7 +73,7 @@ public class ProductManageServlet extends HttpServlet {
         if (offset < 0) {
             offset = 0;
         }
-        List<Book> lsBook = bookService.searchAndFilterPaginated(q, type, stock, pageSize, offset);
+        List<Book> lsBook = bookService.searchAndFilterPaginated(q, type, stock, pageSize, offset, status);
         for (Book book : lsBook) {
             book.setSalesPercentage(bookService.salesPercentageTheMostRecentImport(book.getId()));
         }
@@ -78,6 +83,8 @@ public class ProductManageServlet extends HttpServlet {
         request.setAttribute("lsbook", lsBook);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
+        System.out.println(lsBook.get(1));
+
 
         ThongKeService thongKeService = new ThongKeService();
 

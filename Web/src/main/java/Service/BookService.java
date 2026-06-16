@@ -142,12 +142,12 @@ public class BookService {
 
     }
 
-    public List<Book> searchAndFilter(String q, String type, String stock) {
+    public List<Book> searchAndFilter(String q, String type, String stock, int status) {
         if (q != null && q.isBlank()) q = null;
         if (type != null && type.isBlank()) type = null;
         if (stock != null && stock.isBlank()) stock = null;
 
-        return hd.searchAndFilter(q, type, stock);
+        return hd.searchAndFilter(q, type, stock,status);
     }
 
     public void updateBook(int id,
@@ -208,6 +208,9 @@ public class BookService {
         if (incoming.getPublishedDate() != 0 && old.getPublishedDate() != incoming.getPublishedDate()) {
             changeParams.put("published_date", incoming.getPublishedDate());
         }
+        if(incoming.getIsSell()!=old.getIsSell()){
+            changeParams.put("is_sell", incoming.getIsSell());
+        }
 
 
         if (mainImage != null && mainImage.getSize() > 0) {
@@ -254,6 +257,7 @@ public class BookService {
         if (startDate != null && !startDate.isBlank()) {
             book.setPublishedDate(Integer.parseInt(startDate.substring(0, 4)));
         }
+        book.setIsSell("1".equals(p.get("status")[0]));
 
         return book;
     }
@@ -464,17 +468,17 @@ public class BookService {
         }
     }
 
-    public int countSearchAndFilter(String q, String type) {
+    public int countSearchAndFilter(String q, String type, int status) {
         if (q != null && q.isBlank()) q = null;
         if (type != null && type.isBlank()) type = null;
-        return hd.countSearchAndFilter(q, type);
+        return hd.countSearchAndFilter(q, type,status);
     }
 
-    public List<Book> searchAndFilterPaginated(String q, String type, String stock, int limit, int offset) {
+    public List<Book> searchAndFilterPaginated(String q, String type, String stock, int limit, int offset, int status) {
         if (q != null && q.isBlank()) q = null;
         if (type != null && type.isBlank()) type = null;
         if (stock != null && stock.isBlank()) stock = null;
-        return hd.searchAndFilterPaginated(q, type, stock, limit, offset);
+        return hd.searchAndFilterPaginated(q, type, stock, limit, offset, status);
     }
     public List<String> getListBookCode(){
         return hd.getListBookCode();

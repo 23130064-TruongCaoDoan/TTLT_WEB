@@ -261,8 +261,6 @@
                             </div>
                         </div>
                     </div>
-                    </div>
-
                     <div id="sold-books-panel">
                         <div id="sold-books-container">
                             <div class="panel-header">
